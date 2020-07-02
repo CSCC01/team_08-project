@@ -125,4 +125,4 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-CORS_ORIGIN_WHITELIST = 'https://localhost:4200', 'https://3.18.84.86',
+CORS_ORIGIN_ALLOW_ALL = True
