@@ -39,4 +39,4 @@ RUN pip3 install pipenv && pip3 install -r requirements.txt
 RUN pipenv install --skip-lock --system --dev
 
 EXPOSE 8000
-CMD waitress-serve --listen=*:8000 SDServer.wsgi:application
+CMD uwsgi --socket :8000 --module SDServer.wsgi:application

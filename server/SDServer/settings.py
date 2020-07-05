@@ -26,7 +26,7 @@ SECRET_KEY = 'e__kj=#ny0vab4e2*&kj7=d@0cq1v%9@$uk407b)6(%x3-h3ip'
 #debug can be turned on or off
 DEBUG = int(os.environ.get('DEBUG', default=1))
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
