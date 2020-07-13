@@ -7,8 +7,6 @@ import json
 def add_tag_page(request):
     body = json.loads(request.body)
     tag = ManualTag.add_tag(body['food_name'], body['restaurant_id'], body['category'], body['value'])
-    tag._id = str(tag._id)
-    tag.foods = [str(food) for food in tag.foods]
     return JsonResponse(model_to_dict(tag))
 
 
@@ -34,3 +32,8 @@ def create_dish_page(request):
     # print(food.restaurant_id)
     food._id = str(food._id)
     return JsonResponse(model_to_dict(food))
+
+def auto_tag(request):
+    body = json.loads(request.body)
+    tags = [model_to_dict(tag) for tag in ManualTag.auto_tag_food(body['_id'])]
+    return JsonResponse({'tags' : tags})

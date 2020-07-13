@@ -9,6 +9,7 @@ import { RestaurantsService } from '../../service/restaurants.service';
 })
 export class AllRestaurantsComponent implements OnInit {
   restaurants: any[];
+  dishes: any[]
   faSearch = faSearch;
 
   constructor(private restaurantsService: RestaurantsService) {}
@@ -17,6 +18,11 @@ export class AllRestaurantsComponent implements OnInit {
     // Get list of all restaurants
     this.restaurantsService.listRestaurants().subscribe((data) => {
       this.restaurants = data.Restaurants;
+
+    });
+    this.restaurantsService.getDishes().subscribe((data) => {
+      this.dishes = data.Dishes;
+
     });
   }
 

@@ -71,16 +71,19 @@ class Restaurant(models.Model):
 ## URLs
 
 |     Address     | Required Fields (Field Type)                                                          | Functionality                    |
-| :-------------: | :------------------------------------------------------------------------------------ | -------------------------------- |
-| /auth/signup/   | nickname, name, picture, updated\_at, email, email\_verified, role **(_Roles_ Name)** | Registers SDUser to DB           |
-| /auth/reassign/ | email, role **(_Roles_ Name)**                                                        | Updates Role of SDUser           |
-| /auth/data/     | email                                                                                 | Returns All Fields of the SDUser |
-| /tag/add/       | food_name, restaurant, category, value                                                | Adds Tag to a Food Item          |
-| /tag/clear/     | food_name, restaurant                                                                 | Clears All Tags on a Food Item   |
-| /RO/get/        | restaurant_id                                                                         | Retrieves Restaurant data        |                                 
-| /RO/getAll/     |                                                                                       | Retrieves all Restaurants        |    
-| /RO/insert/     | { name: , address: , phone : email : , city : , cuisine : , pricepoint : , instagram : , twitter : , GEO_location : , external_delivery_link : , bio : }
+| :-------------: | :------------------------------------------------------------------------------------ | ---------------------------------------------------------------  |
+| /auth/signup/                | nickname, name, picture, updated\_at, email, email\_verified, role **(_Roles_ Name)** | Registers SDUser to DB                                           |
+| /auth/reassign/              | email, role **(_Roles_ Name)**                                                        | Updates Role of SDUser                                           |
+| /auth/data/                  | email                                                                                 | Returns All Fields of the SDUser                                 |
+| /tag/add/                    | food_name, restaurant, category, value                                                | Adds Tag to a Food Item                                          |
+| /tag/clear/                  | food_name, restaurant                                                                 | Clears All Tags on a Food Item                                   |
+| /tag/auto_tag/               | _id                                                                                   | Automatically tags food based on description                     |
+| /tag/create/                 | name, restaurant_id, description, piecture, price, specials                           | Adds dish to DB                                                  |
+| /tag/get_all/                |                                                                                       | retrieves all doshes                                             |           
+| /tag/get_food_by_restaurant/ | restaurant_id                                                                         | retrieves all dishes from restaurant                             |
+| /RO/get/                     | restaurant_id                                                                         | Retrieves Restaurant data                                        |                                 
+| /RO/getAll/                  |                                                                                       | Retrieves all Restaurants                                        |    
+| /RO/insert/                  | { name: , address: , phone : email : , city : , cuisine : , pricepoint : , instagram : , twitter : , GEO_location : , external_delivery_link : , bio : } |
 
 All requests should be sent in a JSON format.
-
 

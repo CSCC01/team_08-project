@@ -4,6 +4,7 @@
       <h2>Order #{{ order.id }}</h2>
       <p class="body-text"><b>Name:</b> {{ order.name }}</p>
       <p class="body-text"><b>Email:</b> {{ order.email }}</p>
+      <p class="body-text"><b>Phone Number:</b> {{ order.phone }}</p>
     </div>
     <div class="col-md-6">
       <div class="orders" *ngFor="let dish of order.dishes">

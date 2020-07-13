@@ -15,7 +15,7 @@
         placeholder="Search"
       />
     </div>
-    <div class="all-listings-box">
+    <div class="restaruant-listings-box">
       <div class="row">
         <div class="col-md-4">
           <app-filterlist-card
@@ -65,6 +65,43 @@
         placeholder="Search"
         aria-label="Search"
       />
+    </div>
+    <div class="dishes-listings-box">
+      <div class="row">
+        <div class="col-md-3">
+          <app-filterlist-card
+            [category]="'Rating'"
+            [subcategories]="['1 star', '2 star', '3 star', '4 star', '5 star']"
+            [length]="5"
+            (events)="displayList($event)"
+          ></app-filterlist-card>
+          <app-filterlist-card
+            [category]="'Price Range'"
+            [subcategories]="['$', '$$', '$$$']"
+            [length]="3"
+            (events)="displayList($event)"
+          ></app-filterlist-card>
+          <app-filterlist-card
+            [category]="'Filter'"
+            [subcategories]="[
+              'Category',
+              'Category',
+              'Category',
+              'Category',
+              'Category'
+            ]"
+            [length]="5"
+            (events)="displayList($event)"
+          ></app-filterlist-card>
+        </div>
+        <div class="col-md-9">
+          <div class="row equal">
+            <div *ngFor="let dish of dishes" class="col-sm-4 d-flex">
+              <app-dish-card [dish]="dish"></app-dish-card>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </mat-tab>
 </mat-tab-group>

@@ -23,7 +23,7 @@ export class RestaurantsService {
   }
 
   /*
-  @Input: Restaurand id
+  @Input: Restaurant id
   @Output: Corresponding restaurant object
 
   Returns the details of the restaurant using its id.
@@ -37,7 +37,7 @@ export class RestaurantsService {
   }
 
   /*
-  @Input: Restaurand id
+  @Input: Restaurant id
   @Output: Corresponding restaurant object
 
   Returns the details of the restaurant using its id.
@@ -48,5 +48,16 @@ export class RestaurantsService {
       restaurant_id: id,
     };
     return this.http.get(endpoint, { params: params });
+  }
+
+  /*
+  @Input: None
+  @Output: All Dishes
+
+  Returns All Dishes.
+  */
+  getDishes(): Observable<any> {
+    const endpoint = `${RestaurantsService.RO_ENDPOINT}/tag/get_all/`;
+    return this.http.get(endpoint);
   }
 }

@@ -16,6 +16,7 @@ module.exports = {
       "components/restaurant-card",
       "components/review-card",
       "components/view-review-card",
+      "components/order-card",
     ],
   },
 };
