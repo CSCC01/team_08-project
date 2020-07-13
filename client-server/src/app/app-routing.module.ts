@@ -7,6 +7,7 @@ import { PaymentComponent } from './pages/payment/payment.component';
 import { AllRestaurantsComponent } from './pages/all-restaurants/all-restaurants.component';
 import { RestaurantPageComponent } from './pages/restaurant-page/restaurant-page.component';
 import { RestuarantDashboardComponent } from './pages/restuarant-dashboard/restuarant-dashboard.component';
+import { RestaurantSetupComponent } from './pages/restaurant-setup/restaurant-setup.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -19,6 +20,7 @@ const routes: Routes = [
   { path: 'all-listings', component: AllRestaurantsComponent },
   { path: 'restaurant', component: RestaurantPageComponent },
   { path: 'dashboard', component: RestuarantDashboardComponent },
+  { path: 'restaurant-setup', component: RestaurantSetupComponent },
 ];
 
 @NgModule({
