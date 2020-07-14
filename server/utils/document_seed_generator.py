@@ -57,21 +57,21 @@ class Seeder():
             Document[Keyval[0]] = Keyval[1](self.faker)
         return Document
 
-def clean(gen_dict = {}) -> 'Cleaned Keys':
-    '''
-    removes the invalid random generation functions from the current generation dictionary
-    Params: 
-        gen_dict({string: function(faker)}): the dictionary of functions for random generation
-    Return: 
-        None
-    '''
-    cleaned_keys = []
-    for Keyval in gen_dict.items():
-        try:
-            json.dumps(Keyval[1]())
-        except:
-            print(f"[ {Keyval[0]} ]: invalid random generation function, cleaning...")
-            cleaned_keys.append(Keyval[0])
-    for Key in cleaned_keys:
-        gen_dict.pop(Key, None)
-    return cleaned_keys
+    def clean(self, gen_dict = {}) -> 'Cleaned Keys':
+        '''
+        removes the invalid random generation functions from the current generation dictionary
+        Params: 
+            gen_dict({string: function(faker)}): the dictionary of functions for random generation
+        Return: 
+            None
+        '''
+        cleaned_keys = []
+        for Keyval in gen_dict.items():
+            try:
+                json.dumps(Keyval[1](self.faker))
+            except:
+                print(f"[ {Keyval[0]} ]: invalid random generation function, cleaning...")
+                cleaned_keys.append(Keyval[0])
+        for Key in cleaned_keys:
+            gen_dict.pop(Key, None)
+        return cleaned_keys

@@ -1,6 +1,5 @@
 from django.test import SimpleTestCase
 from utils.document_seed_generator import Seeder
-from utils.document_seed_generator import clean
 from faker import Faker
 import json
 
@@ -38,9 +37,12 @@ class AddTestCase(SimpleTestCase):
         '''
         dicts are properly cleaned of invalid functions
         '''
-        gen_dict = {"name" : lambda faker: None}
-        expected_dict = {}
-        expected_keys = ["name"]
-        cleaned_keys = clean(gen_dict)
+        testfuncinvalid = lambda faker : lambda faker : None
+        testfuncvalid = lambda faker : faker.name()
+
+        gen_dict = {"function" : testfuncinvalid, "name": testfuncvalid}
+        expected_dict = {"name": testfuncvalid}
+        expected_keys = ["function"]
+        cleaned_keys = self.seeder.clean(gen_dict)
         self.assertDictEqual(gen_dict, expected_dict)
         self.assertEqual(cleaned_keys, expected_keys)
