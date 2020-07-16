@@ -7,7 +7,7 @@ from bson.objectid import ObjectId
 
 class Restaurant(models.Model):
     _id = models.ObjectIdField()
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=60)
     address = models.CharField(max_length=60)
     phone = models.BigIntegerField(null=True)
     email = models.EmailField(unique=True)
