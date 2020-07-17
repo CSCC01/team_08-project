@@ -6,3 +6,5 @@ djongo==1.2.38
 django-cors-headers
 sqlparse==0.2.4
 django-reset-migrations
+Pillow
+google-cloud-storage

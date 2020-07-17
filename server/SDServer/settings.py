@@ -42,7 +42,9 @@ INSTALLED_APPS = [
     'reset_migrations',
     'auth2',
     'restaurant',
-    'RO'
+    'RO',
+    'cloud_storage',
+    'request_form'
 ]
 
 MIDDLEWARE = [

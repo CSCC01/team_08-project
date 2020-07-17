@@ -1,7 +1,7 @@
 from djongo import models
 from django.forms.models import model_to_dict
 from bson.objectid import ObjectId
-
+from cloud_storage import cloud_controller
 
 # Create your models here.
 
@@ -32,7 +32,16 @@ class Restaurant(models.Model):
         return None
 
     @classmethod
+    def update_logo(cls, img, _id):
+        restaurant = cls.get(_id=_id)
+        url = cloud_controller.upload(img, cloud_controller.TEST_BUCKET)
+        restaurant.logo_url = url
+        restaurant.save()
+        return url
+
+    @classmethod
     def get_all(cls):
+        # TODO add delete
         response = {'Restaurants': []}
         for restaurant in list(Restaurant.objects.all()):
             restaurant._id = str(restaurant._id)
