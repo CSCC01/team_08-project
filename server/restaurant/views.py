@@ -29,7 +29,6 @@ def all_dishes_page(request):
 def create_dish_page(request):
     body = json.loads(request.body)
     food = Food.add_dish(body)
-    # print(food.restaurant_id)
     food._id = str(food._id)
     return JsonResponse(model_to_dict(food))
 

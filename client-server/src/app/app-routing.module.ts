@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { AuthGuard } from './auth/auth.guard';
+import { ROCheckGuard } from './auth/ro-check.guard';
 import { HomeComponent } from './pages/home/home.component';
 import { PaymentComponent } from './pages/payment/payment.component';
 import { AllRestaurantsComponent } from './pages/all-restaurants/all-restaurants.component';
@@ -18,7 +19,11 @@ const routes: Routes = [
   { path: 'payment', component: PaymentComponent },
   { path: 'all-listings', component: AllRestaurantsComponent },
   { path: 'restaurant', component: RestaurantPageComponent },
-  { path: 'dashboard', component: RestuarantDashboardComponent },
+  {
+    path: 'dashboard',
+    component: RestuarantDashboardComponent,
+    canActivate: [ROCheckGuard],
+  },
 ];
 
 @NgModule({

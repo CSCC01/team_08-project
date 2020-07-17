@@ -48,4 +48,17 @@ export class LoginService {
     };
     return this.http.get(endpoint, { params: userObject });
   }
+
+  /*
+  @Input: JSON object from auth
+  @Output: Return True if user is in database, False otherwise
+  Check if user exists in the database
+  */
+  checkUserExists(userData): Observable<any> {
+    const endpoint = `${LoginService.AUTH_ENDPOINT}/exists/`;
+    const userObject = {
+      email: userData.email,
+    };
+    return this.http.get(endpoint, { params: userObject });
+  }
 }

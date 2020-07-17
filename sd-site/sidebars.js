@@ -4,6 +4,7 @@ module.exports = {
     Backend: ["backend/backend"],
     Frontend: [
       "frontend/frontend",
+      "frontend/auth-guard",
       "frontend/bootstrap",
       "frontend/material",
       "frontend/aos",

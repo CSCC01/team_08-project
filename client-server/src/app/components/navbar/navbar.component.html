@@ -30,6 +30,16 @@
         </a>
       </li>
       <li class="nav-item nav-link">
+        <a
+          routerLink="dashboard"
+          routerLinkActive="active"
+          *ngIf="auth.role == 'RO'"
+          class="nav-link"
+        >
+          DASHBOARD
+        </a>
+      </li>
+      <li class="nav-item nav-link">
         <a routerLink="all-listings" routerLinkActive="active" class="nav-link">
           BROWSE
         </a>
