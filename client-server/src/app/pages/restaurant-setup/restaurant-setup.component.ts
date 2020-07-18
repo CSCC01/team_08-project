@@ -19,6 +19,7 @@ export class RestaurantSetupComponent implements OnInit {
   ngOnInit(): void {}
 
   upgradeUser(): void {
+    // Extract form inputs from the user
     var restaurantInfo = {
       name: (<HTMLInputElement>document.getElementById('restaurant-name'))
         .value,
@@ -38,24 +39,22 @@ export class RestaurantSetupComponent implements OnInit {
       instagram: (<HTMLInputElement>document.getElementById('instagram')).value,
       GEO_location: 'blank',
       external_delivery_link: 'blank',
-      cover_photo_url: 'link',
-      logo_url: 'link',
-      rating: '3.00',
+      cover_photo_url: 'blank',
+      logo_url: 'blank',
+      rating: '0.00',
     };
+
+    // Attach a restaurant ID to the current user and upgrade them
     this.restaurantsService
       .getRestaurantID(restaurantInfo)
       .subscribe((data) => {
         this.restaurantId = data._id;
+        this.auth.userProfile$.source.subscribe((userInfo) => {
+          userInfo.role = 'RO';
+          userInfo.restaurant_id = data._id;
+          this.loginService.addNewUser(userInfo);
+        });
       });
     console.log(this.restaurantId);
-    this.auth.userProfile$.source.subscribe((data) => {
-      var userInfo = data;
-      userInfo.role = 'RO';
-      userInfo.restaurant_id = this.restaurantsService.restaurantId;
-      this.loginService.addNewUser(userInfo);
-    });
-    // this.loginService.addNewUser(this.auth.userProfile$.source)
-    // this.loginService.updateUser(this.auth.userProfile$.source, null);
-    // this.auth.role = 'RO';
   }
 }
