@@ -2,9 +2,26 @@ from django.http import HttpResponse, JsonResponse
 from user.models import SDUser
 from restaurant.models import Restaurant
 import json
+from jsonschema import validate
 
+
+#jsonschema validation scheme
+user_schema = {
+    "type":"object",
+    "properties":{
+        "nickname":{"type":"string"},
+        "name":{"type", "string"},
+        "picture":{"type","string"},
+        "updated_at":{"type","string"},
+        "email":{"type","string"},
+        "email_verified":{"type","string"},
+        "role":{"type","string"},
+        "restaurant_id":{"type","string"}
+    }
+}
 
 def signup_page(request):
+    validate(instance=request.body, schema=user_schema)
     body = json.loads(request.body)
     user = SDUser.signup(nickname=body['nickname'], name=body['name'], picture=body['picture'],
                          updated=body['updated_at'], email=body['email'],
@@ -13,6 +30,7 @@ def signup_page(request):
 
 
 def reassign_page(request):
+    validate(instance=request.body, schema=user_schema)
     body = json.loads(request.body)
     user = SDUser.objects.get(pk=body['user_email'])
     user.reassign_role(body['role'])

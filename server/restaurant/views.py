@@ -3,6 +3,20 @@ from restaurant.models import Food, ManualTag, Restaurant
 from django.forms.models import model_to_dict
 import json
 
+#jsconshema validation schemes
+food_schema = {
+
+}
+
+tag_schema = {
+
+}
+
+restaurant_schema = {
+
+}
+
+
 
 def insert_tag_page(request):
     body = json.loads(request.body)
