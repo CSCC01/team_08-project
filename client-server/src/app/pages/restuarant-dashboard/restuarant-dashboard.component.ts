@@ -30,7 +30,6 @@ export class RestuarantDashboardComponent implements OnInit {
         this.complete.push(this.orders[i]);
       }
     }
-    console.log(this.new_orders);
   }
 
   ngOnInit(): void {}
