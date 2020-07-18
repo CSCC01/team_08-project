@@ -34,7 +34,7 @@ class SDUserTestCases(TestCase):
                           email="A@mail.com", email_verified=True, role="BU", restaurant_id=None)
         self.assertEqual(actual, expected)
 
-    # Tests the signup view by calling it with invalid parameters then checking if the proper error is thrown
+    # Tests the signup view by calling it with invalid role then checking if the proper error is thrown
     def test_signup_invalid_role(self):
         self.assertRaises(ValidationError, SDUser.signup, "TesterF", "Tester", "picF", "2020-06-26T14:07:39.888Z",
                           "F@mail.com", True, "Random", "")

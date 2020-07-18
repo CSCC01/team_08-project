@@ -92,13 +92,17 @@ class Restaurant(models.Model):
 
 All requests should be sent in a JSON format. All optional parameters can be left blank Ex: {"Role" : ""}
 
-    path('tag/insert/', views.insert_tag_page, name='insert_tag_page'),
-    path('tag/clear/', views.clear_tags_page, name='clear_tags_page'),
-    path('tag/auto/', views.auto_tag_page, name='auto_tag_page'),
-    path('dish/insert/', views.insert_dish_page, name='insert_dish_page'),
-    path('dish/get_all/', views.all_dishes_page, name='all_dishes_page'),
-    path('dish/get_by_restaurant/', views.get_dish_by_restaurant_page, name='get_dish_by_restaurant_page'),
-    path('get/', views.get_restaurant_page, name='get_restaurant_page'),
-    path('insert/', views.insert_restaurant_page, name='insert_restaurant_page'),
-    path('get_all/', views.get_all_restaurants_page, name='get_all_restaurants_page'),
-    path('edit/', views.edit_restaurant_page, name='edit_restaurant_page')
+## Testing
+
+|  Test Case Name              |     App    | Test Suite      |  Evaluation Criteria                                                                                                                                                                      | Risk Description                      | Magnitude | Probability | Priority |
+| :--------------------------: | :--------: | :------------:  | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:  | :-----------------------------------: | :-------: | :--------:  | :-----:  |                                 
+|  test_signup                 | user       | SDUserTestCases | Provides valid fields and checks to see if the SDUser (and its fields) have been inserted into the database                                                                               | No new Users can be made              |           |             |          |   
+|  test_signup_invalid_role    | user       | SDUserTestCases | Provides invalid role and checks if a Validation Error is thrown                                                                                                                          | Anything can be used as a role        |           |             |          |   
+|  test_reassign_RO_to_BU      | user       | SDUserTestCases | Provides an user email and new role (BU) and checks if the role change is reflected in the database                                                                                       | Users won't be able to be 'demoted'   |           |             |          |     
+|  test_reassign_BU_to_RO      | user       | SDUserTestCases | Provides an user email, new role (RO), and the fields to create a new restaurant. Then checks if it updates the user fields with the new restaurant id and role                           | New ROs won't be able to be created   |           |             |          |     
+|  test_data                   | user       | SDUserTestCases | Provides an user email and then checks the user data returned is the correct data                                                                                                         | Display incorrect data for users      |           |             |          |     
+|  test_exists_true                   | user       | SDUserTestCases | Provides an user email and then checks the user data returned is the correct data                                                                                                         | Display incorrect data for users      |           |             |          |     
+|  test_exists_false                   | user       | SDUserTestCases | Provides an user email and then checks the user data returned is the correct data                                                                                                         | Display incorrect data for users      |           |             |          |     
+
+Risk Description explains the consequences if the code doesn't pass the given test case. All tests can be run automatically with "python manage.py test". 
+Specific apps, test suites, or even individual test cases can be run using the format: "python manage.py test App.Test_Suite.Test_Case" depending on how deep you want to go. 
