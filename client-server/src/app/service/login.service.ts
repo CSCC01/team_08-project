@@ -23,7 +23,7 @@ export class LoginService {
   }
 
   /*
-  @Input: JSON object from auth
+  @Input: JSON object from auth, restaurnt info from form
   @Output: None
   Assign the 'Restauraut Owner' role to the user using their email.
   */

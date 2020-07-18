@@ -61,4 +61,15 @@ export class RestaurantsService {
     const endpoint = `${RestaurantsService.RO_ENDPOINT}/dish/get_all/`;
     return this.http.get(endpoint);
   }
+
+  /*
+  @Input: JSON object containing restaurant info
+  @Output: The ID for that restaurant
+
+  Creates an entry for the restauant in the database and returns an id
+  */
+  getRestaurantID(restuarantInfo): Observable<any> {
+    const endpoint = `${RestaurantsService.RO_ENDPOINT}/edit/`;
+    return this.http.get(endpoint);
+  }
 }
