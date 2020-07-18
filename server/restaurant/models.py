@@ -20,6 +20,11 @@ class Food(models.Model):
 
     @classmethod
     def add_dish(cls, food_data):
+        """
+        insert dish into database and return response
+        :param food_data: dictionary representation of dish
+        :return: Food model object
+        """
         dish = cls(
             name=food_data['name'],
             restaurant_id=food_data['restaurant_id'],

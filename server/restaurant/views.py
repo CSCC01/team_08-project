@@ -33,17 +33,16 @@ def insert_dish_page(request):
 
 
 def auto_tag_page(request):
+    
     body = json.loads(request.body)
     tags = [model_to_dict(tag) for tag in ManualTag.auto_tag_food(body['_id'])]
+    print(tags)
     return JsonResponse({'tags': tags})
 
 
 def get_restaurant_page(request):
-    try:  # body
-        body = json.loads(request.body)
-        _id = body['_id']
-    except:  # query string
-        _id = request.GET.get('_id')
+
+    _id = request.GET.get('_id')
 
     restaurant = Restaurant.get(_id)
     if restaurant:
