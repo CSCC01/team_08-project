@@ -7,7 +7,7 @@ import { environment } from '../../environments/environment';
   providedIn: 'root',
 })
 export class LoginService {
-  private static readonly AUTH_ENDPOINT = `${environment.endpoint_url}/auth`;
+  private static readonly AUTH_ENDPOINT = `${environment.endpoint_url}/user`;
 
   constructor(private http: HttpClient) {}
 
