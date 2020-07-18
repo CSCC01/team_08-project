@@ -55,6 +55,5 @@ export class RestaurantSetupComponent implements OnInit {
           this.loginService.addNewUser(userInfo);
         });
       });
-    console.log(this.restaurantId);
   }
 }

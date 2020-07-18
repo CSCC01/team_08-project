@@ -33,7 +33,6 @@ export class RestaurantsService {
     var params = {
       _id: id,
     };
-    console.log(params);
     return this.http.get(endpoint, { params: params });
   }
 
