@@ -16,10 +16,6 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-import user
-import restaurant
-from user.views import data_page
-from restaurant.views import all_dishes_page
 urlpatterns = [
     path('user/', include('user.urls')),
     path('admin/', admin.site.urls),
