@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { LoginService } from '../../service/login.service';
 import { AuthService } from '../../auth/auth.service';
 import { RestaurantsService } from '../../service/restaurants.service';
-import { faThumbsDown } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-restaurant-setup',
@@ -10,6 +9,7 @@ import { faThumbsDown } from '@fortawesome/free-solid-svg-icons';
   styleUrls: ['./restaurant-setup.component.scss'],
 })
 export class RestaurantSetupComponent implements OnInit {
+  restaurantId: any;
   constructor(
     public auth: AuthService,
     private loginService: LoginService,
@@ -20,38 +20,38 @@ export class RestaurantSetupComponent implements OnInit {
 
   upgradeUser(): void {
     var restaurantInfo = {
-      'restaurant-name': (<HTMLInputElement>(
-        document.getElementById('restaurant-name')
-      )).value,
-      'restaurant-address': (<HTMLInputElement>(
-        document.getElementById('restaurant-address')
-      )).value,
-      'restaurant-city': (<HTMLInputElement>(
-        document.getElementById('restaurant-city')
-      )).value,
-      'phone-number': (<HTMLInputElement>(
-        document.getElementById('phone-number')
-      )).value,
-      'restaurant-email': (<HTMLInputElement>(
-        document.getElementById('restaurant-email')
-      )).value,
+      name: (<HTMLInputElement>document.getElementById('restaurant-name'))
+        .value,
+      address: (<HTMLInputElement>document.getElementById('restaurant-address'))
+        .value,
+      city: (<HTMLInputElement>document.getElementById('restaurant-city'))
+        .value,
+      phone: (<HTMLInputElement>document.getElementById('phone-number')).value,
+      email: (<HTMLInputElement>document.getElementById('restaurant-email'))
+        .value,
       pricepoint: (<HTMLInputElement>document.getElementById('pricepoint'))
         .value,
-      'restaurant-cuisine': (<HTMLInputElement>(
-        document.getElementById('restaurant-cuisine')
-      )).value,
-      'restaurant-bio': (<HTMLInputElement>(
-        document.getElementById('restaurant-bio')
-      )).value,
+      cuisine: (<HTMLInputElement>document.getElementById('restaurant-cuisine'))
+        .value,
+      bio: (<HTMLInputElement>document.getElementById('restaurant-bio')).value,
       twitter: (<HTMLInputElement>document.getElementById('twitter')).value,
       instagram: (<HTMLInputElement>document.getElementById('instagram')).value,
+      GEO_location: 'blank',
+      external_delivery_link: 'blank',
+      cover_photo_url: 'link',
+      logo_url: 'link',
+      rating: '3.00',
     };
-    var restaurantID = this.restaurantsService.getRestaurantID(restaurantInfo);
-    console.log(restaurantID);
+    this.restaurantsService
+      .getRestaurantID(restaurantInfo)
+      .subscribe((data) => {
+        this.restaurantId = data._id;
+      });
+    console.log(this.restaurantId);
     this.auth.userProfile$.source.subscribe((data) => {
       var userInfo = data;
       userInfo.role = 'RO';
-      userInfo.restaurant_id = restaurantID;
+      userInfo.restaurant_id = this.restaurantsService.restaurantId;
       this.loginService.addNewUser(userInfo);
     });
     // this.loginService.addNewUser(this.auth.userProfile$.source)

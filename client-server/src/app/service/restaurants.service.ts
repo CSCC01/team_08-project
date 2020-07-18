@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -8,7 +8,7 @@ import { environment } from '../../environments/environment';
 })
 export class RestaurantsService {
   private static readonly RO_ENDPOINT = `${environment.endpoint_url}/restaurant`;
-
+  restaurantId: string;
   constructor(private http: HttpClient) {}
 
   /*
@@ -69,7 +69,7 @@ export class RestaurantsService {
   Creates an entry for the restauant in the database and returns an id
   */
   getRestaurantID(restuarantInfo): Observable<any> {
-    const endpoint = `${RestaurantsService.RO_ENDPOINT}/edit/`;
-    return this.http.get(endpoint);
+    const endpoint = `${RestaurantsService.RO_ENDPOINT}/insert/`;
+    return this.http.post<any>(endpoint, restuarantInfo);
   }
 }
