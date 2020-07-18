@@ -39,7 +39,7 @@ class Food(models.Model):
     picture = models.CharField(max_length=200, blank=True, default='')
     category = models.CharField(max_length=50, blank=True, default='')
     price = models.DecimalField(max_digits=6, decimal_places=2)
-``` 
+```
 
 ###### Manual Tag for Food Item
 
@@ -48,7 +48,7 @@ class ManualTag(models.Model):
     food = models.ForeignKey(Food, on_delete=models.CASCADE)
     category = models.CharField(max_length=20, choices=[("promo", "promo"), ("allergy", "allergy")])
     value = models.CharField(max_length=50)
-``` 
+```
 
 ###### Restaurant
 
@@ -71,24 +71,23 @@ class Restaurant(models.Model):
 
 ## URLs
 
-|     Address                               | Required Fields (Field Type)                                                                                          | Optional Fields                              |Type     | Functionality                                                   |
-| :--------------------------------------:  | :-------------------------------------------------------------------------------------------------------------------- | :------------------------------------------  | :-----: | --------------------------------------------------------------- |
-| /user/signup/                             | nickname, name, picture, updated\_at, email, email\_verified                                                          |   role **(_Roles_ Name)**, restaurant_id     | POST    |Registers SDUser to DB                                           |
-| /user/reassign/                           | user_email, role **(_Roles_ Name)**                                                                                   |                                              | POST    |Updates Role of SDUser (Not RO)                                  |
-| /user/reassign/                           | user_email, role **(_Roles_ Name)**, (All Fields Needed for /RO/insert/)                                              |                                              | POST    |Updates Role of SDUSer to RO and adds his restaurant page        |
-| /user/data/                               | email                                                                                                                 |                                              | GET     |Returns All Fields of the SDUser                                 |
-| /user/exists/                             | email                                                                                                                 |                                              | GET     |Returns if the SDUser exists in the DB                           |
-| /restaurant/tag/insert/                   | food_name, restaurant, category, value                                                                                |                                              | POST    |Adds Tag to a Food Item                                          |
-| /restaurant/tag/clear/                    | food_name, restaurant                                                                                                 |                                              | POST    |Clears All Tags on a Food Item                                   |
-| /restaurant/tag/auto/                     | _id                                                                                                                   |                                              | POST    |Automatically tags food based on description                     |
-| /restaurant/dish/create/                  | name, restaurant_id, description, picture, price, specials                                                            |                                              | POST    |Adds dish to DB                                                  |
-| /restaurant/dish/get_all/                 |                                                                                                                       |                                              | GET     |retrieves all dishes                                             |           
-| /restaurant/dish/get_by_restaurant/       | restaurant_id                                                                                                         |                                              | GET     |retrieves all dishes from restaurant                             |
-| /restaurant/get/                          | restaurant_id                                                                                                         |                                              | GET     |Retrieves Restaurant data                                        |                                 
-| /restaurant/get_all/                      |                                                                                                                       |                                              | GET     |Retrieves all Restaurants                                        |    
-| /restaurant/insert/                       | name, address, phone, email, city, cuisine, pricepoint, instagram, twitter, GEO_location, external_delivery_link, bio |
-| /restaurant/edit/                         | restaurant_id                                                                                                         | (All Fields Needed for /RO/insert/)          | POST    |Updates the fields of the given Restaurant with the new data     |    
-
+|               Address               | Required Fields (Field Type)                                                                                          | Optional Fields                        | Type | Functionality                                                |
+| :---------------------------------: | :-------------------------------------------------------------------------------------------------------------------- | :------------------------------------- | :--: | ------------------------------------------------------------ |
+|            /user/signup/            | nickname, name, picture, updated_at, email, email_verified                                                            | role **(_Roles_ Name)**, restaurant_id | POST | Registers SDUser to DB                                       |
+|           /user/reassign/           | user*email, role \*\*(\_Roles* Name)\*\*                                                                              |                                        | POST | Updates Role of SDUser (Not RO)                              |
+|           /user/reassign/           | user*email, role \*\*(\_Roles* Name)\*\*, (All Fields Needed for /RO/insert/)                                         |                                        | POST | Updates Role of SDUSer to RO and adds his restaurant page    |
+|             /user/data/             | email                                                                                                                 |                                        | GET  | Returns All Fields of the SDUser                             |
+|            /user/exists/            | email                                                                                                                 |                                        | GET  | Returns if the SDUser exists in the DB                       |
+|       /restaurant/tag/insert/       | food_name, restaurant, category, value                                                                                |                                        | POST | Adds Tag to a Food Item                                      |
+|       /restaurant/tag/clear/        | food_name, restaurant                                                                                                 |                                        | POST | Clears All Tags on a Food Item                               |
+|        /restaurant/tag/auto/        | \_id                                                                                                                  |                                        | POST | Automatically tags food based on description                 |
+|      /restaurant/dish/create/       | name, restaurant_id, description, picture, price, specials                                                            |                                        | POST | Adds dish to DB                                              |
+|      /restaurant/dish/get_all/      |                                                                                                                       |                                        | GET  | retrieves all dishes                                         |
+| /restaurant/dish/get_by_restaurant/ | restaurant_id                                                                                                         |                                        | GET  | retrieves all dishes from restaurant                         |
+|          /restaurant/get/           | \_id                                                                                                                  |                                        | GET  | Retrieves Restaurant data                                    |
+|        /restaurant/get_all/         |                                                                                                                       |                                        | GET  | Retrieves all Restaurants                                    |
+|         /restaurant/insert/         | name, address, phone, email, city, cuisine, pricepoint, instagram, twitter, GEO_location, external_delivery_link, bio |
+|          /restaurant/edit/          | restaurant_id                                                                                                         | (All Fields Needed for /RO/insert/)    | POST | Updates the fields of the given Restaurant with the new data |
 
 All requests should be sent in a JSON format. All optional parameters can be left blank Ex: {"Role" : ""}
 
