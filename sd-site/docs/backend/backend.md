@@ -105,4 +105,5 @@ All requests should be sent in a JSON format. All optional parameters can be lef
 |  test_exists_false                   | user       | SDUserTestCases | Provides an user email and then checks the user data returned is the correct data                                                                                                         | Display incorrect data for users      |           |             |          |     
 
 Risk Description explains the consequences if the code doesn't pass the given test case. All tests can be run automatically with "python manage.py test". 
+
 Specific apps, test suites, or even individual test cases can be run using the format: "python manage.py test App.Test_Suite.Test_Case" depending on how deep you want to go. 
