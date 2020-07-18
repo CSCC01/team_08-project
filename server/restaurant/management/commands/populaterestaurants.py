@@ -1,5 +1,5 @@
 
-from RO.models import Restaurant
+from restaurant.models import Restaurant
 from restaurant.cuisine_dict import load_dict
 from django.core.management.base import BaseCommand, CommandError
 from utils.document_seed_generator import Seeder

@@ -1,5 +1,4 @@
-from restaurant.models import Food, ManualTag
-from RO.models import Restaurant
+from restaurant.models import Food, ManualTag, Restaurant
 from restaurant.cuisine_dict import load_dict
 from django.core.management.base import BaseCommand, CommandError
 from utils.document_seed_generator import Seeder
@@ -51,7 +50,7 @@ class Command(BaseCommand):
         for _ in range(options['numentries']):
             #separate document for non-random fields in seeding process
             Document = {
-                'picture' : " "
+                'picture' : "https://i.imgur.com/rqDiXQE.jpg"
             }
             rand_Document = seed.gen_rand_dict(gen_dict)
             Document.update(rand_Document)
