@@ -1,0 +1,52 @@
+[
+  {
+    "model" : "restaurant.food",
+    "name": "Chinese Dish",
+    "restaurant_id": "4",
+    "price": "2.99",
+    "picture": "assets/images/cuisines/chinese.png",
+    "description": "Very good dish",
+    "tags": ["Nuts"],
+    "specials": "15%"
+  },
+  {
+    "model" : "restaurant.food",
+    "name": "Greek Dish",
+    "rating": "3",
+    "price": "12.99",
+    "picture": "assets/images/cuisines/greek.jpg",
+    "description": "Very good dish",
+    "tags": ["Nuts"],
+    "specials": "15%"
+  },
+  {
+    "model" : "restaurant.food",
+    "name": "Vietnamese Dish",
+    "restaurant_id": "4",
+    "price": "14.99",
+    "picture": "assets/images/cuisines/vietnamese.jpg",
+    "description": "Very good dish",
+    "tags": ["Nuts"],
+    "specials": "15%"
+  },
+  {
+    "model" : "restaurant.food",
+    "name": "Thai Dish",
+    "restaurant_id": "5",
+    "price": "29.99",
+    "picture": "assets/images/cuisines/thai.jpg",
+    "description": "Very good dish",
+    "tags": ["Nuts"],
+    "specials": "15%"
+  },
+  {
+    "model" : "restaurant.food",
+    "name": "Japanese Dish",
+    "restaurant_id": "5",
+    "price": "4.99",
+    "picture": "assets/images/cuisines/japanese.jpg",
+    "description": "Very good dish",
+    "tags": ["Nuts"],
+    "specials": "15%"
+  }
+]
