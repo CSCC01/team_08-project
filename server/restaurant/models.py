@@ -88,9 +88,9 @@ class ManualTag(models.Model):
 
     # Clears all the tags off a food item
     @classmethod
-    def add_tag(cls, food_name, restaurant, category, value):  # To be changed when restaurant is implemented
+    def add_tag(cls, food_name, restaurant_id, category, value):  # To be changed when restaurant is implemented
         food = Food.objects.get(name=food_name,
-                                restaurant_id=restaurant)  # To be changed when restaurant is implemented
+                                restaurant_id=restaurant_id)  # To be changed when restaurant is implemented
         try:
             tag = ManualTag.objects.get(value=value, category=category)
         except:

@@ -33,10 +33,9 @@ def insert_dish_page(request):
 
 
 def auto_tag_page(request):
-    
+
     body = json.loads(request.body)
     tags = [model_to_dict(tag) for tag in ManualTag.auto_tag_food(body['_id'])]
-    print(tags)
     return JsonResponse({'tags': tags})
 
 
