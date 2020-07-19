@@ -1,0 +1,144 @@
+<div class="center">
+  <h2>Initial Set Up</h2>
+  <p>
+    Please provide information about the owner.
+  </p>
+  <br />
+  <button class="btn" (click)="openAddDish(addModal)">
+    ADD NEW DISH
+  </button>
+</div>
+
+<div class="dishes">
+  <div class="row equal">
+    <div *ngFor="let dish of dishes" class="col-sm-4 d-flex">
+      <app-dish-card [dish]="dish"></app-dish-card>
+    </div>
+  </div>
+  <div class="text-right">
+    <button class="btn" [routerLink]="['/']">
+      SAVE & NEXT
+    </button>
+  </div>
+</div>
+
+<img class="bottom-left" src="assets/images/undraw_publish_post_vowb.png" />
+
+<ng-template #addModal let-modal>
+  <div class="modal-header">
+    <h2 class="modal-title" id="modal-basic-title">Add Dish</h2>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-box">
+      <div class="form-group">
+        <label for="dishName" class="required">
+          Dish Name <span class="text-danger">*</span>
+        </label>
+        <input
+          type="text"
+          class="form-control"
+          id="dishName"
+          [(ngModel)]="dishName"
+          placeholder="Ex: Spicy Chicken"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="price" class="required">
+          Price <span class="text-danger">*</span>
+        </label>
+        <input
+          type="text"
+          class="form-control"
+          id="price"
+          [(ngModel)]="price"
+          placeholder="Ex: 12.99"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="menuCategory" class="required">
+          Menu Category <span class="text-danger">*</span>
+        </label>
+        <input
+          type="text"
+          class="form-control"
+          id="menuCategory"
+          [(ngModel)]="menuCategory"
+          placeholder="Ex: Appetizer"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="cuisine" class="required">
+          Cuisine <span class="text-danger">*</span>
+        </label>
+        <input
+          type="text"
+          class="form-control"
+          id="cuisine"
+          [(ngModel)]="cuisine"
+          placeholder="Ex: Indian"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="dishInfo" class="required">
+          Dish Information <span class="text-danger">*</span>
+        </label>
+        <textarea
+          class="form-control"
+          id="dishInfo"
+          [(ngModel)]="dishInfo"
+          rows="4"
+          placeholder="Tell customers the story of your dish..."
+          required
+        ></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="allergy" class="required">
+          Allergy Warnings <span class="text-danger">*</span>
+        </label>
+        <input
+          type="text"
+          class="form-control"
+          id="allergy"
+          [(ngModel)]="allergy"
+          placeholder="Ex: Nuts, Peanut"
+          required
+        />
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-6">
+          <button class="btn dish-image">
+            + DISH IMAGE
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="text-right">
+      <button class="btn skip" (click)="modal.dismiss('Cross click')">
+        CANCEL
+      </button>
+      <button class="btn" (click)="addDish()">
+        ADD DISH
+      </button>
+    </div>
+  </div>
+</ng-template>

@@ -8,7 +8,6 @@ import { environment } from '../../environments/environment';
 })
 export class RestaurantsService {
   private static readonly RO_ENDPOINT = `${environment.endpoint_url}/restaurant`;
-  restaurantId: string;
   constructor(private http: HttpClient) {}
 
   /*
@@ -70,5 +69,16 @@ export class RestaurantsService {
   getRestaurantID(restuarantInfo): Observable<any> {
     const endpoint = `${RestaurantsService.RO_ENDPOINT}/insert/`;
     return this.http.post<any>(endpoint, restuarantInfo);
+  }
+
+  /*
+  @Input: JSON object containing dish info
+  @Output: None
+
+  Creates an entry for the dish for a particular restuarant using its id.
+  */
+  createDish(dishInfo): void {
+    const endpoint = `${RestaurantsService.RO_ENDPOINT}/dish/insert/`;
+    this.http.post<any>(endpoint, dishInfo).subscribe((data) => {});
   }
 }

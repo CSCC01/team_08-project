@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { LoginService } from '../../service/login.service';
 import { AuthService } from '../../auth/auth.service';
 import { RestaurantsService } from '../../service/restaurants.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-restaurant-setup',
@@ -13,7 +14,9 @@ export class RestaurantSetupComponent implements OnInit {
   constructor(
     public auth: AuthService,
     private loginService: LoginService,
-    private restaurantsService: RestaurantsService
+    private restaurantsService: RestaurantsService,
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit(): void {}
@@ -49,8 +52,12 @@ export class RestaurantSetupComponent implements OnInit {
       .getRestaurantID(restaurantInfo)
       .subscribe((data) => {
         this.restaurantId = data._id;
+        this.router.navigate(['/owner-setup'], {
+          queryParams: { restaurantId: this.restaurantId },
+        });
         this.auth.userProfile$.source.subscribe((userInfo) => {
           userInfo.role = 'RO';
+          this.auth.role = 'RO';
           userInfo.restaurant_id = data._id;
           this.loginService.addNewUser(userInfo);
         });

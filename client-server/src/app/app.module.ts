@@ -34,6 +34,7 @@ import { OrderCardComponent } from './components/order-card/order-card.component
 import { RestuarantDashboardComponent } from './pages/restuarant-dashboard/restuarant-dashboard.component';
 import { RestaurantSetupComponent } from './pages/restaurant-setup/restaurant-setup.component';
 import { OwnerSetupComponent } from './pages/owner-setup/owner-setup.component';
+import { MenuSetupComponent } from './pages/menu-setup/menu-setup.component';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { OwnerSetupComponent } from './pages/owner-setup/owner-setup.component';
     RestuarantDashboardComponent,
     RestaurantSetupComponent,
     OwnerSetupComponent,
+    MenuSetupComponent,
   ],
   imports: [
     BrowserModule,
