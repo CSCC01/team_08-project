@@ -69,14 +69,14 @@ class AddTagCase(TestCase):
 
         self.factory = RequestFactory()
 
-    def test_foods_list(self):
+    def test_food_ids(self):
         """ Test if a tag's food list has been updated given tag exists"""
         req = self.factory.post('/api/restaurant/tag/insert', self.data1, content_type='application/json')
         view_response.insert_tag_page(req)
         self.tag.refresh_from_db()
         self.assertListEqual([self.food._id], self.tag.foods)
 
-    def test_tags_list(self):
+    def test_tag_ids(self):
         """ Test food's tag list has been updated given tag exists"""
         req = self.factory.post('/api/restaurant/tag/insert', self.data1, content_type='application/json')
         view_response.insert_tag_page(req)
@@ -220,26 +220,26 @@ class RestaurantTestCase(TestCase):
         Restaurant.objects.create(**self.expected2)
         self.factory = RequestFactory()
 
-    def test_find(self):
+    def test_find_restaurant(self):
         """ Test if correct restaurant is retrieved given id"""
         request = self.factory.get('/api/restaurant/get/', {'_id': '111111111111111111111111'},
                          content_type="application/json")
         self.assertDictEqual(self.expected, json.loads(view_response.get_restaurant_page(request).content))
 
-    def test_find_all(self):
+    def test_find_all_restaurant(self):
         """ Test if all restaurant documents are returned"""
         request = self.factory.get('/api/restaurant/get_all/')
         expected = [self.expected, self.expected2]
         actual = json.loads(view_response.get_all_restaurants_page(request).content)['Restaurants']
         self.assertListEqual(expected,actual)
 
-    def test_insert(self):
+    def test_insert_restaurant(self):
         """ Test is restaurant is properly inserted into the database"""
         request = self.factory.post('/api/restaurant/insert/', self.expected3, content_type="application/json")
         actual = json.loads(view_response.insert_restaurant_page(request).content)
         self.assertDictEqual(self.expected3, actual)
 
-    def test_edit(self):
+    def test_edit_restaurant(self):
         """ Test if restaurant document is properly updated"""
         id = Restaurant.objects.get(_id="111111111111111111111111")._id
         request = self.factory.post('/api/restaurant/edit/',
