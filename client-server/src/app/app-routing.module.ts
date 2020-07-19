@@ -29,7 +29,11 @@ const routes: Routes = [
   },
   { path: 'restaurant-setup', component: RestaurantSetupComponent },
   { path: 'owner-setup', component: OwnerSetupComponent },
-  { path: 'menu-setup', component: MenuSetupComponent },
+  {
+    path: 'menu-setup',
+    component: MenuSetupComponent,
+    canActivate: [ROCheckGuard],
+  },
 ];
 
 @NgModule({
