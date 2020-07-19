@@ -99,7 +99,7 @@ Documented test cases can be found in server/{app} where app is the correspondin
 Specific apps, test suites, or even individual test cases can be run using the format: "python manage.py test App.Test_Suite.Test_Case" depending on how deep you want to go
 
 #### Testing table legend
-| Column                      | Column Description |
+| Column                      | Column Description                                                                                                                                                   |
 | :-------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------ :|
 | Test Case Name              | Name of Test Case                                                                                                                                                    |
 | App                         | Django app test case is testing                                                                                                                                      |
@@ -108,7 +108,7 @@ Specific apps, test suites, or even individual test cases can be run using the f
 | (Possible Risk) Description | A description of possible risks associated with test case failure (Some cases will have matching descriptions to test different effects of the same function         |
 | Magnitude                   | Measurement of how dangerous possible risks associated with test case failure                                                                                        |
 | Probability                 | Measurement of how likely possible risks may occur associated with test case failure                                                                                 |
-| Priority                    | Priority of importance for function to pass test case, priority is influenced by probability, magnitude and the function's priority (found in backlog) it is testing |             |
+| Priority                    | Priority of importance for function to pass test case, priority is influenced by probability, magnitude and the function's priority (found in backlog) it is testing |             
 
 |  Test Case Name              |     App    | Test Suite          |  Evaluation Criteria                                                                                                                                                                      | (Possible Risks) Description                                                                             | Magnitude | Probability | Priority |
 | :--------------------------: | :--------: | :----------------:  | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:  | :------------------------------------------------------------------------------------------------------: | :-------: | :--------:  | :-----:  |                                 
