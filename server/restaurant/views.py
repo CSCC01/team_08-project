@@ -23,7 +23,6 @@ food_schema = {
 tag_schema = {
     "properties" : {
         "_id": {"type": "string"},
-        "category": {"type": "string"},
         "value": {"type": "string"},
         "category": {"type": "string"},
         "foods": {"type": "array",

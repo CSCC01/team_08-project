@@ -8,7 +8,6 @@ from jsonschema import validate
 #jsonschema validation scheme
 signup_schema = {
     "properties":{
-        "_id":{"type":"string"},
         "nickname":{"type":"string"},
         "name":{"type": "string"},
         "picture":{"type":"string"},
