@@ -94,8 +94,8 @@
                 type="button"
                 class="btn btn-outline-secondary"
                 *ngIf="auth.loggedIn"
-                (click)="upgradeUser()"
                 data-dismiss="modal"
+                [routerLink]="['../restaurant-setup']"
               >
                 Confirm
               </button>

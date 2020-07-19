@@ -7,7 +7,7 @@ import { environment } from '../../environments/environment';
   providedIn: 'root',
 })
 export class LoginService {
-  private static readonly AUTH_ENDPOINT = `${environment.endpoint_url}/auth`;
+  private static readonly AUTH_ENDPOINT = `${environment.endpoint_url}/user`;
 
   constructor(private http: HttpClient) {}
 
@@ -23,7 +23,7 @@ export class LoginService {
   }
 
   /*
-  @Input: JSON object from auth
+  @Input: JSON object from auth, restaurnt info from form
   @Output: None
   Assign the 'Restauraut Owner' role to the user using their email.
   */
