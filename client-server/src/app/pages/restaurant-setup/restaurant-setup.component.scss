@@ -1,0 +1,42 @@
+@import "src/styles";
+
+.page-box {
+  margin: auto;
+  text-align: center;
+  padding: 20px 20px 20px 20px;
+}
+
+.form-group {
+  text-align: left;
+}
+
+.required::after {
+  content: "*";
+  padding-left: 5px;
+  color: red;
+}
+
+.form-box {
+  width: 60%;
+  margin: auto;
+  padding: 50px 40px 50px 40px;
+  border-color: #dddddd;
+  border-style: solid;
+  border-radius: 20px;
+}
+
+.btn {
+  margin-left: 0px;
+  height: 40px;
+}
+
+.save-next {
+  padding-left: 60px;
+  padding-right: 60px;
+  position: relative;
+  right: 0px;
+}
+
+.nav-link:hover {
+  color: $navigation-accent-color;
+}

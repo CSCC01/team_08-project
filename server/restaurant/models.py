@@ -8,7 +8,7 @@ from restaurant.cuisine_dict import load_dict
 class Food(models.Model):
     _id = models.ObjectIdField()
     name = models.CharField(max_length=50, default='')
-    restaurant_id = models.CharField(max_length=24, editable=False, blank=False)
+    restaurant_id = models.CharField(max_length=24, editable=False)
     description = models.CharField(max_length=200, blank=True, default='')
     picture = models.CharField(max_length=200, blank=True, default='')
     price = models.DecimalField(max_digits=6, decimal_places=2)
@@ -33,7 +33,6 @@ class Food(models.Model):
             price=food_data['price'],
             specials=food_data['specials'],
         )
-        # dish.full_clean()
         dish.clean_fields()
         dish.clean()
         dish.save()
@@ -67,7 +66,7 @@ class ManualTag(models.Model):
         ('cuisine', 'cuisine'),
         ('dish', 'dish')
     ])
-    value = models.CharField(max_length=50, unique=True)
+    value = models.CharField(max_length=50)
     foods = models.ListField(default=[], blank=True)
 
 
@@ -86,19 +85,18 @@ class ManualTag(models.Model):
         food.tags = []
         food.save()
 
-    # Clears all the tags off a food item
+    # Adds Tag to food
     @classmethod
-    def add_tag(cls, food_name, restaurant_id, category, value):  # To be changed when restaurant is implemented
+
+    def add_tag(cls, food_name, restaurant_id, category, value):
         food = Food.objects.get(name=food_name,
-                                restaurant_id=restaurant_id)  # To be changed when restaurant is implemented
-        try:
-            tag = ManualTag.objects.get(value=value, category=category)
-        except:
+                                restaurant_id=restaurant_id)
+        if not ManualTag.objects.filter(value=value, category=category).exists():
             tag = cls(value=value, category=category, foods=[])
             tag.clean_fields()
-            tag.clean
+            tag.clean()
             tag.save()
-            tag = ManualTag.objects.get(value=value, category=category)
+        tag = ManualTag.objects.get(value=value, category=category)
 
         if tag._id not in food.tags:
             food.tags.append(tag._id)
