@@ -7,14 +7,14 @@ import json
 #jsonschema validation schemes
 food_schema = {
     "properties" : {
-        "_id": {"type", "string"},
+        "_id": {"type": "string"},
         "name":{"type":"string"},
         "restaurant_id":{"type":"string"},
         "description":{"type":"string"},
         "picture":{"type":"string"},
         "price":{"type":"string"},
         "tags":{"type":"array",
-            "items":{"type", "string"}
+            "items":{"type": "string"}
         },
         "specials":{"type":"string"},
     }
@@ -34,7 +34,7 @@ tag_schema = {
 
 restaurant_schema = {
     "properties" : {
-        "_id": {"type", "string"},
+        "_id": {"type": "string"},
         "name":{"type":"string"},
         "address":{"type":"string"},
         "phone":{"type":"number"},
