@@ -94,7 +94,7 @@ All requests should be sent in a JSON format. All optional parameters can be lef
 
 ## Testing
 
-Documented test cases can be found in server/{app} where app is the corresponding app to test case.  
+Documented test cases can be found in server/{app}/test**.py where app is the corresponding app to test case.  
 
 Specific apps, test suites, or even individual test cases can be run using the format: "python manage.py test App.Test_Suite.Test_Case" depending on how deep you want to go
 
