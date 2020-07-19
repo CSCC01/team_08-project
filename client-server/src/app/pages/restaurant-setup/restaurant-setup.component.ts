@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { LoginService } from '../../service/login.service';
 import { AuthService } from '../../auth/auth.service';
 import { RestaurantsService } from '../../service/restaurants.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-restaurant-setup',
@@ -15,7 +15,6 @@ export class RestaurantSetupComponent implements OnInit {
     public auth: AuthService,
     private loginService: LoginService,
     private restaurantsService: RestaurantsService,
-    private route: ActivatedRoute,
     private router: Router
   ) {}
 
