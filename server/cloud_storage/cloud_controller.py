@@ -7,24 +7,37 @@ import random
 client = storage.Client.from_service_account_json('scdining.json')
 TEST_BUCKET = 'test-storage-nog'
 PRODUCTION_BUCKET = 'production-scdining'
+API = 'https://storage.googleapis.com/'
 
 
 def upload(file, bucket_path):
-    """Uploads a file to the bucket."""
+    """Uploads a file to the bucket path."""
     bucket = client.bucket(bucket_path)
     name = generate_name()
     blob = bucket.blob(name)
     blob.upload_from_file(file)
-    return 'https://storage.googleapis.com/' + bucket_path + '/' + name
+    return API + bucket_path + '/' + name
 
 
 def generate_name():
-    name = str(datetime.datetime.now())
+    """Generate a randomized filename"""
     letters = string.ascii_lowercase
-    name += (''.join(random.choice(letters) for i in range(10)))
-    name += '.png'
+    name = 'FILE-' + (''.join(random.choice(letters) for i in range(10))) + '-' + \
+           str(datetime.datetime.now()) + '.png'
     return name
 
 
-def delete_object():
-    """TODO implements this when you get list of defaults"""
+def delete(file_path):
+    """
+    delete object from bucket if it is not a default
+    """
+
+    if 'default-assets' in file_path:
+        return
+    elif API == file_path[:len(API)]:
+        file_path.replace(API, '')
+        bucket_path = file_path[:file_path.find('/')]
+        bucket = client.bucket(bucket_path)
+        bucket.delete_blob(file_path[file_path.find('/') + 1:])
+    else:
+        print('cannot parse invalid file')
