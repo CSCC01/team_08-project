@@ -118,15 +118,18 @@ export class AuthService {
         // Redirect to target route after callback processing
         this.router.navigate([targetRoute]);
         // Add resulting new user to database
-        this.loginService.getUserRole(user).subscribe(
-          (data) => {
-            this.role = data.role;
-          },
-          (error: any) => {
+        this.loginService.checkUserExists(user).subscribe((bool) => {
+          if (bool.exists) {
+            this.loginService.getUserRole(user).subscribe((data) => {
+              this.role = data.role;
+            });
+          } else {
+            user.role = 'BU';
+            user.restaurant_id = '';
             this.loginService.addNewUser(user);
             this.role = 'BU';
           }
-        );
+        });
       });
     }
   }
