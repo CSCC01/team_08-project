@@ -2,7 +2,7 @@ from django.forms import model_to_dict
 from djongo import models
 from bson import ObjectId
 from restaurant.cuisine_dict import load_dict
-
+from cloud_storage import cloud_controller
 
 # Model for the Food Items on the Menu
 class Food(models.Model):
@@ -203,6 +203,20 @@ class Restaurant(models.Model):
         restaurant.clean()
         restaurant.save()
         return restaurant
+
+    @classmethod
+    def update_logo(cls, img, _id):
+        """
+        Upload image to google cloud and change restaurant logo to that link
+        :param img:
+        :param _id:
+        :return:
+        """
+        restaurant = cls.get(_id=_id)
+        url = cloud_controller.upload(img, cloud_controller.TEST_BUCKET)
+        restaurant.logo_url = url
+        restaurant.save()
+        return url
 
 
 

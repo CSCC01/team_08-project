@@ -3,55 +3,55 @@ from restaurant.models import Food, ManualTag, Restaurant
 from django.forms.models import model_to_dict
 from jsonschema import validate
 import json
+from request_form import upload_form
 
-#jsonschema validation schemes
+# jsonschema validation schemes
 food_schema = {
-    "properties" : {
+    "properties": {
         "_id": {"type": "string"},
-        "name":{"type":"string"},
-        "restaurant_id":{"type":"string"},
-        "description":{"type":"string"},
-        "picture":{"type":"string"},
-        "price":{"type":"string"},
-        "tags":{"type":"array",
-            "items":{"type": "string"}
-        },
-        "specials":{"type":"string"},
+        "name": {"type": "string"},
+        "restaurant_id": {"type": "string"},
+        "description": {"type": "string"},
+        "picture": {"type": "string"},
+        "price": {"type": "string"},
+        "tags": {"type": "array",
+                 "items": {"type": "string"}
+                 },
+        "specials": {"type": "string"},
     }
 }
 
 tag_schema = {
-    "properties" : {
+    "properties": {
         "_id": {"type": "string"},
         "value": {"type": "string"},
         "category": {"type": "string"},
         "foods": {"type": "array",
-            "items":{"type":"string"}
-        }
+                  "items": {"type": "string"}
+                  }
     }
 }
 
 restaurant_schema = {
-    "properties" : {
+    "properties": {
         "_id": {"type": "string"},
-        "name":{"type":"string"},
-        "address":{"type":"string"},
-        "phone":{"type":"number"},
-        "email":{"type":"string"},
-        "city":{"type":"string"},
-        "cuisine":{"type":"string"},
-        "pricepoint":{"type":"string"},
-        "twitter":{"type":"string"},
-        "instagram":{"type":"string"},
-        "bio":{"type":"string"},
-        "GEO_location":{"type":"string"},
-        "exernal_delivery_link":{"type":"string"},
-        "cover_photo_url":{"type":"string"},
-        "logo_url":{"type":"string"},
-        "rating":{"type":"string"},
+        "name": {"type": "string"},
+        "address": {"type": "string"},
+        "phone": {"type": "number"},
+        "email": {"type": "string"},
+        "city": {"type": "string"},
+        "cuisine": {"type": "string"},
+        "pricepoint": {"type": "string"},
+        "twitter": {"type": "string"},
+        "instagram": {"type": "string"},
+        "bio": {"type": "string"},
+        "GEO_location": {"type": "string"},
+        "exernal_delivery_link": {"type": "string"},
+        "cover_photo_url": {"type": "string"},
+        "logo_url": {"type": "string"},
+        "rating": {"type": "string"},
     }
 }
-
 
 
 def insert_tag_page(request):
@@ -135,3 +135,11 @@ def edit_restaurant_page(request):
     restaurant.clean()
     restaurant.save()
     return HttpResponse(status=200)
+
+
+def update_logo(request):
+    form = upload_form.ImageIdForm(request.POST, request.FILES)
+    if form.is_valid():
+        Restaurant.update_logo(request.FILES['image'], request.POST['_id'])
+        return HttpResponse('SUCCESS')
+    return HttpResponse('FAILURE')
