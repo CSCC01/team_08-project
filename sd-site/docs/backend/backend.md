@@ -200,4 +200,38 @@ Specific apps, test suites, or even individual test cases can be run using the f
 |  test_insert_restaurant      | restaurant | RestaurantTestCases | Given restaurant data, restaurant document is inserted into database representing said data                                                                                               | New restaurants cannot be added to the database                                                          |    High   |     High    |   High   |
 |  test_edit_restaurant        | restaurant | RestaurantTestCases | Given new restaurant data, restaurant document is updated to represent new data                                                                                                           | Restaurant data becomes static and cannot be changed by restaurant owner                                 |   Medium  |    Medium   |  Medium  |
 
+## API and Microservices
 
+### Cloud-storage
+
+Available constants 
+
+| Constant          | Description                     |
+| :---------------: | :-----------------------------: |
+| TEST_BUCKET       | Path to testing bucket          |
+| PRODUCTION_BUCKET | Path to deploy/production bucket|
+
+#### Functions
+
+#### `upload(file, bucket_path)`
+Upload file (binary data) into bucket path of our google cloud and return link to uploaded file
+
+#### `delete(file_path)`
+Check if pointed file from the file_path is a default object and if not, delete file from its bucket
+
+#### Example
+
+```python
+from cloud_storage import cloud_controller
+
+def test(file):
+    """
+    file is binary data, django forms can do this for you
+    or you can use pillows
+    """
+    # upload file to test bucket
+    path = cloud_controller.upload(file, cloud_controller.TEST_BUCKET)
+    
+    # delete file
+    cloud_controller.delete(path)
+```
