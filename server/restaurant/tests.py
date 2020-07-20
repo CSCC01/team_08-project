@@ -50,6 +50,7 @@ class TagClearCases(TestCase):
 
 class AddTagCase(TestCase):
     def setUp(self):
+        """Load food, tag documents and json data for food"""
         self.food = Food.objects.create(name="foodA", restaurant_id='mock',
                                         description="descripA", picture="picA",
                                         price=10.99)
@@ -121,6 +122,7 @@ class AddTagCase(TestCase):
 
 class AutoTag(TestCase):
     def setUp(self):
+        """Load food document"""
         self.food = Food.objects.create(name="foodA", restaurant_id='mock',
                                         description="chicken", picture="picA",
                                         price='10.99')
@@ -139,6 +141,7 @@ class AutoTag(TestCase):
 class FoodTestCases(TestCase):
 
     def setUp(self):
+        """ Load food document"""
         self.foodA = Food.objects.create(name="foodA", restaurant_id="restA", description="descripA", picture="picA",
                                          price='10.99')
         self.foodB = Food.objects.create(name="foodB", restaurant_id="restB", description="descripB", picture="picB",
@@ -158,6 +161,7 @@ class FoodTestCases(TestCase):
 class RestaurantTestCase(TestCase):
 
     def setUp(self):
+        """Load json data for restaurants"""
         self.maxDiff = None
         self.expected = {
             '_id': '111111111111111111111111',

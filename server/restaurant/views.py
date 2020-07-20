@@ -55,6 +55,7 @@ restaurant_schema = {
 
 
 def insert_tag_page(request):
+    """Insert tag to database"""
     validate(instance=request.body, schema=tag_schema)
     body = json.loads(request.body)
     tag = ManualTag.add_tag(body['food_name'], body['restaurant_id'], body['category'], body['value'])
@@ -62,6 +63,7 @@ def insert_tag_page(request):
 
 
 def clear_tags_page(request):
+    """Clear tags/food relationship"""
     validate(instance=request.body, schema=tag_schema)
     body = json.loads(request.body)
     ManualTag.clear_food_tags(body['food_name'], body['restaurant_id'])
@@ -69,15 +71,18 @@ def clear_tags_page(request):
 
 
 def get_dish_by_restaurant_page(request):
+    """Retrieve all dishes from a restaurant"""
     rest_id = request.GET.get('restaurant_id')
     return JsonResponse(Food.get_by_restaurant(rest_id))
 
 
 def all_dishes_page(request):
+    """Retrieve all dishes from the database"""
     return JsonResponse(Food.get_all())
 
 
 def insert_dish_page(request):
+    """Insert dish into database"""
     validate(instance=request.body, schema=food_schema)
     body = json.loads(request.body)
     food = Food.add_dish(body)
@@ -86,7 +91,7 @@ def insert_dish_page(request):
 
 
 def auto_tag_page(request):
-
+    """Automatically generate tags for food"""
     validate(instance=request.body, schema=food_schema)
     body = json.loads(request.body)
     tags = [model_to_dict(tag) for tag in ManualTag.auto_tag_food(body['_id'])]
@@ -94,7 +99,7 @@ def auto_tag_page(request):
 
 
 def get_restaurant_page(request):
-
+    """retrieve restaurant by id"""
     _id = request.GET.get('_id')
 
     restaurant = Restaurant.get(_id)
@@ -105,10 +110,12 @@ def get_restaurant_page(request):
 
 
 def get_all_restaurants_page(request):
+    """Retrieve all restaurants"""
     return JsonResponse(Restaurant.get_all())
 
 
 def insert_restaurant_page(request):
+    """Insert new restaurant into database"""
     validate(instance=request.body, schema=restaurant_schema)
     restaurant = Restaurant.insert(json.loads(request.body))
     restaurant._id = str(restaurant._id)
@@ -116,6 +123,7 @@ def insert_restaurant_page(request):
 
 
 def edit_restaurant_page(request):
+    """Update restaurant data"""
     validate(instance=request.body, schema=restaurant_schema)
     body = json.loads(request.body)
     restaurant = Restaurant.get(body["restaurant_id"])
