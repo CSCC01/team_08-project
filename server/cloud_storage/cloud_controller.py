@@ -10,12 +10,12 @@ PRODUCTION_BUCKET = 'production-scdining'
 API = 'https://storage.googleapis.com/'
 
 
-def upload(file, bucket_path):
+def upload(file, bucket_path, content_type=None):
     """Uploads a file to the bucket path."""
     bucket = client.bucket(bucket_path)
     name = generate_name()
     blob = bucket.blob(name)
-    blob.upload_from_file(file)
+    blob.upload_from_file(file, content_type=content_type)
     return API + bucket_path + '/' + name
 
 

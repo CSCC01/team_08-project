@@ -138,6 +138,7 @@ def edit_restaurant_page(request):
 
 
 def update_logo(request):
+    """Upload file to cloud and set logo url to that file's url"""
     form = upload_form.ImageIdForm(request.POST, request.FILES)
     if form.is_valid():
         Restaurant.update_logo(request.FILES['image'], request.POST['_id'])
