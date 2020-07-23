@@ -213,7 +213,7 @@ class Restaurant(models.Model):
         :return:
         """
         restaurant = cls.get(_id=_id)
-        url = cloud_controller.upload(img, cloud_controller.TEST_BUCKET, content_type='image/png')
+        url = cloud_controller.upload(img, cloud_controller.TEST_BUCKET, content_type=cloud_controller.IMAGE)
         restaurant.logo_url = url
         restaurant.save()
         return url
