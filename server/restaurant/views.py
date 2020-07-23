@@ -143,8 +143,7 @@ def edit_dish_page(request):
     dish = Food.objects.get(_id=body["_id"])
     del body['_id']
     for field in body:
-        if body[field] != "":
-            setattr(dish, field, body[field])
+        setattr(dish, field, body[field])
     dish.clean_fields()
     dish.clean()
     dish.save()

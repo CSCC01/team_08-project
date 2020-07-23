@@ -177,11 +177,11 @@ class FoodTestCases(TestCase):
         id = Food.objects.get(name="foodB")._id
         request = self.factory.post('/api/restaurant/dish/edit/',
                                     {"_id": str(id), "name": "foodB2", "description": "nutter butter",
-                                     "picture": "", "price": "10.99", "specials": ""}, content_type='application/json')
+                                     "price": "10.99"}, content_type='application/json')
         view_response.edit_dish_page(request)
         actual = Food.objects.get(_id=id)
-        expected = Food(_id=id,name="foodB2", restaurant_id="restB", description="nutter butter", picture="picB",
-                              price='10.99')
+        expected = Food(_id=id, name="foodB2", restaurant_id="restB", description="nutter butter", picture="picB",
+                        price='10.99')
         self.assertEqual(actual, expected)
 
 
