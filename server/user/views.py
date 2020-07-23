@@ -2,9 +2,26 @@ from django.http import HttpResponse, JsonResponse
 from user.models import SDUser
 from restaurant.models import Restaurant
 import json
+from jsonschema import validate
 
 
+#jsonschema validation scheme
+signup_schema = {
+    "properties":{
+        "nickname":{"type":"string"},
+        "name":{"type": "string"},
+        "picture":{"type":"string"},
+        "updated_at":{"type":"string"},
+        "email":{"type":"string"},
+        "email_verified":{"type":"boolean"},
+        "role":{"type":"string"},
+        "restaurant_id":{"type":"string"}
+    }
+}
+
+# Page to insert a user into the db provided all the user fields
 def signup_page(request):
+    validate(instance=request.body, schema=signup_schema)
     body = json.loads(request.body)
     user = SDUser.signup(nickname=body['nickname'], name=body['name'], picture=body['picture'],
                          updated=body['updated_at'], email=body['email'],
@@ -12,7 +29,10 @@ def signup_page(request):
     return HttpResponse(status=200)
 
 
+# Page to change the role of a user provided the user email and new role (If upgraded to RO must provide fields to make
+# new restaurant instance
 def reassign_page(request):
+    validate(instance=request.body, schema=signup_schema)
     body = json.loads(request.body)
     user = SDUser.objects.get(pk=body['user_email'])
     user.reassign_role(body['role'])
@@ -29,6 +49,7 @@ def reassign_page(request):
     return HttpResponse(status=200)
 
 
+# Page that returns all the user_data provided the user email
 def data_page(request):
     req_email = request.GET.get('email')
     user = SDUser.objects.get(pk=req_email)
@@ -37,6 +58,7 @@ def data_page(request):
          'email': user.email, 'email_verified': user.email_verified, 'role': user.role})
 
 
+# Page that checks if an email is already registered in the database provided an user email
 def exists_page(request):
     req_email = request.GET.get('email')
     return JsonResponse({'exists': SDUser.objects.filter(email=req_email).exists()})

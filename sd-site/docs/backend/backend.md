@@ -32,7 +32,6 @@ This section will go over all the backends components of the Scarborough Dining 
 ###### Food Item
 
 ```python
-class Food(models.Model):
     _id = models.ObjectIdField()
     name = models.CharField(max_length=50, default='')
     restaurant_id = models.CharField(max_length=24, editable=False)
@@ -46,14 +45,8 @@ class Food(models.Model):
 ###### Manual Tag for Food Item
 
 ```python
-class ManualTag(models.Model):
     _id = models.ObjectIdField()
-    category = models.CharField(max_length=20, choices=[  
-        ("promo", "promo"),
-        ("allergy", "allergy"),
-        ('cuisine', 'cuisine'),
-        ('dish', 'dish')
-    ])
+    category = models.CharField(max_length=4, choices=Categories.choices())
     value = models.CharField(max_length=50)
     foods = models.ListField(default=[], blank=True)
 ```
@@ -61,43 +54,58 @@ class ManualTag(models.Model):
 ###### Restaurant
 
 ```python
-_id = models.ObjectIdField()
+    _id = models.ObjectIdField()
     name = models.CharField(max_length=30)
     address = models.CharField(max_length=60)
     phone = models.BigIntegerField(null=True)
     email = models.EmailField(unique=True)
     city = models.CharField(max_length=40)
     cuisine = models.CharField(max_length=30)
-    pricepoint = models.CharField(max_length=30)  
-    twitter = models.CharField(max_length=200)
-    instagram = models.CharField(max_length=200)
+    pricepoint = models.CharField(max_length=5, choices=Prices.choices()) 
+    twitter = models.CharField(max_length=200, blank=True)
+    instagram = models.CharField(max_length=200, blank=True)
     bio = models.TextField(null=True)
     GEO_location = models.CharField(max_length=200)
     external_delivery_link = models.CharField(max_length=200)
-    cover_photo_url = models.CharField(max_length=200, default='https://www.nautilusplus.com/content/uploads/2016/08/Pexel_junk-food.jpeg')
-    logo_url = models.CharField(max_length=200, default='https://d1csarkz8obe9u.cloudfront.net/posterpreviews/diner-restaurant-logo-design-template-0899ae0c7e72cded1c0abc4fe2d76ae4_screen.jpg?ts=1561476509')
+    cover_photo_url = models.CharField(max_length=200,
+                                       default='https://www.nautilusplus.com/content/uploads/2016/08/Pexel_junk-food.jpeg')
+    logo_url = models.CharField(max_length=200,
+                                default='https://d1csarkz8obe9u.cloudfront.net/posterpreviews/diner-restaurant-logo-design-template-0899ae0c7e72cded1c0abc4fe2d76ae4_screen.jpg?ts=1561476509')
     rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.00)
 ```
 
+###### Prices (Enum)
+
+    Low = "$"
+    Medium = "$$"
+    High = "$$$"
+
+###### Categories (Enum)
+
+    PR = "Promotion"
+    FR = "Food Restriction"
+    CU = "Cuisine"
+    DI = "Dish"
+
 ## URLs
 
-|               Address               | Required Fields (Field Type)                                                                                                                                    | Optional Fields                                | Type | Functionality                                                |
-| :---------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------- | :--: | ------------------------------------------------------------ |
-|            /user/signup/            | nickname, name, picture, updated_at, email, email_verified                                                                                                      | role **(_Roles_ Name)**, restaurant_id         | POST | Registers SDUser to DB                                       |
-|           /user/role_reassign/      | user\_email, role **(_Roles_ Name)**                                                                                                                            |                                                | POST | Updates Role of SDUser (Not RO)                              |
-|           /user/role_reassign/      | user\_email, role **(_Roles_ Name)**, (All Fields Needed for /restaurant/insert/)                                                                               |                                                | POST | Updates Role of SDUSer to RO and adds his restaurant page    |
-|             /user/data/             | email                                                                                                                                                           |                                                | GET  | Returns All Fields of the SDUser                             |
-|            /user/exists/            | email                                                                                                                                                           |                                                | GET  | Returns if the SDUser exists in the DB                       |
-|       /restaurant/tag/insert/       | food_name, restaurant_id, category, value                                                                                                                       |                                                | POST | Adds Tag to a Food Item                                      |
-|       /restaurant/tag/clear/        | food_name, restaurant_id                                                                                                                                        |                                                | POST | Clears All Tags on a Food Item                               |
-|        /restaurant/tag/auto/        | \_id                                                                                                                                                            |                                                | POST | Automatically tags food based on description                 |
-|      /restaurant/dish/insert/       | name, restaurant_id, description, picture, price, specials                                                                                                      |                                                | POST | Adds a dish to DB                                            |
-|      /restaurant/dish/get_all/      |                                                                                                                                                                 |                                                | GET  | retrieves all dishes                                         |
-| /restaurant/dish/get_by_restaurant/ | restaurant_id                                                                                                                                                   |                                                | GET  | retrieves all dishes from restaurant                         |
-|          /restaurant/get/           | \_id                                                                                                                                                            |                                                | GET  | Retrieves Restaurant data                                    |
-|        /restaurant/get_all/         |                                                                                                                                                                 |                                                | GET  | Retrieves all Restaurants                                    |
-|         /restaurant/insert/         | name, address, phone, email, city, cuisine, pricepoint, instagram, twitter, GEO_location, external_delivery_link, bio, cover_photo_url, logo_url, rating        |
-|          /restaurant/edit/          | restaurant_id                                                                                                                                                   | (All Fields Needed for /restaurant/insert/)    | POST | Updates the fields of the given Restaurant with the new data |
+|               Address               | Required Fields (Field Type)                                                                                                                                                       | Optional Fields                                | Type | Functionality                                                |
+| :---------------------------------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------- | :--: | ------------------------------------------------------------ |
+|            /user/signup/            | nickname, name, picture, updated_at, email, email_verified                                                                                                                         | role **(_Roles_ Name)**, restaurant_id         | POST | Registers SDUser to DB                                       |
+|           /user/role_reassign/      | user\_email, role **(_Roles_ Name)**                                                                                                                                               |                                                | POST | Updates Role of SDUser (Not RO)                              |
+|           /user/role_reassign/      | user\_email, role **(_Roles_ Name)**, (All Fields Needed for /restaurant/insert/)                                                                                                  |                                                | POST | Updates Role of SDUSer to RO and adds his restaurant page    |
+|             /user/data/             | email                                                                                                                                                                              |                                                | GET  | Returns All Fields of the SDUser                             |
+|            /user/exists/            | email                                                                                                                                                                              |                                                | GET  | Returns if the SDUser exists in the DB                       |
+|       /restaurant/tag/insert/       | food\_name, restaurant\_id, category role **(_Categories_ Name)**, value                                                                                                             |                                                | POST | Adds Tag to a Food Item                                      |
+|       /restaurant/tag/clear/        | food_name, restaurant_id                                                                                                                                                           |                                                | POST | Clears All Tags on a Food Item                               |
+|        /restaurant/tag/auto/        | \_id                                                                                                                                                                               |                                                | POST | Automatically tags food based on description                 |
+|      /restaurant/dish/insert/       | name, restaurant_id, description, picture, price, specials                                                                                                                         |                                                | POST | Adds a dish to DB                                            |
+|      /restaurant/dish/get_all/      |                                                                                                                                                                                    |                                                | GET  | retrieves all dishes                                         |
+| /restaurant/dish/get_by_restaurant/ | restaurant_id                                                                                                                                                                      |                                                | GET  | retrieves all dishes from restaurant                         |
+|          /restaurant/get/           | \_id                                                                                                                                                                               |                                                | GET  | Retrieves Restaurant data                                    |
+|        /restaurant/get_all/         |                                                                                                                                                                                    |                                                | GET  | Retrieves all Restaurants                                    |
+|         /restaurant/insert/         | name, address, phone, email, city, cuisine, pricepoint **(_Price_ Name)**, instagram, twitter, GEO_location, external_delivery_link, bio, cover_photo_url, logo_url, rating        |                                                | POST | Registers a Restaurant to DB                                 |
+|          /restaurant/edit/          | restaurant_id                                                                                                                                                                      | (All Fields Needed for /restaurant/insert/)    | POST | Updates the fields of the given Restaurant with the new data |
 
 All requests should be sent in a JSON format. All optional parameters can be left blank Ex: {"Role" : ""}
 
@@ -152,3 +160,51 @@ All requests should be sent in a JSON format. All optional parameters can be lef
     #randomly generates a phone number accounting for faker's default format
     def valid_phone_number(faker)
 ```
+
+## Testing
+
+Documented test cases can be found in server/{app}/test**.py where app is the corresponding app to test case.  
+
+Specific apps, test suites, or even individual test cases can be run using the format: "python manage.py test App.Test_Suite.Test_Case" depending on how deep you want to go
+
+#### Testing table legend
+| Column                      | Column Description                                                                                                                                                   |
+| :-------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+| Test Case Name              | Name of Test Case                                                                                                                                                    |
+| App                         | Django app test case is testing                                                                                                                                      |
+| Test Suite                  | Test Suite for test case                                                                                                                                             |
+| Evaluation Criteria         | Criteria function must pass to pass test case                                                                                                                        |                               
+| (Possible Risk) Description | A description of possible risks associated with test case failure                                                                                                    |
+| Magnitude                   | Measurement of how dangerous possible risks associated with test case failure                                                                                        |
+| Probability                 | Measurement of how likely possible risks may occur associated with test case failure                                                                                 |
+| Priority                    | Priority of importance for function to pass test case, priority is influenced by probability, magnitude and the function's priority (found in backlog) it is testing |             
+
+#### Master Testing Table
+
+|  Test Case Name              |     App    | Test Suite          |  Evaluation Criteria                                                                                                                                                                      | (Possible Risks) Description                                                                             | Magnitude | Probability | Priority |
+| :--------------------------: | :--------: | :----------------:  | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:  | :------------------------------------------------------------------------------------------------------: | :-------: | :--------:  | :-----:  |                                 
+|  test_signup                 | user       | SDUserTestCases     | Checks to see if The User has been inserted into the database                                                                                                                             | No new Users can be made                                                                                 |    High   |     High    |   High   |   
+|  test_signup_invalid_role    | user       | SDUserTestCases     | Checks to see the proper Validation Error is thrown                                                                                                                                       | Anything can be used as a role                                                                           |    High   |     Low     |  Medium  |   
+|  test_reassign_RO_to_BU      | user       | SDUserTestCases     | Checks if the role change to BU is reflected in the database                                                                                                                              | Users won't be able to be 'demoted'                                                                      |    Low    |     Low     |   Low    |     
+|  test_reassign_BU_to_RO      | user       | SDUserTestCases     | Checks if the role change to RO and new restaurant id is reflected in the database                                                                                                        | New ROs won't be able to be created                                                                      |    High   |     Low     |  Medium  |     
+|  test_data                   | user       | SDUserTestCases     | Checks the user data returned is the matching the queried user                                                                                                                            | Display incorrect data for users                                                                         |    High   |     High    |   High   |     
+|  test_exists_true            | user       | SDUserTestCases     | Checks if an existing user exists                                                                                                                                                         | Users will be unable to upgrade                                                                          |    High   |     High    |   High   |     
+|  test_exists_false           | user       | SDUserTestCases     | Checks if a non-existing user exists                                                                                                                                                      | Unable to sign up users                                                                                  |    High   |     High    |   High   |   
+|  test_add_randomizer         | utils      | UtilityTestCases    | Adds a new ["key": randomization_function()] pair into the seeder dictionary                                                                                                              | Incorrectly add new randomization functions to seeders                                                   |    Low    |     Low     |   Low    |     
+|  test_gen_rand_dict          | utils      | UtilityTestCases    | Generates random data based on given seeding dictionary                                                                                                                                   | Inability to randomly generate data for seeding                                                          |    Low    |     Low     |   Low    |     
+|  test_clean_dict             | utils      | UtilityTestCases    | Cleans invalid randomization functions (Non JSON-Encodable outputs) from a given seeding dictionary                                                                                       | Potentially broken seeding scripts with functions that produce non JSON-encodable outputs                |    Low    |     Low     |   Low    |     
+|  test_clear_tags             | restaurant | RestaurantTestCases | Tag ids are correctly purged from a Food document                                                                                                                                         | Tags remain in database which may result in referencing non-existent tag documents                       |   Medium  |    Medium   |  Medium  |
+|  test_clear_foods            | restaurant | RestaurantTestCases | Food ids are correctly purged from Tag document                                                                                                                                           | Foods remain tagged which may result in search engine displaying non-existent/incorrect documents        |   Medium  |    Medium   |  Medium  |
+|  test_food_ids               | restaurant | RestaurantTestCases | Tag ids are correctly updated from tagging an existing Tag document                                                                                                                       | Food will not be associated with subsequent tag which may cause incorrect search engine results          |   Medium  |     Low     |  Medium  |
+|  test_tag_ids                | restaurant | RestaurantTestCases | Tag ids are correctly updated from tagging an existing Tag document                                                                                                                       | Restaurant owners will be unable to tag their dishes resulting in search engines skipping their dishes   |   Medium  |     High    |  Medium  |
+|  test_tag_creation           | restaurant | RestaurantTestCases | Tag document is correctly generated upon tagging with a "new" tag word                                                                                                                    | New Tag documents will not be generated, resulting in limited search engine results                      |   Medium  |     Low     |  Medium  |
+|  test_foods_already_tagged   | restaurant | RestaurantTestCases | Food ids are not duplicated upon tagging an already tagged (Food, Tag) couple                                                                                                             | Duplicate food ids take up extra space in the database and slow down querying                            |    Low    |     Low     |   Low    |
+|  test_tags_already_tagged    | restaurant | RestaurantTestCases | Tag ids are not duplicated upon tagging an already tagged (Food, Tag) couple                                                                                                              | Duplicate tag ids take up extra space in the database and slow down querying                             |    Low    |     Low     |   Low    |
+|  test_auto                   | restaurant | RestaurantTestCases | Correct Tag document correctly automatically generated based on Food's description                                                                                                        | Search engine results become slowly reliant on user input and cannot provide robust results to the user  |   Medium  |     High    |  Medium  |
+|  test_get_all_foods          | restaurant | RestaurantTestCases | All food documents within the database are correctly retrieved                                                                                                                            | Frontend will be unable feature dishes on the homepage                                                   |   Medium  |     High    |  Medium  |                               
+|  test_find_restaurant        | restaurant | RestaurantTestCases | Correct restaurant document is retrieved given primary key 'id'                                                                                                                           | Frontend will be unable to documents associated with that specific restaurant such as dishes and users   |    High   |     High    |   High   |
+|  test_find_all_restaurant    | restaurant | RestaurantTestCases | All restaurant documents are retrieved from database                                                                                                                                      | Frontend will is unable to display restaurant data                                                       |    High   |     High    |   High   |
+|  test_insert_restaurant      | restaurant | RestaurantTestCases | Given restaurant data, restaurant document is inserted into database representing said data                                                                                               | New restaurants cannot be added to the database                                                          |    High   |     High    |   High   |
+|  test_edit_restaurant        | restaurant | RestaurantTestCases | Given new restaurant data, restaurant document is updated to represent new data                                                                                                           | Restaurant data becomes static and cannot be changed by restaurant owner                                 |   Medium  |    Medium   |  Medium  |
+
+
