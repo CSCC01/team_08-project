@@ -31,6 +31,7 @@ const routes: Routes = [
   {
     path: 'restaurant-setup',
     component: RestaurantSetupComponent,
+    canActivate: [ROSetupGuard],
   },
   {
     path: 'owner-setup',
