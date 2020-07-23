@@ -8,6 +8,7 @@ client = storage.Client.from_service_account_json('scdining.json')
 TEST_BUCKET = 'test-storage-nog'
 PRODUCTION_BUCKET = 'production-scdining'
 API = 'https://storage.googleapis.com/'
+IMAGE = 'image/png'
 
 
 def upload(file, bucket_path, content_type=None):
@@ -35,7 +36,7 @@ def delete(file_path):
     if 'default-assets' in file_path:
         return
     elif API == file_path[:len(API)]:
-        file_path.replace(API, '')
+        file_path = file_path.replace(API, '')
         bucket_path = file_path[:file_path.find('/')]
         bucket = client.bucket(bucket_path)
         bucket.delete_blob(file_path[file_path.find('/') + 1:])
