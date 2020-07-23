@@ -76,7 +76,7 @@ class ManualTag(models.Model):
 
     # Clears all the tags off a food item
     @classmethod
-    def clear_food_tags(cls, food_name, restaurant):  # To be changed when restaurant is implemented
+    def clear_food_tags(cls, food_name, restaurant):
         """
         Destroy all food -tag relationships for food
         :param food_name: name of food
@@ -84,7 +84,7 @@ class ManualTag(models.Model):
         :return: None
         """
         food = Food.objects.get(name=food_name,
-                                restaurant_id=restaurant)  # To be changed when restaurant is implemented
+                                restaurant_id=restaurant)
         for tag_id in food.tags:
             tag = ManualTag.objects.get(_id=tag_id)
             for food_id in tag.foods:
