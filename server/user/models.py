@@ -12,6 +12,7 @@ class SDUser(models.Model):
     email_verified = models.BooleanField(default=False)
     role = models.CharField(max_length=5, choices=Roles.choices(), default="BU")
     restaurant_id = models.CharField(max_length=24, blank=True, default=None)
+
     # Constructs & Saves User to DB
     @classmethod
     def signup(cls, nickname, name, picture, updated, email, verified, role, restaurant_id):
