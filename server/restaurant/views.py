@@ -89,6 +89,15 @@ def insert_dish_page(request):
     return JsonResponse(model_to_dict(food))
 
 
+def delete_dish_page(request):
+    """Insert dish into database"""
+    validate(instance=request.body, schema=tag_schema)
+    body = json.loads(request.body)
+    ManualTag.clear_food_tags(body["food_name"], body["restaurant_id"])
+    Food.objects.filter(name=body["food_name"], restaurant_id=body["restaurant_id"]).delete()
+    return HttpResponse(status=200)
+
+
 def auto_tag_page(request):
     """Automatically generate tags for food"""
     validate(instance=request.body, schema=food_schema)

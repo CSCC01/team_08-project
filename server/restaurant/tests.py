@@ -36,8 +36,6 @@ class TagClearCases(TestCase):
         req = self.factory.post('/api/restaurant/tag/clear/', {'food_name': 'foodA',
                                                                'restaurant_id': str(self.restaurant._id)},
                                 content_type='application/json')
-        request = self.factory.post('/api/user/role_reassign/', {"user_email": "B@mail.com", "role": "BU"},
-                                    content_type='application/json')
 
         view_response.clear_tags_page(req)
         self.food.refresh_from_db()
@@ -183,6 +181,16 @@ class FoodTestCases(TestCase):
         expected = Food(_id=id, name="foodB2", restaurant_id="restB", description="nutter butter", picture="picB",
                         price='10.99')
         self.assertEqual(actual, expected)
+
+
+    def test_delete_food(self):
+        """Test if the food is deleted"""
+        req = self.factory.post('api/restaurant/dish/delete', {'food_name': "foodA","restaurant_id": "restA"},
+                                content_type="application/json")
+        view_response.delete_dish_page(req)
+        actual = Food.objects.filter(name="foodA").first()
+        expected = None
+        self.assertEqual(expected, actual)
 
 
 class RestaurantTestCase(TestCase):
