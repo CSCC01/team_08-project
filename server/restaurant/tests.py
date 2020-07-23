@@ -162,6 +162,14 @@ class FoodTestCases(TestCase):
         expected['Dishes'][1]['_id'] = str(expected['Dishes'][1]['_id'])
         self.assertDictEqual(expected, actual)
 
+    def test_delete_food(self):
+        """Test if the food is deleted"""
+        req = self.factory.post('api/restaurant/dish/delete', {'food_name': "foodA","restaurant_id": "restA"},
+                                content_type="application/json")
+        view_response.delete_dish_page(req)
+        actual = Food.objects.filter(name="foodA").first()
+        expected = None
+        self.assertEqual(expected, actual)
 
 class RestaurantTestCase(TestCase):
 
