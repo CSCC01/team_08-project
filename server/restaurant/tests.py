@@ -1,7 +1,6 @@
 from django.test import TestCase, RequestFactory
 from restaurant.models import Food, ManualTag
 from django.forms.models import model_to_dict
-from django.test import Client
 from restaurant.models import Restaurant
 import restaurant.views as view_response
 import json
@@ -10,9 +9,7 @@ import json
 class TagClearCases(TestCase):
 
     def setUp(self):
-        """
-        Create restaurant food, tag and food object for testing
-        """
+        """ Create restaurant food, tag and food object for testing """
         self.restaurant = Restaurant.objects.create(name="RestA", address="123 Road", phone=None, email="RA@mail.com",
                                                     city="Toronto",
                                                     cuisine="Chinese", pricepoint="High", twitter="?", instagram="?",
@@ -32,7 +29,7 @@ class TagClearCases(TestCase):
         self.factory = RequestFactory()
 
     def test_clear_tags(self):
-        """Test if tag ids are cleared from food document"""
+        """ Test if tag ids are cleared from food document """
         req = self.factory.post('/api/restaurant/tag/clear/', {'food_name': 'foodA',
                                                                'restaurant_id': str(self.restaurant._id)},
                                 content_type='application/json')
@@ -41,7 +38,7 @@ class TagClearCases(TestCase):
         self.assertListEqual(self.food.tags, [])
 
     def test_clear_foods(self):
-        """ Test if food ids are cleared from tag document"""
+        """ Test if food ids are cleared from tag document """
         req = self.factory.post('/api/restaurant/tag/clear/', {'food_name': 'foodA',
                                                                'restaurant_id': str(self.restaurant._id)},
                                 content_type='application/json')
@@ -52,7 +49,7 @@ class TagClearCases(TestCase):
 
 class AddTagCase(TestCase):
     def setUp(self):
-        """Load food, tag documents and json data for food"""
+        """ Load food, tag documents and json data for food """
         self.food = Food.objects.create(name="foodA", restaurant_id='mock',
                                         description="descripA", picture="picA",
                                         price=10.99)
@@ -73,28 +70,28 @@ class AddTagCase(TestCase):
         self.factory = RequestFactory()
 
     def test_food_ids(self):
-        """ Test if a tag's food list has been updated given tag exists"""
+        """ Test if a tag's food list has been updated given tag exists """
         req = self.factory.post('/api/restaurant/tag/insert', self.data1, content_type='application/json')
         view_response.insert_tag_page(req)
         self.tag.refresh_from_db()
         self.assertListEqual([self.food._id], self.tag.foods)
 
     def test_tag_ids(self):
-        """ Test food's tag list has been updated given tag exists"""
+        """ Test food's tag list has been updated given tag exists """
         req = self.factory.post('/api/restaurant/tag/insert', self.data1, content_type='application/json')
         view_response.insert_tag_page(req)
         self.food.refresh_from_db()
         self.assertListEqual([self.tag._id], self.food.tags)
 
     def test_tag_creation(self):
-        """ Test if new tag document was created upon tagging"""
+        """ Test if new tag document was created upon tagging """
         req = self.factory.post('/api/restaurant/tag/insert', self.data2, content_type='application/json')
         view_response.insert_tag_page(req)
         self.tag = ManualTag.objects.get(value='30% off', category='PR')
         self.assertListEqual([self.food._id], self.tag.foods)
 
     def test_foods_already_tagged(self):
-        """ Test tag's foods list if already tagged"""
+        """ Test tag's foods list if already tagged """
         # tag food/tags
         self.tag.foods = [self.food._id]
         self.food.tags = [self.tag._id]
@@ -131,7 +128,7 @@ class AutoTag(TestCase):
         self.factory = RequestFactory()
 
     def test_auto(self):
-        """ Test if food description generates correct tags"""
+        """ Test if food description generates correct tags """
         request = self.factory.post('/api/restaurant/tag/auto/', {'_id': str(self.food._id)},
                                     content_type="application/json")
         actual = json.loads(view_response.auto_tag_page(request).content)['tags'][0]
@@ -144,7 +141,7 @@ class AutoTag(TestCase):
 class FoodTestCases(TestCase):
 
     def setUp(self):
-        """ Load food document"""
+        """ Load food document """
         self.foodA = Food.objects.create(name="foodA", restaurant_id="restA", description="descripA", picture="picA",
                                          price='10.99')
         self.foodB = Food.objects.create(name="foodB", restaurant_id="restB", description="descripB", picture="picB",
@@ -152,7 +149,7 @@ class FoodTestCases(TestCase):
         self.factory = RequestFactory()
 
     def test_get_all_foods(self):
-        """Test if all foods from db are retrieved"""
+        """ Test if all foods from db are retrieved """
         req = self.factory.get('api/restaurant/get_all/')
         actual = json.loads(view_response.all_dishes_page(req).content)
         expected = {'Dishes': [model_to_dict(self.foodA), model_to_dict(self.foodB)]}
@@ -161,7 +158,7 @@ class FoodTestCases(TestCase):
         self.assertDictEqual(expected, actual)
 
     def test_get_by_restaurant(self):
-        """Test if all foods from a restaurant are retrieved"""
+        """ Test if all foods from a restaurant are retrieved """
         req = self.factory.get('api/restaurant/dish/get_by_restaurant/', {'restaurant_id': 'restA'},
                                content_type="application/json")
         actual = json.loads(view_response.get_dish_by_restaurant_page(req).content)
@@ -170,7 +167,7 @@ class FoodTestCases(TestCase):
         self.assertDictEqual(expected, actual)
 
     def test_edit_dish(self):
-        """ Test if dish document is properly updated"""
+        """ Test if dish document is properly updated """
         id = Food.objects.get(name="foodB")._id
         request = self.factory.post('/api/restaurant/dish/edit/',
                                     {"_id": str(id), "name": "foodB2", "description": "nutter butter",
@@ -181,10 +178,9 @@ class FoodTestCases(TestCase):
                         price='10.99')
         self.assertEqual(actual, expected)
 
-
     def test_delete_food(self):
-        """Test if the food is deleted"""
-        req = self.factory.post('api/restaurant/dish/delete', {'food_name': "foodA","restaurant_id": "restA"},
+        """ Test if the food is deleted """
+        req = self.factory.post('api/restaurant/dish/delete', {'food_name': "foodA", "restaurant_id": "restA"},
                                 content_type="application/json")
         view_response.delete_dish_page(req)
         actual = Food.objects.filter(name="foodA").first()
@@ -195,7 +191,7 @@ class FoodTestCases(TestCase):
 class RestaurantTestCase(TestCase):
 
     def setUp(self):
-        """Load json data for restaurants"""
+        """ Load json data for restaurants """
         self.maxDiff = None
         self.expected = {
             '_id': '111111111111111111111111',
@@ -259,40 +255,37 @@ class RestaurantTestCase(TestCase):
         self.factory = RequestFactory()
 
     def test_find_restaurant(self):
-        """ Test if correct restaurant is retrieved given id"""
+        """ Test if correct restaurant is retrieved given id """
         request = self.factory.get('/api/restaurant/get/', {'_id': '111111111111111111111111'},
                                    content_type="application/json")
         self.assertDictEqual(self.expected, json.loads(view_response.get_restaurant_page(request).content))
 
     def test_find_all_restaurant(self):
-        """ Test if all restaurant documents are returned"""
+        """ Test if all restaurant documents are returned """
         request = self.factory.get('/api/restaurant/get_all/')
         expected = [self.expected, self.expected2]
         actual = json.loads(view_response.get_all_restaurants_page(request).content)['Restaurants']
         self.assertListEqual(expected, actual)
 
     def test_insert_restaurant(self):
-        """ Test is restaurant is properly inserted into the database"""
+        """ Test is restaurant is properly inserted into the database """
         request = self.factory.post('/api/restaurant/insert/', self.expected3, content_type="application/json")
         actual = json.loads(view_response.insert_restaurant_page(request).content)
         self.assertDictEqual(self.expected3, actual)
 
     def test_edit_restaurant(self):
-        """ Test if restaurant document is properly updated"""
+        """ Test if restaurant document is properly updated """
         id = Restaurant.objects.get(_id="111111111111111111111111")._id
         request = self.factory.post('/api/restaurant/edit/',
                                     {"restaurant_id": "111111111111111111111111", "name": "kfc2",
-                                     "address": "211 Cambodia", "phone": "", "city": "", "email": "", "cuisine": "",
-                                     "pricepoint": "", "twitter": "", "instagram": "", "bio": "", "GEO_location": "",
-                                     "external_delivery_link": "", "cover_photo_url": "", "logo_url": "",
-                                     "rating": "1.00"
+                                     "address": "211 Cambodia", "twitter": "", "instagram": "", "rating": "1.00"
                                      }, content_type='application/json')
         view_response.edit_restaurant_page(request)
         actual = Restaurant.objects.get(_id="111111111111111111111111")
-        expected = Restaurant(_id=id, name='kfc2',
+        expected = Restaurant(_id=id, name='kfc22',
                               address='211 Cambodia', phone=6475040680, city='markham', email='alac@gmail.com',
-                              cuisine='american', pricepoint='High', twitter='https://twitter.com/SupremeDreams_1',
-                              instagram='https://www.instagram.com/rdcworld1/?hl=en',
+                              cuisine='american', pricepoint='High', twitter='',
+                              instagram='',
                               bio='Finger licking good chicken',
                               GEO_location='{\'longitude\': 44.068203, \'latitude\':-114.742043}',
                               external_delivery_link='https://docs.djangoproject.com/en/topics/testing/overview/',
