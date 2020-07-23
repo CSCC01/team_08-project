@@ -36,7 +36,8 @@ class TagClearCases(TestCase):
         req = self.factory.post('/api/restaurant/tag/clear/', {'food_name': 'foodA',
                                                                'restaurant_id': str(self.restaurant._id)},
                                 content_type='application/json')
-        request = self.factory.post('/api/user/role_reassign/', {"user_email": "B@mail.com", "role": "BU"}, content_type='application/json')
+        request = self.factory.post('/api/user/role_reassign/', {"user_email": "B@mail.com", "role": "BU"},
+                                    content_type='application/json')
 
         view_response.clear_tags_page(req)
         self.food.refresh_from_db()
@@ -155,12 +156,33 @@ class FoodTestCases(TestCase):
 
     def test_get_all_foods(self):
         """Test if all foods from db are retrieved"""
-        req = self.factory.get('api/restaurant/get_all')
+        req = self.factory.get('api/restaurant/get_all/')
         actual = json.loads(view_response.all_dishes_page(req).content)
         expected = {'Dishes': [model_to_dict(self.foodA), model_to_dict(self.foodB)]}
         expected['Dishes'][0]['_id'] = str(expected['Dishes'][0]['_id'])
         expected['Dishes'][1]['_id'] = str(expected['Dishes'][1]['_id'])
         self.assertDictEqual(expected, actual)
+
+    def test_get_by_restaurant(self):
+        """Test if all foods from a restaurant are retrieved"""
+        req = self.factory.get('api/restaurant/dish/get_by_restaurant/', {'restaurant_id': 'restA'},
+                               content_type="application/json")
+        actual = json.loads(view_response.get_dish_by_restaurant_page(req).content)
+        expected = {'Dishes': [model_to_dict(self.foodA)]}
+        expected['Dishes'][0]['_id'] = str(expected['Dishes'][0]['_id'])
+        self.assertDictEqual(expected, actual)
+
+    def test_edit_dish(self):
+        """ Test if dish document is properly updated"""
+        id = Food.objects.get(name="foodB")._id
+        request = self.factory.post('/api/restaurant/dish/edit/',
+                                    {"_id": str(id), "name": "foodB2", "description": "nutter butter",
+                                     "picture": "", "price": "10.99", "specials": ""}, content_type='application/json')
+        view_response.edit_dish_page(request)
+        actual = Food.objects.get(_id=id)
+        expected = Food(_id=id,name="foodB2", restaurant_id="restB", description="nutter butter", picture="picB",
+                              price='10.99')
+        self.assertEqual(actual, expected)
 
 
 class RestaurantTestCase(TestCase):

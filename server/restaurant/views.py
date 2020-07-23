@@ -4,54 +4,53 @@ from django.forms.models import model_to_dict
 from jsonschema import validate
 import json
 
-#jsonschema validation schemes
+# jsonschema validation schemes
 food_schema = {
-    "properties" : {
+    "properties": {
         "_id": {"type": "string"},
-        "name":{"type":"string"},
-        "restaurant_id":{"type":"string"},
-        "description":{"type":"string"},
-        "picture":{"type":"string"},
-        "price":{"type":"string"},
-        "tags":{"type":"array",
-            "items":{"type": "string"}
-        },
-        "specials":{"type":"string"},
+        "name": {"type": "string"},
+        "restaurant_id": {"type": "string"},
+        "description": {"type": "string"},
+        "picture": {"type": "string"},
+        "price": {"type": "string"},
+        "tags": {"type": "array",
+                 "items": {"type": "string"}
+                 },
+        "specials": {"type": "string"},
     }
 }
 
 tag_schema = {
-    "properties" : {
+    "properties": {
         "_id": {"type": "string"},
         "value": {"type": "string"},
         "category": {"type": "string"},
         "foods": {"type": "array",
-            "items":{"type":"string"}
-        }
+                  "items": {"type": "string"}
+                  }
     }
 }
 
 restaurant_schema = {
-    "properties" : {
+    "properties": {
         "_id": {"type": "string"},
-        "name":{"type":"string"},
-        "address":{"type":"string"},
-        "phone":{"type":"number"},
-        "email":{"type":"string"},
-        "city":{"type":"string"},
-        "cuisine":{"type":"string"},
-        "pricepoint":{"type":"string"},
-        "twitter":{"type":"string"},
-        "instagram":{"type":"string"},
-        "bio":{"type":"string"},
-        "GEO_location":{"type":"string"},
-        "exernal_delivery_link":{"type":"string"},
-        "cover_photo_url":{"type":"string"},
-        "logo_url":{"type":"string"},
-        "rating":{"type":"string"},
+        "name": {"type": "string"},
+        "address": {"type": "string"},
+        "phone": {"type": "number"},
+        "email": {"type": "string"},
+        "city": {"type": "string"},
+        "cuisine": {"type": "string"},
+        "pricepoint": {"type": "string"},
+        "twitter": {"type": "string"},
+        "instagram": {"type": "string"},
+        "bio": {"type": "string"},
+        "GEO_location": {"type": "string"},
+        "exernal_delivery_link": {"type": "string"},
+        "cover_photo_url": {"type": "string"},
+        "logo_url": {"type": "string"},
+        "rating": {"type": "string"},
     }
 }
-
 
 
 def insert_tag_page(request):
@@ -68,6 +67,7 @@ def clear_tags_page(request):
     body = json.loads(request.body)
     ManualTag.clear_food_tags(body['food_name'], body['restaurant_id'])
     return HttpResponse(status=200)
+
 
 def get_dish_by_restaurant_page(request):
     """Retrieve all dishes from a restaurant"""
@@ -133,4 +133,19 @@ def edit_restaurant_page(request):
     restaurant.clean_fields()
     restaurant.clean()
     restaurant.save()
+    return HttpResponse(status=200)
+
+
+def edit_dish_page(request):
+    """Update Dish data"""
+    validate(instance=request.body, schema=food_schema)
+    body = json.loads(request.body)
+    dish = Food.objects.get(_id=body["_id"])
+    del body['_id']
+    for field in body:
+        if body[field] != "":
+            setattr(dish, field, body[field])
+    dish.clean_fields()
+    dish.clean()
+    dish.save()
     return HttpResponse(status=200)
