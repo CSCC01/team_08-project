@@ -15,7 +15,11 @@
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item nav-link">
-        <a routerLink="/" class="nav-link">
+        <a
+          routerLink="/"
+          [queryParams]="{ role: role, restaurantId: restaurantId }"
+          class="nav-link"
+        >
           HOME
         </a>
       </li>
@@ -25,12 +29,22 @@
         </a>
       </li>
       <li class="nav-item nav-link" *ngIf="role == 'RO'">
-        <a routerLink="dashboard" routerLinkActive="active" class="nav-link">
+        <a
+          routerLink="dashboard"
+          [queryParams]="{ role: role, restaurantId: restaurantId }"
+          routerLinkActive="active"
+          class="nav-link"
+        >
           DASHBOARD
         </a>
       </li>
       <li class="nav-item nav-link" *ngIf="auth.loggedIn && role == 'RO'">
-        <a routerLink="menu-edit" routerLinkActive="active" class="nav-link">
+        <a
+          routerLink="menu-edit"
+          [queryParams]="{ role: role, restaurantId: restaurantId }"
+          routerLinkActive="active"
+          class="nav-link"
+        >
           PAGE
         </a>
       </li>
