@@ -10,7 +10,7 @@
     aria-expanded="false"
     aria-label="Toggle navigation"
   >
-    <span class="navbar-toggler-icon"></span>
+    <span class="navbar-toggler-icon"></span>ng gene
   </button>
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav mr-auto">
@@ -19,24 +19,19 @@
           HOME
         </a>
       </li>
-      <li class="nav-item nav-link">
-        <a
-          routerLink="profile"
-          routerLinkActive="active"
-          *ngIf="auth.loggedIn"
-          class="nav-link"
-        >
+      <li class="nav-item nav-link" *ngIf="auth.loggedIn && role == 'BU'">
+        <a routerLink="profile" routerLinkActive="active" class="nav-link">
           PROFILE
         </a>
       </li>
-      <li class="nav-item nav-link">
-        <a
-          routerLink="dashboard"
-          routerLinkActive="active"
-          *ngIf="auth.role == 'RO'"
-          class="nav-link"
-        >
+      <li class="nav-item nav-link" *ngIf="role == 'RO'">
+        <a routerLink="dashboard" routerLinkActive="active" class="nav-link">
           DASHBOARD
+        </a>
+      </li>
+      <li class="nav-item nav-link" *ngIf="auth.loggedIn && role == 'RO'">
+        <a routerLink="menu-edit" routerLinkActive="active" class="nav-link">
+          PAGE
         </a>
       </li>
       <li class="nav-item nav-link">
@@ -49,7 +44,7 @@
       <button
         type="button"
         class="upgrade-button"
-        *ngIf="auth.loggedIn && auth.role == 'BU'"
+        *ngIf="auth.loggedIn && role == 'BU'"
         data-toggle="modal"
         data-target="#exampleModal"
       >

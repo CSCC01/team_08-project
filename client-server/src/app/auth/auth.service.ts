@@ -12,6 +12,7 @@ import {
 import { tap, catchError, concatMap, shareReplay } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { LoginService } from '../service/login.service';
+import { DataService } from '../service/data.service';
 
 @Injectable({
   providedIn: 'root',
@@ -45,8 +46,13 @@ export class AuthService {
   // Create a local property for login status
   loggedIn: boolean = null;
   role: string = '';
+  restaurantId: string = '';
 
-  constructor(private router: Router, private loginService: LoginService) {
+  constructor(
+    private router: Router,
+    private loginService: LoginService,
+    private data: DataService
+  ) {
     // On initial load, check authentication state with authorization server
     // Set up local auth streams if user is already authenticated
     this.localAuthSetup();
@@ -115,19 +121,39 @@ export class AuthService {
       // Subscribe to authentication completion observable
       // Response will be an array of user and login status
       authComplete$.subscribe(([user, loggedIn]) => {
-        // Redirect to target route after callback processing
-        this.router.navigate([targetRoute]);
         // Add resulting new user to database
         this.loginService.checkUserExists(user).subscribe((bool) => {
           if (bool.exists) {
-            this.loginService.getUserRole(user).subscribe((data) => {
+            this.loginService.getUser(user).subscribe((data) => {
               this.role = data.role;
+              if (data.role == 'RO') {
+                this.restaurantId = data.restaurant_id;
+                this.data.changeRestaurantId('RO');
+              }
+
+              this.data.changeRestaurantId(this.restaurantId);
+
+              // Redirect to target route after callback processing
+              this.router
+                .navigate([targetRoute], {
+                  queryParams: {
+                    role: this.role,
+                    restaurantId: this.restaurantId,
+                  },
+                })
+                .then(() => {
+                  window.location.reload();
+                });
             });
           } else {
             user.role = 'BU';
             user.restaurant_id = '';
             this.loginService.addNewUser(user);
             this.role = 'BU';
+
+            this.router.navigate([targetRoute], {
+              queryParams: { role: this.role },
+            });
           }
         });
       });
