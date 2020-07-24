@@ -1,5 +1,9 @@
 @import "src/styles";
 
+app-dish-card {
+  margin-bottom: 0;
+}
+
 .form-box {
   padding: 20px;
 }
@@ -17,6 +21,7 @@
   height: 45px;
   width: 45px;
   padding: 0px;
+  margin: 0 10px;
   position: relative;
 }
 

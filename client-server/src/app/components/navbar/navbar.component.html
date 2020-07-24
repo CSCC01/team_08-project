@@ -45,11 +45,16 @@
           routerLinkActive="active"
           class="nav-link"
         >
-          PAGE
+          RESTAURANT PAGE
         </a>
       </li>
       <li class="nav-item nav-link">
-        <a routerLink="all-listings" routerLinkActive="active" class="nav-link">
+        <a
+          routerLink="all-listings"
+          *ngIf="role != 'RO'"
+          routerLinkActive="active"
+          class="nav-link"
+        >
           BROWSE
         </a>
       </li>

@@ -10,6 +10,7 @@ import { faTwitter, faInstagram } from '@fortawesome/free-brands-svg-icons';
 import { RestaurantsService } from 'src/app/service/restaurants.service';
 import dishes from '../../../assets/data/dishes.json';
 import reviews from '../../../assets/data/reviews.json';
+import { DataService } from 'src/app/service/data.service';
 
 @Component({
   selector: 'app-restaurant-page',
@@ -51,7 +52,8 @@ export class RestaurantPageComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private restaurantsService: RestaurantsService
+    private restaurantsService: RestaurantsService,
+    private data: DataService
   ) {
     this.dishes = dishes;
     this.reviews = reviews;
@@ -60,6 +62,9 @@ export class RestaurantPageComponent implements OnInit {
   ngOnInit(): void {
     this.restaurantId = this.route.snapshot.queryParams.restaurantId;
     this.role = this.route.snapshot.queryParams.role;
+
+    this.data.changeRestaurantId(this.restaurantId);
+    this.data.changeRole(this.role);
 
     // generate restaurant page
     this.restaurantsService
