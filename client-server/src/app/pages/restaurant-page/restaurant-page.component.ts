@@ -1,6 +1,10 @@
 import { Component, OnInit, Input, HostListener } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { faMapMarkerAlt, faPhone } from '@fortawesome/free-solid-svg-icons';
+import { ActivatedRoute, Router } from '@angular/router';
+import {
+  faMapMarkerAlt,
+  faPhone,
+  faEdit,
+} from '@fortawesome/free-solid-svg-icons';
 import { faHeart, faEnvelope } from '@fortawesome/free-regular-svg-icons';
 import { faTwitter, faInstagram } from '@fortawesome/free-brands-svg-icons';
 import { RestaurantsService } from 'src/app/service/restaurants.service';
@@ -16,6 +20,7 @@ export class RestaurantPageComponent implements OnInit {
   @Input() userId: any; // pass the user id everywhere
 
   restaurantId: string;
+  role: string;
   dishes: any[] = [];
   reviews: any[] = [];
   restaurantDetails: any;
@@ -41,9 +46,11 @@ export class RestaurantPageComponent implements OnInit {
   faHeartLine = faHeart;
   faTwitter = faTwitter;
   faInstagram = faInstagram;
+  faEdit = faEdit;
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private restaurantsService: RestaurantsService
   ) {
     this.dishes = dishes;
@@ -52,6 +59,7 @@ export class RestaurantPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.restaurantId = this.route.snapshot.queryParams.restaurantId;
+    this.role = this.route.snapshot.queryParams.role;
 
     // generate restaurant page
     this.restaurantsService
@@ -83,5 +91,11 @@ export class RestaurantPageComponent implements OnInit {
       el2.classList.add('col-md-5');
       el3.classList.add('row');
     }
+  }
+
+  editMenu() {
+    this.router.navigate(['/menu-edit'], {
+      queryParams: { role: this.role, restaurantId: this.restaurantId },
+    });
   }
 }

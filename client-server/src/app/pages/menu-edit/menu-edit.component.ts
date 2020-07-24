@@ -141,4 +141,10 @@ export class MenuEditComponent implements OnInit {
     this.loadAllDishes();
     this.deleteModalRef.close();
   }
+
+  back() {
+    this.router.navigate(['/restaurant'], {
+      queryParams: { role: this.role, restaurantId: this.restaurantId },
+    });
+  }
 }
