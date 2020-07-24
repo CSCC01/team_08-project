@@ -13,6 +13,9 @@ export class OwnerSetupComponent implements OnInit {
 
   ngOnInit(): void {
     this.restaurantId = this.route.snapshot.queryParams.restaurantId;
+    if (!this.restaurantId) {
+      this.router.navigate(['']);
+    }
   }
 
   updateOwner() {
