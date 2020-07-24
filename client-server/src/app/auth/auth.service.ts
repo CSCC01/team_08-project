@@ -151,9 +151,13 @@ export class AuthService {
             this.loginService.addNewUser(user);
             this.role = 'BU';
 
-            this.router.navigate([targetRoute], {
-              queryParams: { role: this.role },
-            });
+            this.router
+              .navigate([targetRoute], {
+                queryParams: { role: this.role },
+              })
+              .then(() => {
+                window.location.reload();
+              });
           }
         });
       });

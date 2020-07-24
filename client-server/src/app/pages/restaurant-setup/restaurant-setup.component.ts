@@ -52,7 +52,7 @@ export class RestaurantSetupComponent implements OnInit {
       .subscribe((data) => {
         this.restaurantId = data._id;
         this.router.navigate(['/owner-setup'], {
-          queryParams: { restaurantId: this.restaurantId },
+          queryParams: { role: 'RO', restaurantId: this.restaurantId },
         });
         this.auth.userProfile$.source.subscribe((userInfo) => {
           userInfo.role = 'RO';

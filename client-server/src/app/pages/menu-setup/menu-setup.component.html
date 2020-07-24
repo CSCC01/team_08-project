@@ -16,7 +16,11 @@
     </div>
   </div>
   <div class="text-right">
-    <button class="btn" [routerLink]="['/']">
+    <button
+      class="btn"
+      [routerLink]="['/']"
+      [queryParams]="{ role: role, restaurantId: restaurantId }"
+    >
       SAVE & NEXT
     </button>
   </div>
