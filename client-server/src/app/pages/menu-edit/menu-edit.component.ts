@@ -136,8 +136,9 @@ export class MenuEditComponent implements OnInit {
       restaurant_id: this.restaurantId,
     };
 
-    this.clearInput();
     this.restaurantsService.deleteDish(dishInfo);
+    this.clearInput();
+    this.loadAllDishes();
     this.loadAllDishes();
     this.deleteModalRef.close();
   }
