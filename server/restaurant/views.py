@@ -136,12 +136,12 @@ def edit_restaurant_page(request):
     restaurant = Restaurant.get(body["restaurant_id"])
     del body['restaurant_id']
     for field in body:
-        if body[field] != "":
             setattr(restaurant, field, body[field])
     restaurant.clean_fields()
     restaurant.clean()
     restaurant.save()
-    return HttpResponse(status=200)
+    restaurant._id = str(restaurant._id)
+    return JsonResponse(model_to_dict(restaurant))
 
 
 def edit_dish_page(request):
@@ -155,4 +155,5 @@ def edit_dish_page(request):
     dish.clean_fields()
     dish.clean()
     dish.save()
-    return HttpResponse(status=200)
+    dish._id = str(dish._id)
+    return JsonResponse(model_to_dict(dish))
