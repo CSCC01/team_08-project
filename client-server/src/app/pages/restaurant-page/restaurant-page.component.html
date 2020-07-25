@@ -86,6 +86,13 @@
 
   <mat-tab-group mat-align-tabs="center">
     <mat-tab label="Menu">
+      <div style="text-align: center;">
+        <button *ngIf="role == 'RO'" class="btn editBtn" (click)="editMenu()">
+          <fa-icon [icon]="faEdit"></fa-icon>
+          <b>EDIT MENU</b>
+        </button>
+      </div>
+      <br />
       <ngb-alert *ngIf="restaurantMenu.length == 0" [dismissible]="false">
         Menu currently empty! Please check again at a later time.
       </ngb-alert>

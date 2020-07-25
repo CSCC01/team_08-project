@@ -2,10 +2,11 @@ from django.forms import model_to_dict
 from djongo import models
 from bson import ObjectId
 from restaurant.cuisine_dict import load_dict
+from restaurant.enum import Prices, Categories
 
 
-# Model for the Food Items on the Menu
 class Food(models.Model):
+    """ Model for the Food Items on the Menu """
     _id = models.ObjectIdField()
     name = models.CharField(max_length=50, default='')
     restaurant_id = models.CharField(max_length=24, editable=False)
@@ -66,31 +67,23 @@ class Food(models.Model):
         return response
 
 
-# Model for Manual Tags
 class ManualTag(models.Model):
+    """ Model for Manual Tags """
     _id = models.ObjectIdField()
-    category = models.CharField(max_length=20, choices=[  # Use enum later
-        ("promo", "promo"),
-        ("allergy", "allergy"),
-        ('cuisine', 'cuisine'),
-        ('dish', 'dish')
-    ])
+    category = models.CharField(max_length=4, choices=Categories.choices())
     value = models.CharField(max_length=50)
     foods = models.ListField(default=[], blank=True)
 
-
-
-    # Clears all the tags off a food item
     @classmethod
-    def clear_food_tags(cls, food_name, restaurant):  # To be changed when restaurant is implemented
+    def clear_food_tags(cls, food_name, restaurant_id):
         """
-        Destroy all food -tag relationships for food
+        Destroy all food-tag relationships for food
         :param food_name: name of food
         :param restaurant: id of restaurant
         :return: None
         """
         food = Food.objects.get(name=food_name,
-                                restaurant_id=restaurant)  # To be changed when restaurant is implemented
+                                restaurant_id=restaurant_id)
         for tag_id in food.tags:
             tag = ManualTag.objects.get(_id=tag_id)
             for food_id in tag.foods:
@@ -100,9 +93,7 @@ class ManualTag(models.Model):
         food.tags = []
         food.save()
 
-    # Adds Tag to food
     @classmethod
-
     def add_tag(cls, food_name, restaurant_id, category, value):
         """
         Add tag to food
@@ -140,13 +131,15 @@ class ManualTag(models.Model):
         dish = Food.objects.get(_id=ObjectId(_id))
         desc_set = {''.join(e for e in food if e.isalpha()).lower()
                     for food in dish.description.split(' ')}  # fancy set comprehension
-        return [cls.add_tag(dish.name, dish.restaurant_id, 'dish', item)  # fancy list comprehension
+        return [cls.add_tag(dish.name, dish.restaurant_id, 'DI', item)  # fancy list comprehension
                 for item in desc_set.intersection(load_dict.read('dishes.csv'))]
 
     def __eq__(self, other):
         return self.food == other.food and self.category == other.category and self.value == other.value
 
+
 class Restaurant(models.Model):
+    """ Model for Restaurants """
     _id = models.ObjectIdField()
     name = models.CharField(max_length=30)
     address = models.CharField(max_length=60)
@@ -154,14 +147,16 @@ class Restaurant(models.Model):
     email = models.EmailField(unique=True)
     city = models.CharField(max_length=40)
     cuisine = models.CharField(max_length=30)
-    pricepoint = models.CharField(max_length=30)  # add choices, make enum
-    twitter = models.CharField(max_length=200)
-    instagram = models.CharField(max_length=200)
+    pricepoint = models.CharField(max_length=10, choices=Prices.choices())
+    twitter = models.CharField(max_length=200, blank=True)
+    instagram = models.CharField(max_length=200, blank=True)
     bio = models.TextField(null=True)
     GEO_location = models.CharField(max_length=200)
     external_delivery_link = models.CharField(max_length=200)
-    cover_photo_url = models.CharField(max_length=200, default='https://www.nautilusplus.com/content/uploads/2016/08/Pexel_junk-food.jpeg')
-    logo_url = models.CharField(max_length=200, default='https://d1csarkz8obe9u.cloudfront.net/posterpreviews/diner-restaurant-logo-design-template-0899ae0c7e72cded1c0abc4fe2d76ae4_screen.jpg?ts=1561476509')
+    cover_photo_url = models.CharField(max_length=200,
+                                       default='https://www.nautilusplus.com/content/uploads/2016/08/Pexel_junk-food.jpeg')
+    logo_url = models.CharField(max_length=200,
+                                default='https://d1csarkz8obe9u.cloudfront.net/posterpreviews/diner-restaurant-logo-design-template-0899ae0c7e72cded1c0abc4fe2d76ae4_screen.jpg?ts=1561476509')
     rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.00)
 
     @classmethod
@@ -169,7 +164,7 @@ class Restaurant(models.Model):
         """
         retrieve restaurant based on id
         :param _id: id of restaurant
-        :return: restaurant json
+        :return: restaurant json or None
         """
         restaurant = list(Restaurant.objects.filter(_id=ObjectId(_id)))
         if len(restaurant) == 1:
@@ -203,6 +198,3 @@ class Restaurant(models.Model):
         restaurant.clean()
         restaurant.save()
         return restaurant
-
-
-

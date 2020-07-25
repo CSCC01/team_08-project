@@ -1,0 +1,185 @@
+<div class="center">
+  <h2>Edit Restaurant Menu</h2>
+  <p>
+    Please provide menu items.
+  </p>
+  <br />
+  <button class="btn saveBtn" (click)="openDishModal(dishModal)">
+    ADD NEW DISH
+  </button>
+</div>
+
+<div class="dishes">
+  <div class="row equal">
+    <div *ngFor="let dish of dishes" class="col-sm-4 d-flex">
+      <div class="col">
+        <div class="row">
+          <app-dish-card [dish]="dish"></app-dish-card>
+        </div>
+        <div class="row">
+          <button class="icon btn" (click)="openDishModal(dishModal, dish)">
+            <fa-icon [icon]="faEdit"></fa-icon>
+          </button>
+          <button class="icon btn" (click)="openDeleteModal(deleteModal, dish)">
+            <fa-icon [icon]="faTrash"></fa-icon>
+          </button>
+        </div>
+        <br />
+        <br />
+      </div>
+    </div>
+  </div>
+  <div class="text-right">
+    <button class="btn saveBtn" (click)="back()">
+      SAVE
+    </button>
+  </div>
+</div>
+
+<img class="bottom-left" src="assets/images/undraw_publish_post_vowb.png" />
+
+<ng-template #dishModal let-modal>
+  <div class="modal-header">
+    <h2 class="modal-title" id="modal-basic-title">Configure Dish</h2>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-box">
+      <div class="form-group">
+        <label for="dishName" class="required">
+          Dish Name <span class="text-danger">*</span>
+        </label>
+        <input
+          type="text"
+          class="form-control"
+          id="dishName"
+          [(ngModel)]="dishName"
+          placeholder="Ex: Spicy Chicken"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="price" class="required">
+          Price <span class="text-danger">*</span>
+        </label>
+        <input
+          type="text"
+          class="form-control"
+          id="price"
+          [(ngModel)]="price"
+          placeholder="Ex: 12.99"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="menuCategory" class="required">
+          Menu Category <span class="text-danger">*</span>
+        </label>
+        <input
+          type="text"
+          class="form-control"
+          id="menuCategory"
+          [(ngModel)]="menuCategory"
+          placeholder="Ex: Appetizer"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="cuisine" class="required">
+          Cuisine <span class="text-danger">*</span>
+        </label>
+        <input
+          type="text"
+          class="form-control"
+          id="cuisine"
+          [(ngModel)]="cuisine"
+          placeholder="Ex: Indian"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="dishInfo" class="required">
+          Dish Information <span class="text-danger">*</span>
+        </label>
+        <textarea
+          class="form-control"
+          id="dishInfo"
+          [(ngModel)]="dishInfo"
+          rows="4"
+          placeholder="Tell customers the story of your dish..."
+          required
+        ></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="allergy" class="required">
+          Allergy Warnings <span class="text-danger">*</span>
+        </label>
+        <input
+          type="text"
+          class="form-control"
+          id="allergy"
+          [(ngModel)]="allergy"
+          placeholder="Ex: Nuts, Peanut"
+          required
+        />
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-6">
+          <button class="btn saveBtn dish-image">
+            + DISH IMAGE
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="text-right">
+      <button class="btn saveBtn skip" (click)="modal.dismiss('Cross click')">
+        CANCEL
+      </button>
+      <button class="btn saveBtn" (click)="configDish()">
+        COMPLETE DISH
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #deleteModal let-modal>
+  <div class="modal-header">
+    <h2 class="modal-title" id="modal-basic-title">Delete Dish</h2>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    Are you sure you want to delete this dish?
+  </div>
+  <div class="modal-footer">
+    <div class="text-right">
+      <button class="btn saveBtn skip" (click)="modal.dismiss('Cross click')">
+        NO
+      </button>
+      <button class="btn saveBtn" (click)="deleteDish()">
+        YES
+      </button>
+    </div>
+  </div>
+</ng-template>
