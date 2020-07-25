@@ -28,17 +28,21 @@ const routes: Routes = [
     component: RestuarantDashboardComponent,
     canActivate: [ROCheckGuard],
   },
-  { path: 'restaurant-setup', component: RestaurantSetupComponent },
-  { path: 'owner-setup', component: OwnerSetupComponent },
+  {
+    path: 'restaurant-setup',
+    component: RestaurantSetupComponent,
+  },
+  {
+    path: 'owner-setup',
+    component: OwnerSetupComponent,
+  },
   {
     path: 'menu-setup',
     component: MenuSetupComponent,
-    canActivate: [ROCheckGuard],
   },
   {
     path: 'menu-edit',
     component: MenuEditComponent,
-    canActivate: [ROCheckGuard],
   },
 ];
 
