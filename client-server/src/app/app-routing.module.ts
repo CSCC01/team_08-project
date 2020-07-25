@@ -3,7 +3,6 @@ import { Routes, RouterModule } from '@angular/router';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { AuthGuard } from './auth/auth.guard';
 import { ROCheckGuard } from './auth/ro-check.guard';
-import { ROSetupGuard } from './auth/ro-setup.guard';
 import { HomeComponent } from './pages/home/home.component';
 import { PaymentComponent } from './pages/payment/payment.component';
 import { AllRestaurantsComponent } from './pages/all-restaurants/all-restaurants.component';
