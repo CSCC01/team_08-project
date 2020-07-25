@@ -1,3 +1,4 @@
+from django.forms import model_to_dict
 from django.http import HttpResponse, JsonResponse
 from user.models import SDUser
 from restaurant.models import Restaurant
@@ -17,6 +18,8 @@ signup_schema = {
         "restaurant_id": {"type": "string"}
     }
 }
+
+user_editable = ["nickname", "name", "picture", "updated_at"]
 
 
 def signup_page(request):
@@ -64,3 +67,18 @@ def exists_page(request):
     """ Page that checks if an email is already registered in the database provided an user email """
     req_email = request.GET.get('email')
     return JsonResponse({'exists': SDUser.objects.filter(email=req_email).exists()})
+
+
+def edit_user_page(request):
+    """Update User data"""
+    validate(instance=request.body, schema=signup_schema)
+    body = json.loads(request.body)
+    user = SDUser.objects.get(email=body["email"])
+    del body['email']
+    for field in body:
+        if field in user_editable:
+            setattr(user, field, body[field])
+    user.clean_fields()
+    user.clean()
+    user.save()
+    return JsonResponse(model_to_dict(user))
