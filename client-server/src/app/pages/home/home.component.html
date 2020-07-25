@@ -2,7 +2,7 @@
 
 <img src="assets/images/food/header.jpeg" alt="header" class="header-img" />
 <div class="header">
-  Your local Scarborough restaurants, delivered.
+  Celebrating Amazing Food and Restaurants in Scarborough
 </div>
 
 <button class="scroll-down-btn" (click)="scrollDown()">
@@ -88,21 +88,6 @@
 </carousel>
 
 <div class="bg1">
-  <div class="cuisine-carousel" data-aos="fade-left">
-    <h2 class="heading">Specials</h2>
-    <ivy-carousel
-      [images]="dishes"
-      [margin]="30"
-      [arrowsOutside]="arrowsOutside"
-      [borderRadius]="20"
-      [cellWidth]="300"
-      [height]="400"
-    >
-    </ivy-carousel>
-  </div>
-</div>
-
-<div class="bg2">
   <div class="cuisine-carousel" data-aos="fade-right">
     <h2 class="heading">Stories</h2>
     <ivy-carousel
@@ -111,6 +96,21 @@
       [arrowsOutside]="arrowsOutside"
       [borderRadius]="20"
       [cellWidth]="500"
+      [height]="400"
+    >
+    </ivy-carousel>
+  </div>
+</div>
+
+<div class="bg2">
+  <div class="cuisine-carousel" data-aos="fade-left">
+    <h2 class="heading">Specials</h2>
+    <ivy-carousel
+      [images]="dishes"
+      [margin]="30"
+      [arrowsOutside]="arrowsOutside"
+      [borderRadius]="20"
+      [cellWidth]="300"
       [height]="400"
     >
     </ivy-carousel>
