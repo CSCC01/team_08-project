@@ -32,22 +32,18 @@ const routes: Routes = [
   {
     path: 'restaurant-setup',
     component: RestaurantSetupComponent,
-    canActivate: [ROSetupGuard],
   },
   {
     path: 'owner-setup',
     component: OwnerSetupComponent,
-    canActivate: [ROCheckGuard],
   },
   {
     path: 'menu-setup',
     component: MenuSetupComponent,
-    canActivate: [ROCheckGuard],
   },
   {
     path: 'menu-edit',
     component: MenuEditComponent,
-    canActivate: [ROCheckGuard],
   },
 ];
 
