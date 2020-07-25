@@ -1,7 +1,4 @@
 from djongo import models
-from bson import ObjectId
-from restaurant.models import Restaurant
-from restaurant.models import Food
 
 
 # Model for a post on an restaurant's timeline

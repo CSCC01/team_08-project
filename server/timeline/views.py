@@ -45,7 +45,6 @@ def upload_comment(request):
 
     try:    # validate request
         validate(instance=body, schema=comment_schema)
-        print('nigger')
     except jsonschema.exceptions.ValidationError:
         return HttpResponseBadRequest('Invalid request')
 

@@ -1,4 +1,4 @@
-**/__migrations__/**
+**/migrations/**
 **/__pycache__/**
 **.vscode**
 **.ini**
