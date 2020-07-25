@@ -28,7 +28,12 @@ export class MenuSetupComponent implements OnInit {
 
   ngOnInit(): void {
     this.restaurantId = this.route.snapshot.queryParams.restaurantId;
-    this.loadAllDishes();
+    if (!this.restaurantId) {
+      this.router.navigate(['']);
+      alert('No matching restaurant found for this profile!');
+    } else {
+      this.loadAllDishes();
+    }
   }
 
   loadAllDishes() {

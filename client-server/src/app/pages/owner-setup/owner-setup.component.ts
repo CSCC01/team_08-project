@@ -15,6 +15,7 @@ export class OwnerSetupComponent implements OnInit {
     this.restaurantId = this.route.snapshot.queryParams.restaurantId;
     if (!this.restaurantId) {
       this.router.navigate(['']);
+      alert('No matching restaurant found for this profile!');
     }
   }
 
