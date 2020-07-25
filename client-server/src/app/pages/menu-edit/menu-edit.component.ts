@@ -42,7 +42,7 @@ export class MenuEditComponent implements OnInit {
     this.role = this.route.snapshot.queryParams.role;
     this.restaurantId = this.route.snapshot.queryParams.restaurantId;
 
-    if (!this.restaurantId && this.role !== 'RO') {
+    if (!this.restaurantId || this.role !== 'RO') {
       this.router.navigate([''], {
         queryParams: { role: this.role, restaurantId: this.restaurantId },
       });
