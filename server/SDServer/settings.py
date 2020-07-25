@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'reset_migrations',
     'jsonschema',
     'user',
-    'restaurant'
+    'restaurant',
+    'timeline'
 ]
 
 MIDDLEWARE = [
