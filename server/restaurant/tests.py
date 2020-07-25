@@ -47,7 +47,7 @@ class TagClearCases(TestCase):
         self.assertListEqual(self.tag.foods, [])
 
 
-class AddTagCase(TestCase):
+class AddTagCases(TestCase):
     def setUp(self):
         """ Load food, tag documents and json data for food """
         self.food = Food.objects.create(name="foodA", restaurant_id='mock',
@@ -119,7 +119,7 @@ class AddTagCase(TestCase):
         self.assertListEqual(self.food.tags, [self.tag._id])
 
 
-class AutoTag(TestCase):
+class AutoTagCases(TestCase):
     def setUp(self):
         """Load food document"""
         self.food = Food.objects.create(name="foodA", restaurant_id='mock',
@@ -176,7 +176,7 @@ class FoodTestCases(TestCase):
         actual = Food.objects.get(_id=id)
         expected = Food(_id=id, name="foodB2", restaurant_id="restB", description="nutter butter", picture="picB",
                         price='10.99')
-        self.assertEqual(actual, expected)
+        self.assertDictEqual(model_to_dict(actual), model_to_dict(expected))
 
     def test_delete_food(self):
         """ Test if the food is deleted """
@@ -188,7 +188,7 @@ class FoodTestCases(TestCase):
         self.assertEqual(expected, actual)
 
 
-class RestaurantTestCase(TestCase):
+class RestaurantTestCases(TestCase):
 
     def setUp(self):
         """ Load json data for restaurants """
@@ -278,16 +278,15 @@ class RestaurantTestCase(TestCase):
         id = Restaurant.objects.get(_id="111111111111111111111111")._id
         request = self.factory.post('/api/restaurant/edit/',
                                     {"restaurant_id": "111111111111111111111111", "name": "kfc2",
-                                     "address": "211 Cambodia", "twitter": "", "instagram": "", "rating": "1.00"
-                                     }, content_type='application/json')
+                                     "address": "211 Cambodia", "twitter": "", "instagram": "",
+                                     "rating": "1.00"}, content_type='application/json')
         view_response.edit_restaurant_page(request)
         actual = Restaurant.objects.get(_id="111111111111111111111111")
-        expected = Restaurant(_id=id, name='kfc22',
+        expected = Restaurant(_id=id, name='kfc2',
                               address='211 Cambodia', phone=6475040680, city='markham', email='alac@gmail.com',
-                              cuisine='american', pricepoint='High', twitter='',
-                              instagram='',
+                              cuisine='american', pricepoint='High', twitter='', instagram='',
                               bio='Finger licking good chicken',
                               GEO_location='{\'longitude\': 44.068203, \'latitude\':-114.742043}',
                               external_delivery_link='https://docs.djangoproject.com/en/topics/testing/overview/',
-                              cover_photo_url='link', logo_url='link', rating='1.00')
-        self.assertEqual(actual, expected)
+                              cover_photo_url='link', logo_url='link', rating='3.00')
+        self.assertDictEqual(model_to_dict(actual), model_to_dict(expected))

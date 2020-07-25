@@ -21,7 +21,6 @@ signup_schema = {
 
 user_editable = ["nickname", "name", "picture", "updated_at"]
 
-
 def signup_page(request):
     """ Page to insert a user into the db provided all the user fields """
     validate(instance=request.body, schema=signup_schema)
@@ -29,7 +28,7 @@ def signup_page(request):
     user = SDUser.signup(nickname=body['nickname'], name=body['name'], picture=body['picture'],
                          updated=body['updated_at'], email=body['email'],
                          verified=body['email_verified'], role=body['role'], restaurant_id=body['restaurant_id'])
-    return HttpResponse(status=200)
+    return JsonResponse(model_to_dict(user))
 
 
 def reassign_page(request):

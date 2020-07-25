@@ -53,6 +53,7 @@ restaurant_schema = {
 }
 
 dish_editable = ["name", "description", "picture", "price", "specials"]
+
 restaurant_editable = ["name", "address", "phone", "updated_at", "email", "city", "cuisine", "pricepoint", "twitter",
                        "instagram", "bio", "external_delivery_link", "cover_photo_url", "logo_url"]
 
@@ -143,6 +144,7 @@ def edit_restaurant_page(request):
     restaurant.clean_fields()
     restaurant.clean()
     restaurant.save()
+    restaurant._id = str(restaurant._id)
     return JsonResponse(model_to_dict(restaurant))
 
 
@@ -152,9 +154,10 @@ def edit_dish_page(request):
     body = json.loads(request.body)
     dish = Food.objects.get(_id=body["_id"])
     for field in body:
-        if field in restaurant_editable:
+        if field in dish_editable:
             setattr(dish, field, body[field])
     dish.clean_fields()
     dish.clean()
     dish.save()
+    dish._id = str(dish._id)
     return JsonResponse(model_to_dict(dish))
