@@ -111,3 +111,19 @@ ngb-alert {
     width: 90%;
   }
 }
+
+.editBtn {
+  height: 50px;
+  padding: 0 15px 0 5px;
+  position: relative;
+
+  fa-icon {
+    color: white;
+  }
+}
+
+.editBtn:hover {
+  fa-icon {
+    color: $secondary-color;
+  }
+}

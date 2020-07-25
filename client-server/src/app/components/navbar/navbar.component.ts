@@ -1,7 +1,9 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, Input } from '@angular/core';
 import { AuthService } from '../../auth/auth.service';
 import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
 import { LoginService } from '../../service/login.service';
+import { HomeComponent } from '../../pages/home/home.component';
+import { DataService } from 'src/app/service/data.service';
 
 @Component({
   selector: 'app-navbar',
@@ -9,11 +11,18 @@ import { LoginService } from '../../service/login.service';
   styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent implements OnInit {
+  restaurantId: string = '';
+  role: string = '';
+
   title = 'client-server';
   faUserCircle = faUserCircle;
   userRole: any;
 
-  constructor(public auth: AuthService, private loginService: LoginService) {}
+  constructor(
+    public auth: AuthService,
+    private loginService: LoginService,
+    private data: DataService
+  ) {}
 
   @HostListener('window:resize', ['$event'])
   onResize() {
@@ -25,7 +34,10 @@ export class NavbarComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.data.restaurantId.subscribe((id) => (this.restaurantId = id));
+    this.data.role.subscribe((role) => (this.role = role));
+  }
 
   upgradeUser(): void {
     this.loginService.updateUser(this.auth.userProfile$.source);

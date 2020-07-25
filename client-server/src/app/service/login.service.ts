@@ -41,7 +41,7 @@ export class LoginService {
   @Output: Return all fields of a user
   Get all fields of a user
   */
-  getUserRole(userData): Observable<any> {
+  getUser(userData): Observable<any> {
     const endpoint = `${LoginService.AUTH_ENDPOINT}/data/`;
     const userObject = {
       email: userData.email,

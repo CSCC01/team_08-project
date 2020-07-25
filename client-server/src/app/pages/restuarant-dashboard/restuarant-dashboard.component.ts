@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import orders from '../../../assets/data/orders.json';
 import { ShowOnDirtyErrorStateMatcher } from '@angular/material/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { DataService } from 'src/app/service/data.service';
 
 @Component({
   selector: 'app-restuarant-dashboard',
@@ -8,12 +10,19 @@ import { ShowOnDirtyErrorStateMatcher } from '@angular/material/core';
   styleUrls: ['./restuarant-dashboard.component.scss'],
 })
 export class RestuarantDashboardComponent implements OnInit {
+  restaurantId: string = '';
+  role: string = '';
+
   new_orders: any[];
   in_progress: any[];
   complete: any[];
   orders: any[];
 
-  constructor() {
+  constructor(
+    private data: DataService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {
     this.orders = orders;
     this.new_orders = [];
     this.in_progress = [];
@@ -32,5 +41,11 @@ export class RestuarantDashboardComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.role = this.route.snapshot.queryParams.role;
+    this.restaurantId = this.route.snapshot.queryParams.restaurantId;
+
+    this.data.changeRestaurantId(this.restaurantId);
+    this.data.changeRole(this.role);
+  }
 }
