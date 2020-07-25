@@ -55,7 +55,7 @@ def data_page(request):
     user = SDUser.objects.get(pk=req_email)
     return JsonResponse(
         {'nickname': user.nickname, 'name': user.name, 'picture': user.picture, 'updated_at': user.last_updated,
-         'email': user.email, 'email_verified': user.email_verified, 'role': user.role})
+         'email': user.email, 'email_verified': user.email_verified, 'role': user.role, 'restaurant_id': user.restaurant_id})
 
 
 # Page that checks if an email is already registered in the database provided an user email

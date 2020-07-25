@@ -56,7 +56,7 @@ class SDUserTestCases(TestCase):
                                     {"user_email": "C@mail.com", "role": "RO", "name": "Rando Resto",
                                      "address": "211 detroit", "phone": 6475210680,
                                      "city": "toronto", "email": "calvin@gmail.com",
-                                     "cuisine": "african", "pricepoint": "medium",
+                                     "cuisine": "african", "pricepoint": "Medium",
                                      "twitter": "https://twitter.com/SupremeDreams_s1",
                                      "instagram": "https://www.instagram.com/rdcworld1/2?hl=en",
                                      "bio": "Finger licking good chicken",

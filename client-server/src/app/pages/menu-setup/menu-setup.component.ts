@@ -10,6 +10,8 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class MenuSetupComponent implements OnInit {
   restaurantId: string = '';
+  role: string = '';
+
   modalRef: any;
   dishes: any[];
   dishName: string = '';
@@ -28,10 +30,12 @@ export class MenuSetupComponent implements OnInit {
 
   ngOnInit(): void {
     this.restaurantId = this.route.snapshot.queryParams.restaurantId;
+    this.restaurantId = this.route.snapshot.queryParams.restaurantId;
     if (!this.restaurantId) {
       this.router.navigate(['']);
       alert('No matching restaurant found for this profile!');
     } else {
+      this.role = this.route.snapshot.queryParams.role;
       this.loadAllDishes();
     }
   }

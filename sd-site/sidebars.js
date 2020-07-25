@@ -1,6 +1,7 @@
 module.exports = {
   someSidebar: {
     Docusaurus: ["intro", "style", "ui-template"],
+    Tests: ["tests/back-tests", "tests/front-tests"],
     Backend: ["backend/backend"],
     Frontend: [
       "frontend/frontend",
