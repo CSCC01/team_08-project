@@ -79,6 +79,7 @@ export class MenuSetupComponent implements OnInit {
         this.dishInfo = '';
         this.allergy = '';
 
+        this.loadAllDishes();
         this.modalRef.close();
         this.loadAllDishes();
       } else {
