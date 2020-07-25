@@ -64,11 +64,10 @@ def insert_tag_page(request):
 
 def clear_tags_page(request):
     """Clear tags/food relationship"""
-    validate(instance=request.body, schema=tag_schema)
+    # validate(instance=request.body, schema=tag_schema)
     body = json.loads(request.body)
     ManualTag.clear_food_tags(body['food_name'], body['restaurant_id'])
     return HttpResponse(status=200)
-
 
 def get_dish_by_restaurant_page(request):
     """Retrieve all dishes from a restaurant"""
@@ -88,6 +87,15 @@ def insert_dish_page(request):
     food = Food.add_dish(body)
     food._id = str(food._id)
     return JsonResponse(model_to_dict(food))
+
+
+def delete_dish_page(request):
+    """Insert dish into database"""
+    validate(instance=request.body, schema=tag_schema)
+    body = json.loads(request.body)
+    ManualTag.clear_food_tags(body["food_name"], body["restaurant_id"])
+    Food.objects.filter(name=body["food_name"], restaurant_id=body["restaurant_id"]).delete()
+    return HttpResponse(status=200)
 
 
 def auto_tag_page(request):
@@ -137,6 +145,7 @@ def edit_restaurant_page(request):
     return HttpResponse(status=200)
 
 
+
 def update_logo(request):
     """Upload file to cloud and set logo url to that file's url"""
     form = upload_form.ImageIdForm(request.POST, request.FILES)
@@ -144,3 +153,17 @@ def update_logo(request):
         Restaurant.update_logo(request.FILES['image'], request.POST['_id'])
         return HttpResponse('SUCCESS')
     return HttpResponse('FAILURE')
+
+def edit_dish_page(request):
+    """Update Dish data"""
+    validate(instance=request.body, schema=food_schema)
+    body = json.loads(request.body)
+    dish = Food.objects.get(_id=body["_id"])
+    del body['_id']
+    for field in body:
+        setattr(dish, field, body[field])
+    dish.clean_fields()
+    dish.clean()
+    dish.save()
+    return HttpResponse(status=200)
+

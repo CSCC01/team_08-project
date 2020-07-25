@@ -28,6 +28,7 @@ import { PaymentComponent } from './pages/payment/payment.component';
 import { RestaurantPageComponent } from './pages/restaurant-page/restaurant-page.component';
 
 import { LoginService } from './service/login.service';
+import { DataService } from './service/data.service';
 import { ViewReviewCardComponent } from './components/view-review-card/view-review-card.component';
 import { AllRestaurantsComponent } from './pages/all-restaurants/all-restaurants.component';
 import { OrderCardComponent } from './components/order-card/order-card.component';
@@ -35,6 +36,7 @@ import { RestuarantDashboardComponent } from './pages/restuarant-dashboard/restu
 import { RestaurantSetupComponent } from './pages/restaurant-setup/restaurant-setup.component';
 import { OwnerSetupComponent } from './pages/owner-setup/owner-setup.component';
 import { MenuSetupComponent } from './pages/menu-setup/menu-setup.component';
+import { MenuEditComponent } from './pages/menu-edit/menu-edit.component';
 
 @NgModule({
   declarations: [
@@ -58,6 +60,7 @@ import { MenuSetupComponent } from './pages/menu-setup/menu-setup.component';
     RestaurantSetupComponent,
     OwnerSetupComponent,
     MenuSetupComponent,
+    MenuEditComponent,
   ],
   imports: [
     BrowserModule,
@@ -72,7 +75,7 @@ import { MenuSetupComponent } from './pages/menu-setup/menu-setup.component';
     NumberPickerModule,
     NgbModule,
   ],
-  providers: [LoginService],
+  providers: [LoginService, DataService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
