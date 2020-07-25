@@ -9,10 +9,7 @@ import dishes from '../../../assets/data/dishes.json';
 import stories from '../../../assets/data/stories.json';
 import { AuthService } from 'src/app/auth/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
-<<<<<<< HEAD
-=======
 import { DataService } from 'src/app/service/data.service';
->>>>>>> develop
 
 @Component({
   selector: 'app-home',
@@ -69,10 +66,7 @@ export class HomeComponent implements OnInit {
 
   constructor(
     public auth: AuthService,
-<<<<<<< HEAD
-=======
     private data: DataService,
->>>>>>> develop
     private route: ActivatedRoute,
     private router: Router
   ) {
