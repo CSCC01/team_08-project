@@ -74,6 +74,29 @@ This section will go over all the backends components of the Scarborough Dining 
     rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.00)
 ```
 
+###### TimelinePost
+```python
+class TimelinePost(models.Model):
+    _id = models.ObjectIdField()
+    restaurant_id = models.CharField(max_length=24)
+    user_id = models.CharField(max_length=24)
+    likes = models.ListField(default=[], blank=True)
+    content = models.TextField(max_length=4096)
+    Timestamp = models.DateTimeField(auto_now=True)
+    comments = models.ListField(default=[], blank=True)
+```
+
+##### TimelineComment
+```python
+class TimelineComment(models.Model):
+    _id = models.ObjectIdField()
+    post_id = models.CharField(max_length=24)
+    user_id = models.CharField(max_length=24)
+    likes = models.ListField(default=[], blank=True)
+    content = models.TextField(max_length=256)
+    Timestamp = models.DateTimeField(auto_now=True)
+```
+
 ###### Prices (Enum)
 
     Low = "$"
@@ -108,6 +131,8 @@ This section will go over all the backends components of the Scarborough Dining 
 |        /restaurant/get_all/         |                                                                                                                                                                                    |                                                        | GET  | Retrieves all Restaurants                                    |
 |         /restaurant/insert/         | name, address, phone, email, city, cuisine, pricepoint (_Price_ Name), instagram, twitter, GEO_location, external_delivery_link, bio, cover_photo_url, logo_url, rating            |                                                        | POST | Registers a Restaurant to DB                                 |
 |          /restaurant/edit/          | restaurant_id                                                                                                                                                                      | **(All Fields Needed for /restaurant/insert/)**        | POST | Updates the fields of the given Restaurant with the new data |
+|        /timeline/post/upload/       | restaurant_id, user_id, content                                                                                                                                                    |                                                        | POST | Add post to timeline table                                   |
+|      /timeline/comment/upload/      | post_id, user_id, content                                                                                                                                                          |                                                        | POST | Add comment to database and to post                          |
 
 All requests should be sent in a JSON format. Optional parameters can be left blank Ex: {"Role" : ""}. Bolded Fields can be omitted entirely.
 
