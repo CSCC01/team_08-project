@@ -8,6 +8,7 @@ import {
 import dishes from '../../../assets/data/dishes.json';
 import stories from '../../../assets/data/stories.json';
 import { AuthService } from 'src/app/auth/auth.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -59,7 +60,11 @@ export class HomeComponent implements OnInit {
     },
   ];
 
-  constructor(public auth: AuthService) {
+  constructor(
+    public auth: AuthService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {
     this.dishes = dishes;
     this.stories = stories;
   }
@@ -126,5 +131,9 @@ export class HomeComponent implements OnInit {
       left: 0,
       behavior: 'smooth',
     });
+  }
+
+  browseListings() {
+    this.router.navigate(['/all-listings']);
   }
 }
