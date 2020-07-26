@@ -3,6 +3,7 @@ from restaurant.models import Food, ManualTag, Restaurant
 from django.forms.models import model_to_dict
 from jsonschema import validate
 import json
+from request_form import upload_form
 
 # jsonschema validation schemes
 food_schema = {
@@ -147,6 +148,15 @@ def edit_restaurant_page(request):
     return HttpResponse(status=200)
 
 
+
+def update_logo(request):
+    """Upload file to cloud and set logo url to that file's url"""
+    form = upload_form.ImageIdForm(request.POST, request.FILES)
+    if form.is_valid():
+        Restaurant.update_logo(request.FILES['image'], request.POST['_id'])
+        return HttpResponse('SUCCESS')
+    return HttpResponse('FAILURE')
+
 def edit_dish_page(request):
     """Update Dish data"""
     validate(instance=request.body, schema=food_schema)
@@ -159,3 +169,4 @@ def edit_dish_page(request):
     dish.clean()
     dish.save()
     return HttpResponse(status=200)
+

@@ -23,7 +23,7 @@ comment_schema = {
 }
 
 
-def upload_post(request):
+def upload_post_page(request):
     """Upload post into post timeline post table"""
 
     body = json.loads(request.body)
@@ -38,7 +38,8 @@ def upload_post(request):
     return JsonResponse(model_to_dict(post))
 
 
-def upload_comment(request):
+
+def upload_comment_page(request):
     """Upload post into post timeline post table"""
 
     body = json.loads(request.body)
