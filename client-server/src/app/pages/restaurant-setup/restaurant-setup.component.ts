@@ -61,7 +61,7 @@ export class RestaurantSetupComponent implements OnInit {
         });
       },
       (error) => {
-        alert('Sorry an account with this email has already been found');
+        alert('Sorry a restaurant with this email has already been found');
         this.router.navigate([''], { queryParams: { role: 'BU' } });
       }
     );
