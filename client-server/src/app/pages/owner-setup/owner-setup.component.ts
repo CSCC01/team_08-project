@@ -41,9 +41,13 @@ export class OwnerSetupComponent implements OnInit {
       owner_story: (<HTMLInputElement>document.getElementById('owner-story'))
         .value,
     };
-    this.restaurantsService.editRestaurant(restaurantInfo);
-    this.router.navigate(['/menu-setup'], {
-      queryParams: { role: this.role, restaurantId: this.restaurantId },
-    });
+    if (restaurantInfo.owner_name == '' || restaurantInfo.owner_story == '') {
+      alert('Please enter all requried information about the owner!');
+    } else {
+      this.restaurantsService.editRestaurant(restaurantInfo);
+      this.router.navigate(['/menu-setup'], {
+        queryParams: { role: this.role, restaurantId: this.restaurantId },
+      });
+    }
   }
 }

@@ -41,29 +41,42 @@ export class RestaurantSetupComponent implements OnInit {
       instagram: (<HTMLInputElement>document.getElementById('instagram')).value,
       GEO_location: 'blank',
       external_delivery_link: 'blank',
-      cover_photo_url: 'blank',
-      logo_url: 'blank',
+      cover_photo_url: 'www.blank.com',
+      logo_url: 'www.blank.com',
       rating: '0.00',
     };
 
-    // Attach a restaurant ID to the current user and upgrade them
-    this.restaurantsService.getRestaurantID(restaurantInfo).subscribe(
-      (data) => {
-        this.restaurantId = data._id;
-        this.router.navigate(['/owner-setup'], {
-          queryParams: { role: 'RO', restaurantId: this.restaurantId },
-        });
-        this.auth.userProfile$.source.subscribe((userInfo) => {
-          userInfo.role = 'RO';
-          this.auth.role = 'RO';
-          userInfo.restaurant_id = data._id;
-          this.loginService.addNewUser(userInfo);
-        });
-      },
-      (error) => {
-        alert('Sorry a restaurant with this email has already been found');
-        this.router.navigate([''], { queryParams: { role: 'BU' } });
-      }
-    );
+    if (
+      restaurantInfo.name == '' ||
+      restaurantInfo.address == '' ||
+      restaurantInfo.city == '' ||
+      restaurantInfo.phone == '' ||
+      restaurantInfo.email == '' ||
+      restaurantInfo.pricepoint == 'Choose...' ||
+      restaurantInfo.cuisine == '' ||
+      restaurantInfo.bio == ''
+    ) {
+      alert('Please enter all requried information about the restaurant!');
+    } else {
+      // Attach a restaurant ID to the current user and upgrade them
+      this.restaurantsService.getRestaurantID(restaurantInfo).subscribe(
+        (data) => {
+          this.restaurantId = data._id;
+          this.router.navigate(['/owner-setup'], {
+            queryParams: { role: 'RO', restaurantId: this.restaurantId },
+          });
+          this.auth.userProfile$.source.subscribe((userInfo) => {
+            userInfo.role = 'RO';
+            this.auth.role = 'RO';
+            userInfo.restaurant_id = data._id;
+            this.loginService.addNewUser(userInfo);
+          });
+        },
+        (error) => {
+          alert('Sorry a restaurant with this email has already been found');
+          this.router.navigate([''], { queryParams: { role: 'BU' } });
+        }
+      );
+    }
   }
 }
