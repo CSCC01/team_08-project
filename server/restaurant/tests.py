@@ -209,7 +209,10 @@ class RestaurantTestCase(TestCase):
             'external_delivery_link': 'https://docs.djangoproject.com/en/topics/testing/overview/',
             'cover_photo_url': 'link',
             'logo_url': 'link',
-            'rating': '3.00'
+            'rating': '3.00',
+            'owner_name': 'Colonel Sanders',
+            'owner_story': 'i made chicken',
+            'owner_picture_url': 'https://www.imgur.com/image.jpg'#this is not real
         }
 
         self.expected2 = {
@@ -228,7 +231,10 @@ class RestaurantTestCase(TestCase):
             'external_delivery_link': 'https://docs.djangoproject.com/en/topics/testing/overview/',
             'cover_photo_url': 'link',
             'logo_url': 'link',
-            'rating': '3.00'
+            'rating': '3.00',
+            'owner_name': 'Colonel Calvino',
+            'owner_story': 'i made it boys',
+            'owner_picture_url': 'https://www.imgur.com/image.jpg'#this is not real
         }
 
         self.expected3 = {
@@ -247,7 +253,10 @@ class RestaurantTestCase(TestCase):
             'external_delivery_link': 'https://docs.djangoproject.com/en/topics/testing/overview/',
             'cover_photo_url': 'link',
             'logo_url': 'link',
-            'rating': '3.00'
+            'rating': '3.00',
+            'owner_name': 'Colonel Lam',
+            'owner_story': 'lambs are a thing',
+            'owner_picture_url': ''#test for blank image url validity
         }
 
         Restaurant.objects.create(**self.expected)
@@ -289,5 +298,8 @@ class RestaurantTestCase(TestCase):
                               bio='Finger licking good chicken',
                               GEO_location='{\'longitude\': 44.068203, \'latitude\':-114.742043}',
                               external_delivery_link='https://docs.djangoproject.com/en/topics/testing/overview/',
-                              cover_photo_url='link', logo_url='link', rating='1.00')
+                              cover_photo_url='link', logo_url='link', rating='1.00',
+                              owner_name= 'Colonel Sanders',
+                              owner_story = 'i made chicken',
+                              owner_picture_url = '')
         self.assertEqual(actual, expected)

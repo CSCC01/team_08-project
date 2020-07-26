@@ -72,6 +72,9 @@ This section will go over all the backends components of the Scarborough Dining 
     logo_url = models.CharField(max_length=200,
                                 default='https://d1csarkz8obe9u.cloudfront.net/posterpreviews/diner-restaurant-logo-design-template-0899ae0c7e72cded1c0abc4fe2d76ae4_screen.jpg?ts=1561476509')
     rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.00)
+    owner_name = models.CharField(max_length = 50, blank = True)
+    owner_story = models.CharField(max_length = 3000, blank = True)
+    owner_picture_url = models.CharField(max_length = 200, blank=True)
 ```
 
 ###### Prices (Enum)
@@ -106,7 +109,7 @@ This section will go over all the backends components of the Scarborough Dining 
 | /restaurant/dish/get_by_restaurant/ | restaurant_id                                                                                                                                                                      |                                                        | GET  | retrieves all dishes from restaurant                         |
 |          /restaurant/get/           | \_id                                                                                                                                                                               |                                                        | GET  | Retrieves Restaurant data                                    |
 |        /restaurant/get_all/         |                                                                                                                                                                                    |                                                        | GET  | Retrieves all Restaurants                                    |
-|         /restaurant/insert/         | name, address, phone, email, city, cuisine, pricepoint (_Price_ Name), instagram, twitter, GEO_location, external_delivery_link, bio, cover_photo_url, logo_url, rating            |                                                        | POST | Registers a Restaurant to DB                                 |
+|         /restaurant/insert/         | name, address, phone, email, city, cuisine, pricepoint (_Price_ Name), instagram, twitter, GEO_location, external_delivery_link, bio, cover_photo_url, logo_url, rating            |owner_name, owner_story, owner_picture_url                                                        | POST | Registers a Restaurant to DB                                 |
 |          /restaurant/edit/          | restaurant_id                                                                                                                                                                      | **(All Fields Needed for /restaurant/insert/)**        | POST | Updates the fields of the given Restaurant with the new data |
 
 All requests should be sent in a JSON format. Optional parameters can be left blank Ex: {"Role" : ""}. Bolded Fields can be omitted entirely.

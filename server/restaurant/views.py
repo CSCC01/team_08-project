@@ -49,6 +49,9 @@ restaurant_schema = {
         "cover_photo_url": {"type": "string"},
         "logo_url": {"type": "string"},
         "rating": {"type": "string"},
+        "owner_name": {"type": "string"},
+        "owner_story": {"type": "string"},
+        "owner_picture_url": {"type": "string"}
     }
 }
 
