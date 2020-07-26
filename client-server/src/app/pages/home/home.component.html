@@ -1,8 +1,8 @@
 <router-outlet></router-outlet>
 
-<img src="assets/images/food/header.jpeg" alt="header" class="header-img" />
+<img src="assets/images/food/background.jpg" alt="header" class="header-img" />
 <div class="header">
-  Your local Scarborough restaurants, delivered.
+  Celebrating Amazing People and Food in Scarborough
 </div>
 
 <button class="scroll-down-btn" (click)="scrollDown()">
@@ -54,55 +54,49 @@
 <carousel [isAnimated]="true" [interval]="5000">
   <slide>
     <img
-      src="assets/images/food/fastfood.jpg"
+      src="assets/images/food/dim-sum.jpg"
       alt="first slide"
       class="carousel-images"
     />
     <div class="carousel-caption d-none d-md-block">
-      <h2>Variety of Options</h2>
-      <p>Take a break and indulge in your guilty pleasure foods!</p>
+      <h2>Taste the Streets of China</h2>
+      <p>
+        Enjoy some of the freshest and tastiest Chinese cuisine that Scarborough
+        has to offer
+      </p>
     </div>
   </slide>
   <slide>
     <img
-      src="assets/images/food/grilledcheese.jpg"
+      src="assets/images/food/indian.jpg"
       alt="second slide"
       class="carousel-images"
     />
     <div class="carousel-caption d-none d-md-block">
-      <h2>Learn from the best in Scarborough</h2>
-      <p>Grill your own cheese sandwich!</p>
+      <h2>Taste the Spices of India</h2>
+      <p>
+        Let Scarborough restaurants transport you taste buds to the spice
+        markets of India
+      </p>
     </div>
   </slide>
   <slide>
     <img
-      src="assets/images/food/veggies.jpg"
+      src="assets/images/food/vegetarian.jpg"
       alt="third slide"
       class="carousel-images"
     />
     <div class="carousel-caption d-none d-md-block">
-      <h2>Health Options</h2>
-      <p>Keep your healthy habits in check!</p>
+      <h2>Something for Everyone</h2>
+      <p>
+        Scarborough Dining has a wide variety of cuisines to cater for all
+        dietrary restrictions
+      </p>
     </div>
   </slide>
 </carousel>
 
 <div class="bg1">
-  <div class="cuisine-carousel" data-aos="fade-left">
-    <h2 class="heading">Specials</h2>
-    <ivy-carousel
-      [images]="dishes"
-      [margin]="30"
-      [arrowsOutside]="arrowsOutside"
-      [borderRadius]="20"
-      [cellWidth]="300"
-      [height]="400"
-    >
-    </ivy-carousel>
-  </div>
-</div>
-
-<div class="bg2">
   <div class="cuisine-carousel" data-aos="fade-right">
     <h2 class="heading">Stories</h2>
     <ivy-carousel
@@ -111,6 +105,21 @@
       [arrowsOutside]="arrowsOutside"
       [borderRadius]="20"
       [cellWidth]="500"
+      [height]="400"
+    >
+    </ivy-carousel>
+  </div>
+</div>
+
+<div class="bg2">
+  <div class="cuisine-carousel" data-aos="fade-left">
+    <h2 class="heading">Specials</h2>
+    <ivy-carousel
+      [images]="dishes"
+      [margin]="30"
+      [arrowsOutside]="arrowsOutside"
+      [borderRadius]="20"
+      [cellWidth]="300"
       [height]="400"
     >
     </ivy-carousel>
@@ -174,7 +183,13 @@
   <h2 class="heading">Ready to explore?</h2>
   <br />
   <button (click)="auth.login()" class="btn get-started-btn">
-    GET STARTED
+    LOGIN/SIGNUP
+  </button>
+  <button (click)="browseListings()" class="btn get-started-btn">
+    BROWSE
+  </button>
+  <button class="btn get-started-btn">
+    VIEW STORIES
   </button>
 </div>
 
