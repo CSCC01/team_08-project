@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from 'src/app/service/data.service';
+import { RestaurantsService } from '../../service/restaurants.service';
 
 @Component({
   selector: 'app-owner-setup',
@@ -14,7 +15,8 @@ export class OwnerSetupComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private data: DataService
+    private data: DataService,
+    private restaurantsService: RestaurantsService
   ) {}
 
   ngOnInit(): void {
@@ -32,6 +34,14 @@ export class OwnerSetupComponent implements OnInit {
   }
 
   updateOwner() {
+    var restaurantInfo = {
+      restaurant_id: this.restaurantId,
+      owner_name: (<HTMLInputElement>document.getElementById('owner-name'))
+        .value,
+      owner_story: (<HTMLInputElement>document.getElementById('owner-story'))
+        .value,
+    };
+    this.restaurantsService.editRestaurant(restaurantInfo);
     this.router.navigate(['/menu-setup'], {
       queryParams: { role: this.role, restaurantId: this.restaurantId },
     });
