@@ -47,9 +47,8 @@ export class RestaurantSetupComponent implements OnInit {
     };
 
     // Attach a restaurant ID to the current user and upgrade them
-    this.restaurantsService
-      .getRestaurantID(restaurantInfo)
-      .subscribe((data) => {
+    this.restaurantsService.getRestaurantID(restaurantInfo).subscribe(
+      (data) => {
         this.restaurantId = data._id;
         this.router.navigate(['/owner-setup'], {
           queryParams: { role: 'RO', restaurantId: this.restaurantId },
@@ -60,6 +59,11 @@ export class RestaurantSetupComponent implements OnInit {
           userInfo.restaurant_id = data._id;
           this.loginService.addNewUser(userInfo);
         });
-      });
+      },
+      (error) => {
+        alert('Sorry an account with this email has already been found');
+        this.router.navigate([''], { queryParams: { role: 'BU' } });
+      }
+    );
   }
 }
