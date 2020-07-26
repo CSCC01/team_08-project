@@ -81,4 +81,26 @@ export class RestaurantsService {
     const endpoint = `${RestaurantsService.RO_ENDPOINT}/dish/insert/`;
     this.http.post<any>(endpoint, dishInfo).subscribe((data) => {});
   }
+
+  /*
+  @Input: JSON object containing dish info
+  @Output: None
+
+  Creates an entry for the dish for a particular restuarant using its id.
+  */
+  editDish(dishInfo): void {
+    const endpoint = `${RestaurantsService.RO_ENDPOINT}/dish/edit/`;
+    this.http.post<any>(endpoint, dishInfo).subscribe((data) => {});
+  }
+
+  /*
+  @Input: JSON object containing dish name and restaurant id
+  @Output: None
+
+  Delete dish using dish name and restaurant id.
+  */
+  deleteDish(dishInfo): void {
+    const endpoint = `${RestaurantsService.RO_ENDPOINT}/dish/delete/`;
+    this.http.post<any>(endpoint, dishInfo).subscribe((data) => {});
+  }
 }

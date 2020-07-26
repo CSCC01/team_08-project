@@ -63,7 +63,7 @@ def insert_tag_page(request):
 
 def clear_tags_page(request):
     """Clear tags/food relationship"""
-    # validate(instance=request.body, schema=tag_schema)
+    validate(instance=request.body, schema=tag_schema)
     body = json.loads(request.body)
     ManualTag.clear_food_tags(body['food_name'], body['restaurant_id'])
     return HttpResponse(status=200)
@@ -140,8 +140,7 @@ def edit_restaurant_page(request):
     restaurant = Restaurant.get(body["restaurant_id"])
     del body['restaurant_id']
     for field in body:
-        if body[field] != "":
-            setattr(restaurant, field, body[field])
+        setattr(restaurant, field, body[field])
     restaurant.clean_fields()
     restaurant.clean()
     restaurant.save()
