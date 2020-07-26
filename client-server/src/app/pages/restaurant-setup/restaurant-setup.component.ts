@@ -41,8 +41,6 @@ export class RestaurantSetupComponent implements OnInit {
       instagram: (<HTMLInputElement>document.getElementById('instagram')).value,
       GEO_location: 'blank',
       external_delivery_link: 'blank',
-      cover_photo_url: 'www.blank.com',
-      logo_url: 'www.blank.com',
       rating: '0.00',
     };
 
