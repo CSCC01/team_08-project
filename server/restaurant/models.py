@@ -2,9 +2,12 @@ from django.forms import model_to_dict
 from djongo import models
 from bson import ObjectId
 from restaurant.cuisine_dict import load_dict
+from cloud_storage import cloud_controller
 from restaurant.enum import Prices, Categories
+from django.core.exceptions import ObjectDoesNotExist
 
 
+# Model for the Food Items on the Menu
 class Food(models.Model):
     """ Model for the Food Items on the Menu """
     _id = models.ObjectIdField()
@@ -158,6 +161,9 @@ class Restaurant(models.Model):
     logo_url = models.CharField(max_length=200,
                                 default='https://d1csarkz8obe9u.cloudfront.net/posterpreviews/diner-restaurant-logo-design-template-0899ae0c7e72cded1c0abc4fe2d76ae4_screen.jpg?ts=1561476509')
     rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.00)
+    owner_name = models.CharField(max_length = 50, blank = True)
+    owner_story = models.CharField(max_length = 3000, blank = True)
+    owner_picture_url = models.CharField(max_length = 200, blank=True)
 
     @classmethod
     def get(cls, _id):
@@ -191,10 +197,28 @@ class Restaurant(models.Model):
         :param restaurant_data: json data of restaurant
         :return: restaurant object representing sent data
         """
-        restaurant = cls(
-            **restaurant_data
-        )
-        restaurant.clean_fields()
-        restaurant.clean()
+        try:
+            cls.objects.get(email=restaurant_data['email'])
+            return None
+        except ObjectDoesNotExist:
+            restaurant = cls(
+                **restaurant_data
+            )
+            restaurant.clean_fields()
+            restaurant.clean()
+            restaurant.save()
+            return restaurant
+
+    @classmethod
+    def update_logo(cls, img, _id):
+        """
+        Upload image to google cloud and change restaurant logo to that link
+        :param img:
+        :param _id:
+        :return:
+        """
+        restaurant = cls.get(_id=_id)
+        url = cloud_controller.upload(img, cloud_controller.TEST_BUCKET, content_type=cloud_controller.IMAGE)
+        restaurant.logo_url = url
         restaurant.save()
-        return restaurant
+        return url
