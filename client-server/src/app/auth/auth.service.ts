@@ -156,7 +156,9 @@ export class AuthService {
                 queryParams: { role: this.role },
               })
               .then(() => {
-                window.location.reload();
+                setTimeout(function () {
+                  window.location.reload();
+                }, 1000);
               });
           }
         });
