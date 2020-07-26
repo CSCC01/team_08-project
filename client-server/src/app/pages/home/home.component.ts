@@ -33,7 +33,7 @@ export class HomeComponent implements OnInit {
   cuisines = [
     {
       type: 'image',
-      path: 'assets/images/cuisines/chinese.png',
+      path: 'assets/images/cuisines/chinese.jpg',
       caption: 'Chinese',
     },
     {
@@ -48,7 +48,7 @@ export class HomeComponent implements OnInit {
     },
     {
       type: 'image',
-      path: 'assets/images/cuisines/italian.png',
+      path: 'assets/images/cuisines/italian.jpg',
       caption: 'Italian',
     },
     {
@@ -142,5 +142,9 @@ export class HomeComponent implements OnInit {
       left: 0,
       behavior: 'smooth',
     });
+  }
+
+  browseListings() {
+    this.router.navigate(['/all-listings']);
   }
 }

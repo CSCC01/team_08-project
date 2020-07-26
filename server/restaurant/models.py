@@ -7,8 +7,10 @@ from restaurant.enum import Prices, Categories
 
 
 
+
 # Model for the Food Items on the Menu
 class Food(models.Model):
+    """ Model for the Food Items on the Menu """
     _id = models.ObjectIdField()
     name = models.CharField(max_length=50, default='')
     restaurant_id = models.CharField(max_length=24, editable=False)
@@ -69,24 +71,23 @@ class Food(models.Model):
         return response
 
 
-# Model for Manual Tags
 class ManualTag(models.Model):
+    """ Model for Manual Tags """
     _id = models.ObjectIdField()
     category = models.CharField(max_length=4, choices=Categories.choices())
     value = models.CharField(max_length=50)
     foods = models.ListField(default=[], blank=True)
 
-    # Clears all the tags off a food item
     @classmethod
-    def clear_food_tags(cls, food_name, restaurant):
+    def clear_food_tags(cls, food_name, restaurant_id):
         """
-        Destroy all food -tag relationships for food
+        Destroy all food-tag relationships for food
         :param food_name: name of food
         :param restaurant: id of restaurant
         :return: None
         """
         food = Food.objects.get(name=food_name,
-                                restaurant_id=restaurant)
+                                restaurant_id=restaurant_id)
         for tag_id in food.tags:
             tag = ManualTag.objects.get(_id=tag_id)
             for food_id in tag.foods:
@@ -96,9 +97,7 @@ class ManualTag(models.Model):
         food.tags = []
         food.save()
 
-    # Adds Tag to food
     @classmethod
-
     def add_tag(cls, food_name, restaurant_id, category, value):
         """
         Add tag to food
@@ -144,6 +143,7 @@ class ManualTag(models.Model):
 
 
 class Restaurant(models.Model):
+    """ Model for Restaurants """
     _id = models.ObjectIdField()
     name = models.CharField(max_length=30)
     address = models.CharField(max_length=60)
@@ -151,7 +151,7 @@ class Restaurant(models.Model):
     email = models.EmailField(unique=True)
     city = models.CharField(max_length=40)
     cuisine = models.CharField(max_length=30)
-    pricepoint = models.CharField(max_length=10, choices=Prices.choices())  # add choices, make enum
+    pricepoint = models.CharField(max_length=10, choices=Prices.choices())
     twitter = models.CharField(max_length=200, blank=True)
     instagram = models.CharField(max_length=200, blank=True)
     bio = models.TextField(null=True)
@@ -168,7 +168,7 @@ class Restaurant(models.Model):
         """
         retrieve restaurant based on id
         :param _id: id of restaurant
-        :return: restaurant json
+        :return: restaurant json or None
         """
         restaurant = list(Restaurant.objects.filter(_id=ObjectId(_id)))
         if len(restaurant) == 1:

@@ -4,7 +4,7 @@
     "name": "Special Dish",
     "rating": "4",
     "price": "2.99",
-    "picture": "assets/images/cuisines/chinese.png",
+    "picture": "assets/images/cuisines/chinese.jpg",
     "description": "Very good dish",
     "allergy": "Nuts"
   },
