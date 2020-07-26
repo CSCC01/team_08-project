@@ -239,3 +239,47 @@ Specific apps, test suites, or even individual test cases can be run using the f
 |  test_upload                 | timeline   | PostSuite           | Given post data, Post document is generated in the database                                                                                                                               | No Post can be created                                                                                   |   Medium  |     High    |  Medium  |
 |  test_upload_comment         | timeline   | CommentSuite        | Given Comment data, Comment document is generated in the database                                                                                                                         | No Comments can be created                                                                               |   Medium  |     High    |  Medium  |
 |  test_upload_post            | timeline   | CommentSuite        | Given Comment data, Comment document id is added to original post's comments                                                                                                              | No Comments can be viewed                                                                                |   Medium  |     High    |  Medium  |
+|  test_upload                 | cloud_storage | CloudStorageTestCases | File is uploaded to cloud, and correct path pointing to file is returned                                                                                                             | Images media cannot be changed                                                                           |   High    |     High    |   High   |
+|  test_delete                 | cloud_storage | CloudStorageTestCases | File is removed from the cloud                                                                                                                                                       | Images remain clogging the storage                                                                       |   Medium  |    Medium   |  Medium  |
+|  test_delete_default         | cloud_storage | CloudStorageTestCases | Files in default-buckets are not deleted                                                                                                                                             | Default images are deleted, affecting many users unwantingly                                             |   High    |     High    |   High   |
+
+## API and Microservices
+
+### Cloud-storage
+
+Available constants 
+
+| Constant          | Description                     |
+| :---------------: | :-----------------------------: |
+| TEST_BUCKET       | Path to testing bucket          |
+| PRODUCTION_BUCKET | Path to deploy/production bucket|
+| IMAGE             | content type for images
+#### Functions
+
+#### `upload(file, bucket_path)`
+Upload file (binary data) into bucket path of our google cloud and return link to uploaded file
+
+#### `delete(file_path)`
+Check if pointed file from the file_path is a default object and if not, delete file from its bucket
+
+#### Example
+
+```python
+from cloud_storage import cloud_controller
+
+def test(file):
+    """
+    file is binary data, django forms can do this for you
+    or you can use pillows
+    """
+    # upload file to test bucket
+    path = cloud_controller.upload(file, cloud_controller.TEST_BUCKET)
+    
+    # optional parameter content_type, by setting it image this allows you to
+    # view image in the google console instead of downloading
+    #  path = cloud_controller.upload(file, cloud_controller.TEST_BUCKET, 
+            #  content_type=cloud_controller.IMAGE)
+    
+    # delete file
+    cloud_controller.delete(path)
+```

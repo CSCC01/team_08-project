@@ -3,6 +3,7 @@ from restaurant.models import Food, ManualTag, Restaurant
 from django.forms.models import model_to_dict
 from jsonschema import validate
 import json
+from request_form import upload_form
 
 # jsonschema validation schemes
 food_schema = {
@@ -63,7 +64,7 @@ def insert_tag_page(request):
 
 def clear_tags_page(request):
     """Clear tags/food relationship"""
-    # validate(instance=request.body, schema=tag_schema)
+    validate(instance=request.body, schema=tag_schema)
     body = json.loads(request.body)
     ManualTag.clear_food_tags(body['food_name'], body['restaurant_id'])
     return HttpResponse(status=200)
@@ -136,13 +137,21 @@ def edit_restaurant_page(request):
     restaurant = Restaurant.get(body["restaurant_id"])
     del body['restaurant_id']
     for field in body:
-        if body[field] != "":
-            setattr(restaurant, field, body[field])
+        setattr(restaurant, field, body[field])
     restaurant.clean_fields()
     restaurant.clean()
     restaurant.save()
     return HttpResponse(status=200)
 
+
+
+def update_logo(request):
+    """Upload file to cloud and set logo url to that file's url"""
+    form = upload_form.ImageIdForm(request.POST, request.FILES)
+    if form.is_valid():
+        Restaurant.update_logo(request.FILES['image'], request.POST['_id'])
+        return HttpResponse('SUCCESS')
+    return HttpResponse('FAILURE')
 
 def edit_dish_page(request):
     """Update Dish data"""
@@ -156,3 +165,4 @@ def edit_dish_page(request):
     dish.clean()
     dish.save()
     return HttpResponse(status=200)
+
