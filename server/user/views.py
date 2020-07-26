@@ -20,8 +20,8 @@ signup_schema = {
 }
 
 
-# Page to insert a user into the db provided all the user fields
 def signup_page(request):
+    """ Page to insert a user into the db provided all the user fields """
     validate(instance=request.body, schema=signup_schema)
     body = json.loads(request.body)
     user = SDUser.signup(nickname=body['nickname'], name=body['name'], picture=body['picture'],
@@ -30,9 +30,11 @@ def signup_page(request):
     return JsonResponse(model_to_dict(user))
 
 
-# Page to change the role of a user provided the user email and new role (If upgraded to RO must provide fields to make
-# new restaurant instance
 def reassign_page(request):
+    """
+    Page to change the role of a user provided the user email and new role (If upgraded to RO must
+    provide fields to make new restaurant instance
+    """
     validate(instance=request.body, schema=signup_schema)
     body = json.loads(request.body)
     user = SDUser.objects.get(pk=body['user_email'])
@@ -50,8 +52,8 @@ def reassign_page(request):
     return HttpResponse(status=200)
 
 
-# Page that returns all the user_data provided the user email
 def data_page(request):
+    """ Page that returns all the user_data provided the user email """
     req_email = request.GET.get('email')
     user = SDUser.objects.get(pk=req_email)
     return JsonResponse(
@@ -59,7 +61,7 @@ def data_page(request):
          'email': user.email, 'email_verified': user.email_verified, 'role': user.role})
 
 
-# Page that checks if an email is already registered in the database provided an user email
 def exists_page(request):
+    """ Page that checks if an email is already registered in the database provided an user email """
     req_email = request.GET.get('email')
     return JsonResponse({'exists': SDUser.objects.filter(email=req_email).exists()})

@@ -2,8 +2,8 @@ from django.db import models
 from user.enum import Roles
 
 
-# Scarborough Dining User
 class SDUser(models.Model):
+    """ Scarborough Dining User """
     nickname = models.CharField(max_length=30, blank=True, default="")
     name = models.CharField(max_length=50, default='')
     picture = models.CharField(max_length=200, default='')
@@ -13,9 +13,20 @@ class SDUser(models.Model):
     role = models.CharField(max_length=5, choices=Roles.choices(), default="BU")
     restaurant_id = models.CharField(max_length=24, blank=True, default=None)
 
-    # Constructs & Saves User to DB returning the newly signed up user object
     @classmethod
     def signup(cls, nickname, name, picture, updated, email, verified, role, restaurant_id):
+        """
+        Constructs & Saves User to DB returning the newly signed up user object
+        :param nickname: nickname of user
+        :param name: name of user
+        :param picture: URL to picture for user
+        :param updated: last updated at this time
+        :param email: email of user
+        :param verified: status of verification of account
+        :param role: role of user
+        :param restaurant_id: restaurant id associated with user
+        :return: new SDUser Object
+        """
         if role == "":
             role = "BU"
         if restaurant_id == "":
@@ -28,8 +39,12 @@ class SDUser(models.Model):
         user.save()
         return user
 
-    # Reassigns the Role as the User to the given Role
     def reassign_role(self, role):
+        """
+        Reassigns the Role as the User to the given Role
+        :param role: the new role to be given to the user
+        :return: None
+        """
         if self.role != role:
             self.role = role
             self.save(update_fields=["role"])

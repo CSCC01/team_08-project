@@ -1,11 +1,16 @@
 import { Component, OnInit, Input, HostListener } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { faMapMarkerAlt, faPhone } from '@fortawesome/free-solid-svg-icons';
+import { ActivatedRoute, Router } from '@angular/router';
+import {
+  faMapMarkerAlt,
+  faPhone,
+  faEdit,
+} from '@fortawesome/free-solid-svg-icons';
 import { faHeart, faEnvelope } from '@fortawesome/free-regular-svg-icons';
 import { faTwitter, faInstagram } from '@fortawesome/free-brands-svg-icons';
 import { RestaurantsService } from 'src/app/service/restaurants.service';
 import dishes from '../../../assets/data/dishes.json';
 import reviews from '../../../assets/data/reviews.json';
+import { DataService } from 'src/app/service/data.service';
 
 @Component({
   selector: 'app-restaurant-page',
@@ -16,6 +21,7 @@ export class RestaurantPageComponent implements OnInit {
   @Input() userId: any; // pass the user id everywhere
 
   restaurantId: string;
+  role: string;
   dishes: any[] = [];
   reviews: any[] = [];
   restaurantDetails: any;
@@ -41,10 +47,13 @@ export class RestaurantPageComponent implements OnInit {
   faHeartLine = faHeart;
   faTwitter = faTwitter;
   faInstagram = faInstagram;
+  faEdit = faEdit;
 
   constructor(
     private route: ActivatedRoute,
-    private restaurantsService: RestaurantsService
+    private router: Router,
+    private restaurantsService: RestaurantsService,
+    private data: DataService
   ) {
     this.dishes = dishes;
     this.reviews = reviews;
@@ -52,6 +61,10 @@ export class RestaurantPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.restaurantId = this.route.snapshot.queryParams.restaurantId;
+    this.role = this.route.snapshot.queryParams.role;
+
+    this.data.changeRestaurantId(this.restaurantId);
+    this.data.changeRole(this.role);
 
     // generate restaurant page
     this.restaurantsService
@@ -83,5 +96,11 @@ export class RestaurantPageComponent implements OnInit {
       el2.classList.add('col-md-5');
       el3.classList.add('row');
     }
+  }
+
+  editMenu() {
+    this.router.navigate(['/menu-edit'], {
+      queryParams: { role: this.role, restaurantId: this.restaurantId },
+    });
   }
 }

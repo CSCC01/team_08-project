@@ -15,32 +15,46 @@
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item nav-link">
-        <a routerLink="/" class="nav-link">
+        <a
+          routerLink="/"
+          [queryParams]="{ role: role, restaurantId: restaurantId }"
+          class="nav-link"
+        >
           HOME
         </a>
       </li>
-      <li class="nav-item nav-link">
-        <a
-          routerLink="profile"
-          routerLinkActive="active"
-          *ngIf="auth.loggedIn"
-          class="nav-link"
-        >
+      <li class="nav-item nav-link" *ngIf="auth.loggedIn && role == 'BU'">
+        <a routerLink="profile" routerLinkActive="active" class="nav-link">
           PROFILE
         </a>
       </li>
-      <li class="nav-item nav-link">
+      <li class="nav-item nav-link" *ngIf="role == 'RO'">
         <a
           routerLink="dashboard"
+          [queryParams]="{ role: role, restaurantId: restaurantId }"
           routerLinkActive="active"
-          *ngIf="auth.role == 'RO'"
           class="nav-link"
         >
           DASHBOARD
         </a>
       </li>
+      <li class="nav-item nav-link" *ngIf="auth.loggedIn && role == 'RO'">
+        <a
+          routerLink="restaurant"
+          [queryParams]="{ role: role, restaurantId: restaurantId }"
+          routerLinkActive="active"
+          class="nav-link"
+        >
+          RESTAURANT PAGE
+        </a>
+      </li>
       <li class="nav-item nav-link">
-        <a routerLink="all-listings" routerLinkActive="active" class="nav-link">
+        <a
+          routerLink="all-listings"
+          *ngIf="role != 'RO'"
+          routerLinkActive="active"
+          class="nav-link"
+        >
           BROWSE
         </a>
       </li>
@@ -49,7 +63,7 @@
       <button
         type="button"
         class="upgrade-button"
-        *ngIf="auth.loggedIn && auth.role == 'BU'"
+        *ngIf="auth.loggedIn && role == 'BU'"
         data-toggle="modal"
         data-target="#exampleModal"
       >
