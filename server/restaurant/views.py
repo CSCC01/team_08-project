@@ -1,8 +1,9 @@
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
 from restaurant.models import Food, ManualTag, Restaurant
 from django.forms.models import model_to_dict
 from jsonschema import validate
 import json
+from request_form import upload_form
 
 # jsonschema validation schemes
 food_schema = {
@@ -45,7 +46,7 @@ restaurant_schema = {
         "instagram": {"type": "string"},
         "bio": {"type": "string"},
         "GEO_location": {"type": "string"},
-        "exernal_delivery_link": {"type": "string"},
+        "external_delivery_link": {"type": "string"},
         "cover_photo_url": {"type": "string"},
         "logo_url": {"type": "string"},
         "rating": {"type": "string"},
@@ -128,8 +129,12 @@ def insert_restaurant_page(request):
     """Insert new restaurant into database"""
     validate(instance=request.body, schema=restaurant_schema)
     restaurant = Restaurant.insert(json.loads(request.body))
-    restaurant._id = str(restaurant._id)
-    return JsonResponse(model_to_dict(restaurant))
+    if restaurant is not None:
+        restaurant._id = str(restaurant._id)
+        return JsonResponse(model_to_dict(restaurant))
+    else:
+        return HttpResponseBadRequest('duplicate email')
+
 
 
 def edit_restaurant_page(request):
@@ -146,6 +151,15 @@ def edit_restaurant_page(request):
     return HttpResponse(status=200)
 
 
+
+def update_logo(request):
+    """Upload file to cloud and set logo url to that file's url"""
+    form = upload_form.ImageIdForm(request.POST, request.FILES)
+    if form.is_valid():
+        Restaurant.update_logo(request.FILES['image'], request.POST['_id'])
+        return HttpResponse('SUCCESS')
+    return HttpResponse('FAILURE')
+
 def edit_dish_page(request):
     """Update Dish data"""
     validate(instance=request.body, schema=food_schema)
@@ -158,3 +172,4 @@ def edit_dish_page(request):
     dish.clean()
     dish.save()
     return HttpResponse(status=200)
+

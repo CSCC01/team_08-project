@@ -77,6 +77,29 @@ This section will go over all the backends components of the Scarborough Dining 
     owner_picture_url = models.CharField(max_length = 200, blank=True)
 ```
 
+###### TimelinePost
+```python
+class TimelinePost(models.Model):
+    _id = models.ObjectIdField()
+    restaurant_id = models.CharField(max_length=24)
+    user_id = models.CharField(max_length=24)
+    likes = models.ListField(default=[], blank=True)
+    content = models.TextField(max_length=4096)
+    Timestamp = models.DateTimeField(auto_now=True)
+    comments = models.ListField(default=[], blank=True)
+```
+
+##### TimelineComment
+```python
+class TimelineComment(models.Model):
+    _id = models.ObjectIdField()
+    post_id = models.CharField(max_length=24)
+    user_id = models.CharField(max_length=24)
+    likes = models.ListField(default=[], blank=True)
+    content = models.TextField(max_length=256)
+    Timestamp = models.DateTimeField(auto_now=True)
+```
+
 ###### Prices (Enum)
 
     Low = "$"
@@ -109,8 +132,10 @@ This section will go over all the backends components of the Scarborough Dining 
 | /restaurant/dish/get_by_restaurant/ | restaurant_id                                                                                                                                                                      |                                                        | GET  | retrieves all dishes from restaurant                         |
 |          /restaurant/get/           | \_id                                                                                                                                                                               |                                                        | GET  | Retrieves Restaurant data                                    |
 |        /restaurant/get_all/         |                                                                                                                                                                                    |                                                        | GET  | Retrieves all Restaurants                                    |
-|         /restaurant/insert/         | name, address, phone, email, city, cuisine, pricepoint (_Price_ Name), instagram, twitter, GEO_location, external_delivery_link, bio, cover_photo_url, logo_url, rating            |owner_name, owner_story, owner_picture_url                                                        | POST | Registers a Restaurant to DB                                 |
+|         /restaurant/insert/         | name, address, phone, email (unique), city, cuisine, pricepoint (_Price_ Name), instagram, twitter, GEO_location, external_delivery_link, bio, cover_photo_url, logo_url, rating   |owner_name, owner_story, owner_picture_url                                                         | POST | Registers a Restaurant to DB                                 |
 |          /restaurant/edit/          | restaurant_id                                                                                                                                                                      | **(All Fields Needed for /restaurant/insert/)**        | POST | Updates the fields of the given Restaurant with the new data |
+|        /timeline/post/upload/       | restaurant_id, user_id, content                                                                                                                                                    |                                                        | POST | Add post to timeline table                                   |
+|      /timeline/comment/upload/      | post_id, user_id, content                                                                                                                                                          |                                                        | POST | Add comment to database and to post                          |
 
 All requests should be sent in a JSON format. Optional parameters can be left blank Ex: {"Role" : ""}. Bolded Fields can be omitted entirely.
 
@@ -214,5 +239,50 @@ Specific apps, test suites, or even individual test cases can be run using the f
 |  test_find_all_restaurant    | restaurant | RestaurantTestCases | All restaurant documents are retrieved from database                                                                                                                                      | Frontend will is unable to display restaurant data                                                       |    High   |     High    |   High   |
 |  test_insert_restaurant      | restaurant | RestaurantTestCases | Given restaurant data, restaurant document is inserted into database representing said data                                                                                               | New restaurants cannot be added to the database                                                          |    High   |     High    |   High   |
 |  test_edit_restaurant        | restaurant | RestaurantTestCases | Given new restaurant data, restaurant document is updated to represent new data                                                                                                           | Restaurant data becomes static and cannot be changed by restaurant owner                                 |   Medium  |    Medium   |  Medium  |
+|  test_upload                 | timeline   | PostSuite           | Given post data, Post document is generated in the database                                                                                                                               | No Post can be created                                                                                   |   Medium  |     High    |  Medium  |
+|  test_upload_comment         | timeline   | CommentSuite        | Given Comment data, Comment document is generated in the database                                                                                                                         | No Comments can be created                                                                               |   Medium  |     High    |  Medium  |
+|  test_upload_post            | timeline   | CommentSuite        | Given Comment data, Comment document id is added to original post's comments                                                                                                              | No Comments can be viewed                                                                                |   Medium  |     High    |  Medium  |
+|  test_upload                 | cloud_storage | CloudStorageTestCases | File is uploaded to cloud, and correct path pointing to file is returned                                                                                                             | Images media cannot be changed                                                                           |   High    |     High    |   High   |
+|  test_delete                 | cloud_storage | CloudStorageTestCases | File is removed from the cloud                                                                                                                                                       | Images remain clogging the storage                                                                       |   Medium  |    Medium   |  Medium  |
+|  test_delete_default         | cloud_storage | CloudStorageTestCases | Files in default-buckets are not deleted                                                                                                                                             | Default images are deleted, affecting many users unwantingly                                             |   High    |     High    |   High   |
 
+## API and Microservices
 
+### Cloud-storage
+
+Available constants 
+
+| Constant          | Description                     |
+| :---------------: | :-----------------------------: |
+| TEST_BUCKET       | Path to testing bucket          |
+| PRODUCTION_BUCKET | Path to deploy/production bucket|
+| IMAGE             | content type for images
+#### Functions
+
+#### `upload(file, bucket_path)`
+Upload file (binary data) into bucket path of our google cloud and return link to uploaded file
+
+#### `delete(file_path)`
+Check if pointed file from the file_path is a default object and if not, delete file from its bucket
+
+#### Example
+
+```python
+from cloud_storage import cloud_controller
+
+def test(file):
+    """
+    file is binary data, django forms can do this for you
+    or you can use pillows
+    """
+    # upload file to test bucket
+    path = cloud_controller.upload(file, cloud_controller.TEST_BUCKET)
+    
+    # optional parameter content_type, by setting it image this allows you to
+    # view image in the google console instead of downloading
+    #  path = cloud_controller.upload(file, cloud_controller.TEST_BUCKET, 
+            #  content_type=cloud_controller.IMAGE)
+    
+    # delete file
+    cloud_controller.delete(path)
+```

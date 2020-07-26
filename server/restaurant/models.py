@@ -2,9 +2,12 @@ from django.forms import model_to_dict
 from djongo import models
 from bson import ObjectId
 from restaurant.cuisine_dict import load_dict
+from cloud_storage import cloud_controller
 from restaurant.enum import Prices, Categories
+from django.core.exceptions import ObjectDoesNotExist
 
 
+# Model for the Food Items on the Menu
 class Food(models.Model):
     """ Model for the Food Items on the Menu """
     _id = models.ObjectIdField()
@@ -194,10 +197,28 @@ class Restaurant(models.Model):
         :param restaurant_data: json data of restaurant
         :return: restaurant object representing sent data
         """
-        restaurant = cls(
-            **restaurant_data
-        )
-        restaurant.clean_fields()
-        restaurant.clean()
+        try:
+            cls.objects.get(email=restaurant_data['email'])
+            return None
+        except ObjectDoesNotExist:
+            restaurant = cls(
+                **restaurant_data
+            )
+            restaurant.clean_fields()
+            restaurant.clean()
+            restaurant.save()
+            return restaurant
+
+    @classmethod
+    def update_logo(cls, img, _id):
+        """
+        Upload image to google cloud and change restaurant logo to that link
+        :param img:
+        :param _id:
+        :return:
+        """
+        restaurant = cls.get(_id=_id)
+        url = cloud_controller.upload(img, cloud_controller.TEST_BUCKET, content_type=cloud_controller.IMAGE)
+        restaurant.logo_url = url
         restaurant.save()
-        return restaurant
+        return url
