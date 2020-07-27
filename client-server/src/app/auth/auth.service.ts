@@ -125,7 +125,6 @@ export class AuthService {
         this.loginService.checkUserExists(user).subscribe((bool) => {
           if (bool.exists) {
             this.loginService.getUser(user).subscribe((data) => {
-              console.log(data);
               this.role = data.role;
               if (data.role == 'RO') {
                 this.restaurantId = data.restaurant_id;
@@ -135,12 +134,18 @@ export class AuthService {
               this.data.changeRestaurantId(this.restaurantId);
 
               // Redirect to target route after callback processing
-              this.router.navigate([targetRoute], {
-                queryParams: {
-                  role: this.role,
-                  restaurantId: this.restaurantId,
-                },
-              });
+              this.router
+                .navigate([targetRoute], {
+                  queryParams: {
+                    role: this.role,
+                    restaurantId: this.restaurantId,
+                  },
+                })
+                .then(() => {
+                  setTimeout(function () {
+                    window.location.reload();
+                  }, 1000);
+                });
             });
           } else {
             user.role = 'BU';

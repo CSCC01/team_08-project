@@ -58,6 +58,16 @@
           BROWSE
         </a>
       </li>
+      <li class="nav-item nav-link">
+        <a
+          routerLink="timeline"
+          [queryParams]="{ role: role, restaurantId: restaurantId }"
+          routerLinkActive="active"
+          class="nav-link"
+        >
+          TIMELINE
+        </a>
+      </li>
     </ul>
     <ul class="navbar-nav">
       <button

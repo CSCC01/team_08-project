@@ -1,55 +1,27 @@
 <div class="post-card">
   <div class="card post-content">
-    <!-- {{ post.content }} -->
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-    consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
-    non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    {{ post.content }}
     <div class="text-right" style="margin-top: 20px;">
-      Posted on
-      <!-- {{ post.Timestamp }} -->
-      by
-      <!-- use restaurant id to get restaurant name -->
+      Posted on {{ post.Timestamp }} by
+      <b> {{ post.restaurant_name | titlecase }} </b>
     </div>
     <div *ngIf="role == 'RO'" class="text-right">
       <button class="btn trashBtn"><fa-icon [icon]="faTrash"></fa-icon></button>
-      <!-- on click, send post id and delete post-->
     </div>
   </div>
 
   <div class="card comment-content">
     <div class="comment">
       <div class="col">
-        <div class="row comment-group">
+        <div *ngFor="let comment of comments" class="row comment-group">
           <img
             src="https://png.pngtree.com/element_our/png/20181206/users-vector-icon-png_260862.jpg"
             class="user-img"
             alt="name"
             placement="top"
-            ngbTooltip="user name here"
+            ngbTooltip="{{ comment.user_id }}"
           />
-          <!-- list of comment id for the post, use user id in comment to get user info -->
-          <div class="user-comment">content</div>
-          <!-- comment.content -->
-        </div>
-        <div class="row comment-group">
-          <img
-            src="https://png.pngtree.com/element_our/png/20181206/users-vector-icon-png_260862.jpg"
-            class="user-img"
-            alt="name"
-            placement="top"
-            ngbTooltip="user name here"
-          />
-          <div class="user-comment">
-            content content content content content content content content
-            content content content content content content content content
-            content content content content content content content content
-            content content content content content content content content
-            content content content content content content content content
-            content content
-          </div>
+          <div class="user-comment">{{ comment.content }}</div>
           <div
             *ngIf="role == 'RO'"
             class="text-right"
@@ -57,13 +29,11 @@
           >
             <fa-icon [icon]="faTrash" class="comment-trash-icon"></fa-icon>
           </div>
-          <!-- on click send id and delete comment -->
         </div>
       </div>
     </div>
     <hr />
     <div class="comment">
-      <!-- use query user id get info -->
       <div class="col">
         <div class="row comment-group">
           <img
@@ -71,7 +41,6 @@
             class="user-img"
             alt="name"
           />
-          <!-- list of comment id for the post, use user id in comment to get user info -->
           <input
             type="text"
             class="form-control user-input"

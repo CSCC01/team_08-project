@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from 'src/app/service/data.service';
+import { TimelineService } from 'src/app/service/timeline.service';
+import { RestaurantsService } from 'src/app/service/restaurants.service';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-timeline',
@@ -10,9 +13,16 @@ import { DataService } from 'src/app/service/data.service';
 export class TimelineComponent implements OnInit {
   restaurantId: string = '';
   role: string = '';
+  restaurantName: string = '';
+
+  posts: any[] = [];
+
+  faPlus = faPlus;
 
   constructor(
     private data: DataService,
+    private timeline: TimelineService,
+    private restaurantsService: RestaurantsService,
     private route: ActivatedRoute,
     private router: Router
   ) {}
@@ -24,12 +34,31 @@ export class TimelineComponent implements OnInit {
     this.data.changeRole(this.role);
     this.data.changeRestaurantId(this.restaurantId);
 
-    this.loadTimeline(this.restaurantId);
+    if (this.restaurantId == undefined) {
+      this.loadTimeline();
+    } else {
+      this.getRestaurantName();
+      this.loadTimeline(this.restaurantId);
+    }
   }
 
-  loadTimeline(id) {
-    // if id is there, its the individual timeline list
-    // it not, its the overall timeline list
-    // call the endpoint accordingly
+  getRestaurantName() {
+    this.restaurantsService
+      .getRestaurant(this.restaurantId)
+      .subscribe((data) => {
+        this.restaurantName = data.name;
+      });
+  }
+
+  loadTimeline(id?) {
+    if (id == undefined) {
+      this.timeline.getAllPosts().subscribe((data) => {
+        this.posts = data.Posts;
+      });
+    } else {
+      this.timeline.getRestaurantPosts(id).subscribe((data) => {
+        this.posts = data.Posts;
+      });
+    }
   }
 }

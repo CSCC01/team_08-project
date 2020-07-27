@@ -1,11 +1,27 @@
 <h2 class="title">Timeline</h2>
 
-<div class="d-flex justify-content-center">
-  <app-timeline-post [role]="'BU'"></app-timeline-post>
-  <!-- need to input role, if RO they have delete button; use query params -->
+<h2 *ngIf="restaurantId" class="no-posts">
+  For {{ restaurantName | titlecase }}
+</h2>
+
+<div *ngIf="role == 'RO' && posts.length != 0" style="text-align: center;">
+  <button class="btn new-post">
+    NEW POST
+  </button>
 </div>
-<div class="d-flex justify-content-center">
-  <app-timeline-post [role]="'RO'"></app-timeline-post>
+
+<div *ngIf="posts.length == 0" style="text-align: center;">
+  <h2 class="no-posts">No Posts!</h2>
+  <br />
+  <img class="empty-image" src="assets/images/undraw_begin_chat_c6pj.png" />
+  <br />
+  <button *ngIf="role == 'RO'" class="btn convo-start">
+    START A CONVERSATION
+  </button>
+</div>
+
+<div *ngFor="let post of posts" class="d-flex justify-content-center">
+  <app-timeline-post [post]="post" [role]="role"></app-timeline-post>
 </div>
 
 <img class="bottom-left" src="assets/images/undraw_Group_chat_unwm.png" />

@@ -98,6 +98,12 @@ export class RestaurantPageComponent implements OnInit {
     }
   }
 
+  viewTimeline() {
+    this.router.navigate(['/timeline'], {
+      queryParams: { role: this.role, restaurantId: this.restaurantId },
+    });
+  }
+
   editMenu() {
     this.router.navigate(['/menu-edit'], {
       queryParams: { role: this.role, restaurantId: this.restaurantId },
