@@ -6,4 +6,5 @@ urlpatterns = [
     path('role_reassign/', views.reassign_page, name='reassign_page'),
     path('data/', views.data_page, name='data_page'),
     path('exists/', views.exists_page, name='exists_page'),
+    path('edit/', views.edit_user_page, name='edit_user_page'),
 ]
