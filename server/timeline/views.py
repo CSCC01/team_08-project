@@ -82,6 +82,10 @@ def delete_post_page(request):
     return JsonResponse({'post' : post_deleted, 'comments' : comment_response_list})
 
 
+def get_all_posts_page(request):
+    """ retrieve list of restaurants from database """
+    return JsonResponse(TimelinePost.get_all())
+
 
 def upload_comment_page(request):
     """Upload post into post timeline post table"""
@@ -93,7 +97,7 @@ def upload_comment_page(request):
       
     body = json.loads(request.body)
 
-    try:    # validate post
+    try:  # validate post
         post = TimelinePost.objects.get(_id=body['post_id'])
     except ObjectDoesNotExist:
         return HttpResponseBadRequest('Invalid Post_id')
@@ -108,3 +112,12 @@ def upload_comment_page(request):
 
     comment._id = str(comment._id)
     return JsonResponse(model_to_dict(comment))
+
+
+def get_comment_data_page(request):
+    """ Retrieve comment data of given comment from database """
+    comment = TimelineComment.objects.get(_id=request.GET.get('_id'))
+    comment._id = str(comment._id)
+    comment.likes = list(map(str, comment.likes))
+    return JsonResponse({'_id': comment._id, 'post_id': comment.post_id, 'user_id': comment.user_id,
+                         'likes': comment.likes, 'content': comment.content, 'Timestamp': comment.Timestamp})

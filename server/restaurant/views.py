@@ -59,7 +59,7 @@ restaurant_schema = {
 dish_editable = ["name", "description", "picture", "price", "specials"]
 
 restaurant_editable = ["name", "address", "phone", "updated_at", "email", "city", "cuisine", "pricepoint", "twitter",
-                       "instagram", "bio", "external_delivery_link", "cover_photo_url", "logo_url"]
+                       "instagram", "bio", "external_delivery_link", "cover_photo_url", "logo_url", "owner_name", "owner_story", "owner_picture_url"]
 
 def insert_tag_page(request):
     """Insert tag to database"""

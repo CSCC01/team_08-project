@@ -1,3 +1,4 @@
+from django.forms import model_to_dict
 from django.test import TestCase, RequestFactory
 from timeline.models import TimelinePost, TimelineComment
 from timeline import views as server
@@ -15,6 +16,15 @@ class PostSuite(TestCase):
             'user_id': '111111111111111111111111',
             'content': 'Post',
         }
+        self.data2 = {
+            '_id': '333333333333333333333333',
+            'restaurant_id': '000000000000000000000000',
+            'user_id': '111111111111111111111111',
+            'content': 'Post',
+            'comments': [],
+            'likes': [],
+        }
+        d2 = TimelinePost.objects.create(**self.data2)
 
         ## test values for deletion testing
         self.deletepost = {
@@ -26,7 +36,7 @@ class PostSuite(TestCase):
             'likes': []
         }
         self.unrelatedpost = {
-            '_id': '333333333333333333333333',
+            '_id': '333333333333333333333334',
             'restaurant_id': '0000000000000000000000',
             'user_id': '111111111111111111111111',
             'content': 'deletethispost',
@@ -60,7 +70,7 @@ class PostSuite(TestCase):
             'user_id': '111111111111111111111111',
             'content': 'Post',
             'likes': [],
-            'comments': []
+            'comments': [],
         }
         self.assertDictEqual(actual, expected)
     
@@ -100,6 +110,15 @@ class PostSuite(TestCase):
         
 
 
+    def test_get_all_post(self):
+        """ Test if all post documents are returned """
+        request = RequestFactory().get('/api/timeline/post/get_all/')
+        actual = json.loads(server.get_all_posts_page(request).content)['Posts']
+        for post in actual:
+            del post['Timestamp']
+        expected = [self.data2]
+        self.assertListEqual(expected, actual)
+
 
 class CommentSuite(TestCase):
 
@@ -110,11 +129,19 @@ class CommentSuite(TestCase):
             'content': 'Post',
         })
 
+        self.comment = TimelineComment.objects.create(**{
+            '_id': '333333333333333333333333',
+            'post_id': str(self.post._id),
+            'user_id': '111111111111111111111111',
+            'likes': [],
+            'content': "To be deleted"
+        })
+
     def testUploadComment(self):
         """Test comment data is added to the database"""
-        request = RequestFactory().post('api/timeline/timeline/comment/upload/', {
+        request = RequestFactory().post('api/timeline/comment/upload/', {
             '_id': '000000000000000000000000',
-            'post_id' : str(self.post._id),
+            'post_id': str(self.post._id),
             'user_id': '111111111111111111111111',
             'content': 'testing'
         }, content_type='application/json')
@@ -125,15 +152,15 @@ class CommentSuite(TestCase):
             'post_id': str(self.post._id),
             'user_id': '111111111111111111111111',
             'content': 'testing',
-            'likes':[]
+            'likes': []
         }
         self.assertDictEqual(actual, expected)
 
     def testUploadPost(self):
         """Test comment id is added to post array"""
-        request = RequestFactory().post('api/timeline/timeline/comment/upload/', {
+        request = RequestFactory().post('api/timeline/comment/upload/', {
             '_id': '000000000000000000000000',
-            'post_id' : str(self.post._id),
+            'post_id': str(self.post._id),
             'user_id': '111111111111111111111111',
             'content': 'testing'
         }, content_type='application/json')
@@ -142,3 +169,13 @@ class CommentSuite(TestCase):
         expected = [ObjectId('000000000000000000000000')]
         actual = self.post.comments
         self.assertListEqual(expected, actual)
+
+    def test_get_comment(self):
+        """ Test if correct comment is retrieved given id """
+        request = RequestFactory().get('/api/timeline/comment/get/', {'_id': "333333333333333333333333"},
+                                       content_type="application/json")
+        actual = json.loads(server.get_comment_data_page(request).content)
+        del actual['Timestamp']
+        expected = {'_id': '333333333333333333333333', 'post_id': str(self.post._id),
+                    'user_id': '111111111111111111111111', 'likes': [], 'content': 'To be deleted'}
+        self.assertDictEqual(expected, actual)
