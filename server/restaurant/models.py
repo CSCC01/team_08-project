@@ -161,9 +161,9 @@ class Restaurant(models.Model):
     logo_url = models.CharField(max_length=200,
                                 default='https://d1csarkz8obe9u.cloudfront.net/posterpreviews/diner-restaurant-logo-design-template-0899ae0c7e72cded1c0abc4fe2d76ae4_screen.jpg?ts=1561476509')
     rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.00)
-    owner_name = models.CharField(max_length = 50, blank = True)
-    owner_story = models.CharField(max_length = 3000, blank = True)
-    owner_picture_url = models.CharField(max_length = 200, blank=True)
+    owner_name = models.CharField(max_length=50, blank=True)
+    owner_story = models.CharField(max_length=3000, blank=True)
+    owner_picture_url = models.CharField(max_length=200, blank=True)
 
     @classmethod
     def get(cls, _id):
