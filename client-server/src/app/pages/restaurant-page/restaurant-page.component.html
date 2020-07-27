@@ -85,6 +85,25 @@
   </div>
 
   <mat-tab-group mat-align-tabs="center">
+    <mat-tab label="About Us">
+      <div style="text-align: center;">
+        <button *ngIf="role == 'RO'" class="btn editBtn" (click)="editMenu()">
+          <fa-icon [icon]="faEdit"></fa-icon>
+          <b>EDIT OWNER</b>
+        </button>
+      </div>
+      <div class="row">
+        <div class="form-group col-md-6">
+          <img class="owner-image" src="../../../assets/images/owner.jpg" />
+        </div>
+        <div class="form-group col-md-6">
+          <h2 class="owner-name">{{ restaurantDetails.owner_name }}</h2>
+          <div class="card story-card">
+            <p>{{ restaurantDetails.owner_story }}</p>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
     <mat-tab label="Menu">
       <div style="text-align: center;">
         <button *ngIf="role == 'RO'" class="btn editBtn" (click)="editMenu()">

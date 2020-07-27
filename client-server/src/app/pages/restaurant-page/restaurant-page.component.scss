@@ -112,6 +112,18 @@ ngb-alert {
   }
 }
 
+.story-card {
+  width: 600px;
+  height: auto;
+  margin: 30px auto;
+  padding: 40px 75px;
+  box-shadow: 5px 5px 5px rgb(150, 150, 150);
+
+  @media screen and (max-width: 900px) {
+    width: 90%;
+  }
+}
+
 .editBtn {
   height: 50px;
   padding: 0 15px 0 5px;
@@ -126,4 +138,22 @@ ngb-alert {
   fa-icon {
     color: $secondary-color;
   }
+}
+
+.owner-image {
+  width: 300px;
+  height: 300px;
+  margin-top: 5%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+
+  @media screen and (max-width: 900px) {
+    width: 90%;
+  }
+}
+
+.owner-name {
+  margin: 30px auto;
+  padding: 40px 75px;
 }
