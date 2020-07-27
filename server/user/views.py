@@ -57,10 +57,7 @@ def data_page(request):
     """ Page that returns all the user_data provided the user email """
     req_email = request.GET.get('email')
     user = SDUser.objects.get(pk=req_email)
-    return JsonResponse(
-        {'nickname': user.nickname, 'name': user.name, 'picture': user.picture, 'updated_at': user.last_updated,
-         'email': user.email, 'email_verified': user.email_verified, 'role': user.role})
-
+    return JsonResponse(model_to_dict(user))
 
 def exists_page(request):
     """ Page that checks if an email is already registered in the database provided an user email """
