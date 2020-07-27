@@ -36,3 +36,18 @@
   position: relative;
   right: 0px;
 }
+
+.cancel {
+  color: $secondary-color;
+  background-color: white;
+  border-color: $secondary-color;
+  padding-left: 60px;
+  padding-right: 60px;
+  position: relative;
+  right: 0px;
+}
+
+.cancel:hover {
+  color: white;
+  background-color: $secondary-color;
+}
