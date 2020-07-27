@@ -96,7 +96,7 @@ This section will go over all the backends components of the Scarborough Dining 
 ```python
     _id = models.ObjectIdField()
     restaurant_id = models.CharField(max_length=24)
-    user_id = models.CharField(max_length=24)
+    user_email = models.EmailField()
     likes = models.ListField(default=[], blank=True)
     content = models.TextField(max_length=4096)
     Timestamp = models.DateTimeField(auto_now=True)
@@ -107,7 +107,7 @@ This section will go over all the backends components of the Scarborough Dining 
 ```python
     _id = models.ObjectIdField()
     post_id = models.CharField(max_length=24)
-    user_id = models.CharField(max_length=24)
+    user_email = models.EmailField()
     likes = models.ListField(default=[], blank=True)
     content = models.TextField(max_length=256)
     Timestamp = models.DateTimeField(auto_now=True)
@@ -142,7 +142,7 @@ This section will go over all the backends components of the Scarborough Dining 
 |        /timeline/post/get_all/      |                                                                                                                                                                                    |                                                                                    | GET  | Retrieves all posts                                          |
 |      /timeline/comment/upload/      | post_id, user_email, content                                                                                                                                                       |                                                                                    | POST | Add comment to database and to post                          |
 |      /timeline/comment/delete/      | \_id                                                                                                                                                                               |                                                                                    | POST | Deletes a comment from the database                          |
-|      /timeline/comment/get/         | _id                                                                                                                                                                                |                                                                                    | GET  | Retrieves comment data                                       |
+|      /timeline/comment/get/         | \_id                                                                                                                                                                                |                                                                                   | GET  | Retrieves comment data                                       |
 
 All requests should be sent in a JSON format. Optional parameters can be left blank Ex: {"Role" : ""}. Bolded Fields can be omitted entirely.
 
