@@ -61,7 +61,6 @@ def data_page(request):
         {'nickname': user.nickname, 'name': user.name, 'picture': user.picture, 'updated_at': user.last_updated,
          'email': user.email, 'email_verified': user.email_verified, 'role': user.role})
 
-
 def exists_page(request):
     """ Page that checks if an email is already registered in the database provided an user email """
     req_email = request.GET.get('email')
