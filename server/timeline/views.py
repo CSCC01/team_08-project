@@ -10,7 +10,7 @@ from django.core.exceptions import ObjectDoesNotExist, ValidationError
 post_schema = {
     'properties': {
         'restaurant_id': {'type': 'string'},
-        'user_id': {'type': 'string'},
+        'user_email': {'type': 'string'},
         'content': {'type': 'string'}
     }
 }
@@ -18,7 +18,7 @@ post_schema = {
 comment_schema = {
     'properties': {
         'post_id': {'type': 'string'},
-        'user_id': {'type': 'string'},
+        'user_email': {'type': 'string'},
         'content': {'type': 'string'}
     }
 }
@@ -133,5 +133,5 @@ def get_comment_data_page(request):
     comment = TimelineComment.objects.get(_id=request.GET.get('_id'))
     comment._id = str(comment._id)
     comment.likes = list(map(str, comment.likes))
-    return JsonResponse({'_id': comment._id, 'post_id': comment.post_id, 'user_id': comment.user_id,
+    return JsonResponse({'_id': comment._id, 'post_id': comment.post_id, 'user_email': comment.user_email,
                          'likes': comment.likes, 'content': comment.content, 'Timestamp': comment.Timestamp})
