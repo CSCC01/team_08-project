@@ -15,11 +15,29 @@ class PostSuite(TestCase):
             'user_id': '111111111111111111111111',
             'content': 'Post',
         }
+        self.data2 = {
+            '_id': '333333333333333333333333',
+            'restaurant_id': '000000000000000000000000',
+            'user_id': '111111111111111111111111',
+            'content': 'Post',
+            'comments': [],
+            'likes': [],
+        }
+        self.data3 = {
+            '_id': '444444444444444444444444',
+            'restaurant_id': '111111111111111111111111',
+            'user_id': '111111111111111111111111',
+            'content': 'Post3',
+            'comments': [],
+            'likes': [],
+        }
+        TimelinePost.objects.create(**self.data2)
+        TimelinePost.objects.create(**self.data3)
 
     def testUpload(self):
         """Test post data is added to the database"""
         request = RequestFactory().post('api/timeline/post/upload/', self.data, content_type='application/json')
-        response = server.upload_post(request)
+        response = server.upload_post_page(request)
         actual = json.loads(response.content)
         expected = {
             '_id': '222222222222222222222222',
@@ -31,6 +49,15 @@ class PostSuite(TestCase):
         }
         self.assertDictEqual(actual, expected)
 
+    def test_get_post_by_restaurant(self):
+        """ Test if all post documents for a restaurant are returned """
+        request = RequestFactory().get('/api/timeline/post/get_by_restaurant/',
+                                       {'restaurant_id': '000000000000000000000000'}, content_type='application/json')
+        actual = json.loads(server.get_post_by_restaurant_page(request).content)['Posts']
+        for post in actual:
+            del post['Timestamp']
+        expected = [self.data2]
+        self.assertListEqual(expected, actual)
 
 class CommentSuite(TestCase):
 
@@ -49,7 +76,7 @@ class CommentSuite(TestCase):
             'user_id': '111111111111111111111111',
             'content': 'testing'
         }, content_type='application/json')
-        response = server.upload_comment(request)
+        response = server.upload_comment_page(request)
         actual = json.loads(response.content)
         expected = {
             '_id': '000000000000000000000000',
@@ -68,7 +95,7 @@ class CommentSuite(TestCase):
             'user_id': '111111111111111111111111',
             'content': 'testing'
         }, content_type='application/json')
-        server.upload_comment(request)
+        server.upload_comment_page(request)
         self.post.refresh_from_db()
         expected = [ObjectId('000000000000000000000000')]
         actual = self.post.comments

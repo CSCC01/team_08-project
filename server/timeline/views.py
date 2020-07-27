@@ -38,18 +38,17 @@ def upload_post_page(request):
     return JsonResponse(model_to_dict(post))
 
 
-
 def upload_comment_page(request):
     """Upload post into post timeline post table"""
 
     body = json.loads(request.body)
 
-    try:    # validate request
+    try:  # validate request
         validate(instance=body, schema=comment_schema)
     except jsonschema.exceptions.ValidationError:
         return HttpResponseBadRequest('Invalid request')
 
-    try:    # validate post
+    try:  # validate post
         post = TimelinePost.objects.get(_id=body['post_id'])
     except ObjectDoesNotExist:
         return HttpResponseBadRequest('Invalid User')
@@ -64,3 +63,9 @@ def upload_comment_page(request):
 
     comment._id = str(comment._id)
     return JsonResponse(model_to_dict(comment))
+
+
+def get_post_by_restaurant_page(request):
+    """Retrieve all posts from a restaurant"""
+    rest_id = request.GET.get('restaurant_id')
+    return JsonResponse(TimelinePost.get_by_restaurant(rest_id))
