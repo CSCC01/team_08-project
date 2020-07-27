@@ -15,6 +15,15 @@ class PostSuite(TestCase):
             'user_id': '111111111111111111111111',
             'content': 'Post',
         }
+        self.data2 = {
+            '_id': '333333333333333333333333',
+            'restaurant_id': '000000000000000000000000',
+            'user_id': '111111111111111111111111',
+            'content': 'Post',
+            'comments': [],
+            'likes': []
+        }
+        TimelinePost.objects.create(**self.data2)
 
     def testUpload(self):
         """Test post data is added to the database"""
@@ -30,6 +39,13 @@ class PostSuite(TestCase):
             'comments': []
         }
         self.assertDictEqual(actual, expected)
+
+    def test_get_all_post(self):
+        """ Test if all post documents are returned """
+        request = RequestFactory().get('/api/timeline/post/get_all/')
+        expected = [self.data2]
+        actual = json.loads(server.get_all_posts_page(request).content)['Posts']
+        self.assertListEqual(expected, actual)
 
 
 class CommentSuite(TestCase):

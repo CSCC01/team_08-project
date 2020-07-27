@@ -1,3 +1,4 @@
+from django.forms import model_to_dict
 from djongo import models
 
 
@@ -11,6 +12,20 @@ class TimelinePost(models.Model):
     Timestamp = models.DateTimeField(auto_now=True)
     comments = models.ListField(default=[], blank=True)
 
+
+    @classmethod
+    def get_all(cls):
+        """
+        retrieve list of posts from database
+        :return: return list of posts json data wrapped in dictionary
+        """
+        response = {'Posts': []}
+        for post in list(TimelinePost.objects.all()):
+            post._id = str(post._id)
+            post.likes = list(map(str, post.likes))
+            post.comments = list(map(str, post.comments))
+            response['Posts'].append(model_to_dict(post))
+        return response
 
 # Model for a comment on a timeline post
 class TimelineComment(models.Model):
