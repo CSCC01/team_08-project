@@ -10,6 +10,7 @@ import { RestaurantsService } from '../../service/restaurants.service';
 })
 export class OwnerEditComponent implements OnInit {
   restaurantId: string = '';
+  restaurantDetails: any;
   role: string = '';
 
   constructor(
@@ -22,14 +23,38 @@ export class OwnerEditComponent implements OnInit {
   ngOnInit(): void {
     this.restaurantId = this.route.snapshot.queryParams.restaurantId;
     this.role = this.route.snapshot.queryParams.role;
-    //   if (!this.restaurantId || this.role !== 'RO') {
-    //     this.router.navigate([''], {
-    //       queryParams: { role: this.role, restaurantId: this.restaurantId },
-    //     });
-    //     alert('No matching restaurant found for this profile!');
-    //   } else {
-    //     this.data.changeRestaurantId(this.restaurantId);
-    //     this.data.changeRole(this.role);
-    //   }
+    if (!this.restaurantId || this.role !== 'RO') {
+      this.router.navigate([''], {
+        queryParams: { role: this.role, restaurantId: this.restaurantId },
+      });
+      alert('No matching restaurant found for this profile!');
+    }
+    this.data.changeRestaurantId(this.restaurantId);
+    this.data.changeRole(this.role);
+
+    // generate restaurant page
+    this.restaurantsService
+      .getRestaurant(this.restaurantId)
+      .subscribe((data) => {
+        this.restaurantDetails = data;
+      });
+  }
+
+  updateOwnerInfo() {
+    var restaurantInfo = {
+      restaurant_id: this.restaurantId,
+      owner_name: (<HTMLInputElement>document.getElementById('owner-name'))
+        .value,
+      owner_story: (<HTMLInputElement>document.getElementById('owner-story'))
+        .value,
+    };
+    if (restaurantInfo.owner_name == '' || restaurantInfo.owner_story == '') {
+      alert('Please enter all requried information about the owner!');
+    } else {
+      this.restaurantsService.editRestaurant(restaurantInfo);
+      this.router.navigate(['/restaurant'], {
+        queryParams: { role: this.role, restaurantId: this.restaurantId },
+      });
+    }
   }
 }
