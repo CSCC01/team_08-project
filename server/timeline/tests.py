@@ -19,7 +19,7 @@ class PostSuite(TestCase):
     def testUpload(self):
         """Test post data is added to the database"""
         request = RequestFactory().post('api/timeline/post/upload/', self.data, content_type='application/json')
-        response = server.upload_post(request)
+        response = server.upload_post_page(request)
         actual = json.loads(response.content)
         expected = {
             '_id': '222222222222222222222222',
@@ -40,36 +40,57 @@ class CommentSuite(TestCase):
             'user_id': '111111111111111111111111',
             'content': 'Post',
         })
+        self.post2 = TimelinePost.objects.create(**{
+            'restaurant_id': '222222222222222222222222',
+            'user_id': '111111111111111111111111',
+            'content': 'Post',
+            'comments': []
+        })
+        self.comment = TimelineComment.objects.create(**{
+            '_id': '333333333333333333333333',
+            'post_id': self.post2._id,
+            'user_id': '111111111111111111111111',
+            'likes': [],
+            'content': "To be deleted"
+        })
+        self.post2.comments = [self.comment._id]
+        self.post2.save()
 
     def testUploadComment(self):
         """Test comment data is added to the database"""
-        request = RequestFactory().post('api/timeline/timeline/comment/upload/', {
+        request = RequestFactory().post('api/timeline/comment/upload/', {
             '_id': '000000000000000000000000',
-            'post_id' : str(self.post._id),
+            'post_id': str(self.post._id),
             'user_id': '111111111111111111111111',
             'content': 'testing'
         }, content_type='application/json')
-        response = server.upload_comment(request)
+        response = server.upload_comment_page(request)
         actual = json.loads(response.content)
         expected = {
             '_id': '000000000000000000000000',
             'post_id': str(self.post._id),
             'user_id': '111111111111111111111111',
             'content': 'testing',
-            'likes':[]
+            'likes': []
         }
         self.assertDictEqual(actual, expected)
 
-    def testUploadPost(self):
-        """Test comment id is added to post array"""
-        request = RequestFactory().post('api/timeline/timeline/comment/upload/', {
-            '_id': '000000000000000000000000',
-            'post_id' : str(self.post._id),
-            'user_id': '111111111111111111111111',
-            'content': 'testing'
+    def test_comment_delete_comment(self):
+        """ Test comment is deleted from comment side """
+        request = RequestFactory().post('api/timeline/comment/delete/', {
+            '_id': '333333333333333333333333',
         }, content_type='application/json')
-        server.upload_comment(request)
-        self.post.refresh_from_db()
-        expected = [ObjectId('000000000000000000000000')]
-        actual = self.post.comments
+        server.delete_comment_page(request)
+        expected = None
+        actual = TimelineComment.objects.filter(_id="333333333333333333333333").first()
+        self.assertEquals(expected, actual)
+
+    def test_comment_delete_post(self):
+        """ Test comment is deleted from post side """
+        request = RequestFactory().post('api/timeline/comment/delete/', {
+            '_id': '333333333333333333333333',
+        }, content_type='application/json')
+        server.delete_comment_page(request)
+        expected = []
+        actual = TimelinePost.objects.get(_id=ObjectId(str(self.post2._id))).comments
         self.assertListEqual(expected, actual)
