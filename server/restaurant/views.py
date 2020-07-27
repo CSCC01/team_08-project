@@ -59,7 +59,8 @@ restaurant_schema = {
 dish_editable = ["name", "description", "picture", "price", "specials"]
 
 restaurant_editable = ["name", "address", "phone", "updated_at", "email", "city", "cuisine", "pricepoint", "twitter",
-                       "instagram", "bio", "external_delivery_link", "cover_photo_url", "logo_url"]
+                       "instagram", "bio", "external_delivery_link", "cover_photo_url", "logo_url",
+                       "owner_name", "owner_story", "owner_picture_url"]
 
 def insert_tag_page(request):
     """Insert tag to database"""
@@ -97,7 +98,7 @@ def insert_dish_page(request):
 
 
 def delete_dish_page(request):
-    """Insert dish into database"""
+    """Deletes dish from database"""
     validate(instance=request.body, schema=tag_schema)
     body = json.loads(request.body)
     ManualTag.clear_food_tags(body["food_name"], body["restaurant_id"])
