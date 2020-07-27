@@ -57,4 +57,10 @@ export class OwnerEditComponent implements OnInit {
       });
     }
   }
+
+  cancel() {
+    this.router.navigate(['/restaurant'], {
+      queryParams: { role: this.role, restaurantId: this.restaurantId },
+    });
+  }
 }

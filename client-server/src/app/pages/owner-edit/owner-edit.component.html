@@ -34,11 +34,20 @@
             </button>
           </div>
         </div>
-        <div class="form-group">
-          <div class="text-right">
-            <button class="btn save-next" (click)="updateOwnerInfo()">
-              UPDATE
-            </button>
+        <div class="row">
+          <div class="form-group col-md-6">
+            <div class="text-left">
+              <button class="btn save-next" (click)="cancel()">
+                CANCEL
+              </button>
+            </div>
+          </div>
+          <div class="form-group col-md-6">
+            <div class="text-right">
+              <button class="btn save-next" (click)="updateOwnerInfo()">
+                UPDATE
+              </button>
+            </div>
           </div>
         </div>
       </form>
