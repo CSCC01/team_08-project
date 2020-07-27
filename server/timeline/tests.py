@@ -75,13 +75,7 @@ class CommentSuite(TestCase):
         self.post2.comments = [self.comment._id]
         self.post2.save()
 
-        self.comment = TimelineComment.objects.create(**{
-            '_id': '333333333333333333333333',
-            'post_id': str(self.post._id),
-            'user_id': '111111111111111111111111',
-            'likes': [],
-            'content': "To be deleted"
-        })
+
 
     def testUploadComment(self):
         """Test comment data is added to the database"""
@@ -142,6 +136,6 @@ class CommentSuite(TestCase):
                                        content_type="application/json")
         actual = json.loads(server.get_comment_data_page(request).content)
         del actual['Timestamp']
-        expected = {'_id': '333333333333333333333333', 'post_id': str(self.post._id),
+        expected = {'_id': '333333333333333333333333', 'post_id': str(self.post2._id),
                     'user_id': '111111111111111111111111', 'likes': [], 'content': 'To be deleted'}
         self.assertDictEqual(expected, actual)
