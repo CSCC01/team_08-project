@@ -17,21 +17,34 @@
       <li class="nav-item nav-link">
         <a
           routerLink="/"
-          [queryParams]="{ role: role, restaurantId: restaurantId }"
+          [queryParams]="{
+            role: role,
+            userId: userId,
+            restaurantId: restaurantId
+          }"
           class="nav-link"
         >
           HOME
         </a>
       </li>
       <li class="nav-item nav-link" *ngIf="auth.loggedIn && role == 'BU'">
-        <a routerLink="profile" routerLinkActive="active" class="nav-link">
+        <a
+          routerLink="profile"
+          [queryParams]="{ role: role, userId: userId }"
+          routerLinkActive="active"
+          class="nav-link"
+        >
           PROFILE
         </a>
       </li>
       <li class="nav-item nav-link" *ngIf="role == 'RO'">
         <a
           routerLink="dashboard"
-          [queryParams]="{ role: role, restaurantId: restaurantId }"
+          [queryParams]="{
+            role: role,
+            userId: userId,
+            restaurantId: restaurantId
+          }"
           routerLinkActive="active"
           class="nav-link"
         >
@@ -41,7 +54,11 @@
       <li class="nav-item nav-link" *ngIf="auth.loggedIn && role == 'RO'">
         <a
           routerLink="restaurant"
-          [queryParams]="{ role: role, restaurantId: restaurantId }"
+          [queryParams]="{
+            role: role,
+            userId: userId,
+            restaurantId: restaurantId
+          }"
           routerLinkActive="active"
           class="nav-link"
         >
@@ -51,6 +68,10 @@
       <li class="nav-item nav-link">
         <a
           routerLink="all-listings"
+          [queryParams]="{
+            role: role,
+            userId: userId
+          }"
           *ngIf="role != 'RO'"
           routerLinkActive="active"
           class="nav-link"
@@ -61,7 +82,11 @@
       <li class="nav-item nav-link">
         <a
           routerLink="timeline"
-          [queryParams]="{ role: role, restaurantId: restaurantId }"
+          [queryParams]="{
+            role: role,
+            userId: userId,
+            restaurantId: restaurantId
+          }"
           routerLinkActive="active"
           class="nav-link"
         >

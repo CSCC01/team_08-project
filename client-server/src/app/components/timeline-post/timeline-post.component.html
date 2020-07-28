@@ -15,11 +15,11 @@
       <div class="col">
         <div *ngFor="let comment of comments" class="row comment-group">
           <img
-            src="https://png.pngtree.com/element_our/png/20181206/users-vector-icon-png_260862.jpg"
+            src="{{ comment.user_pic }}"
             class="user-img"
             alt="name"
             placement="top"
-            ngbTooltip="{{ comment.user_id }}"
+            ngbTooltip="{{ comment.user_name }}"
           />
           <div class="user-comment">{{ comment.content }}</div>
           <div
@@ -32,15 +32,11 @@
         </div>
       </div>
     </div>
-    <hr />
-    <div class="comment">
+    <div *ngIf="auth.loggedIn && id" class="comment">
+      <hr />
       <div class="col">
         <div class="row comment-group">
-          <img
-            src="https://png.pngtree.com/element_our/png/20181206/users-vector-icon-png_260862.jpg"
-            class="user-img"
-            alt="name"
-          />
+          <img src="{{ currentUser.pic_url }}" class="user-img" alt="name" />
           <input
             type="text"
             class="form-control user-input"

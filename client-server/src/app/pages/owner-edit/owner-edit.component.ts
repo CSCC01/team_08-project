@@ -11,6 +11,7 @@ import { RestaurantsService } from '../../service/restaurants.service';
 export class OwnerEditComponent implements OnInit {
   restaurantId: string = '';
   restaurantDetails: any;
+  userId: string = '';
   role: string = '';
 
   constructor(
@@ -22,14 +23,21 @@ export class OwnerEditComponent implements OnInit {
 
   ngOnInit(): void {
     this.restaurantId = this.route.snapshot.queryParams.restaurantId;
+    this.userId = this.route.snapshot.queryParams.userId;
     this.role = this.route.snapshot.queryParams.role;
+
     if (!this.restaurantId || this.role !== 'RO') {
       this.router.navigate([''], {
-        queryParams: { role: this.role, restaurantId: this.restaurantId },
+        queryParams: {
+          role: this.role,
+          userId: this.userId,
+          restaurantId: this.restaurantId,
+        },
       });
       alert('No matching restaurant found for this profile!');
     }
     this.data.changeRestaurantId(this.restaurantId);
+    this.data.changeUserId(this.userId);
     this.data.changeRole(this.role);
 
     // generate restaurant page
@@ -53,14 +61,22 @@ export class OwnerEditComponent implements OnInit {
     } else {
       this.restaurantsService.editRestaurant(restaurantInfo);
       this.router.navigate(['/restaurant'], {
-        queryParams: { role: this.role, restaurantId: this.restaurantId },
+        queryParams: {
+          role: this.role,
+          userId: this.userId,
+          restaurantId: this.restaurantId,
+        },
       });
     }
   }
 
   cancel() {
     this.router.navigate(['/restaurant'], {
-      queryParams: { role: this.role, restaurantId: this.restaurantId },
+      queryParams: {
+        role: this.role,
+        userId: this.userId,
+        restaurantId: this.restaurantId,
+      },
     });
   }
 }

@@ -12,6 +12,7 @@ import { RestaurantsService } from 'src/app/service/restaurants.service';
 })
 export class MenuEditComponent implements OnInit {
   restaurantId: string = '';
+  userId: string = '';
   role: string = '';
 
   faEdit = faEdit;
@@ -40,15 +41,21 @@ export class MenuEditComponent implements OnInit {
 
   ngOnInit(): void {
     this.role = this.route.snapshot.queryParams.role;
+    this.userId = this.route.snapshot.queryParams.userId;
     this.restaurantId = this.route.snapshot.queryParams.restaurantId;
 
     if (!this.restaurantId || this.role !== 'RO') {
       this.router.navigate([''], {
-        queryParams: { role: this.role, restaurantId: this.restaurantId },
+        queryParams: {
+          role: this.role,
+          userId: this.userId,
+          restaurantId: this.restaurantId,
+        },
       });
       alert('No matching restaurant found for this profile!');
     }
     this.data.changeRestaurantId(this.restaurantId);
+    this.data.changeUserId(this.userId);
     this.data.changeRole(this.role);
     this.loadAllDishes();
   }
@@ -151,7 +158,11 @@ export class MenuEditComponent implements OnInit {
 
   back() {
     this.router.navigate(['/restaurant'], {
-      queryParams: { role: this.role, restaurantId: this.restaurantId },
+      queryParams: {
+        role: this.role,
+        userId: this.userId,
+        restaurantId: this.restaurantId,
+      },
     });
   }
 }

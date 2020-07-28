@@ -5,13 +5,20 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root',
 })
 export class DataService {
-  private restaurantIdSource = new BehaviorSubject('default id');
+  private userIdSource = new BehaviorSubject('');
+  userId = this.userIdSource.asObservable();
+
+  private restaurantIdSource = new BehaviorSubject('');
   restaurantId = this.restaurantIdSource.asObservable();
 
   private roleSource = new BehaviorSubject('BU');
   role = this.roleSource.asObservable();
 
   constructor() {}
+
+  changeUserId(id: string) {
+    this.userIdSource.next(id);
+  }
 
   changeRestaurantId(id: string) {
     this.restaurantIdSource.next(id);

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { RestaurantsService } from '../../service/restaurants.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { DataService } from 'src/app/service/data.service';
 
 @Component({
   selector: 'app-menu-setup',
@@ -10,6 +11,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class MenuSetupComponent implements OnInit {
   restaurantId: string = '';
+  userId: string = '';
   role: string = '';
 
   modalRef: any;
@@ -24,17 +26,27 @@ export class MenuSetupComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private data: DataService,
     private restaurantsService: RestaurantsService,
     private modalService: NgbModal
   ) {}
 
   ngOnInit(): void {
     this.restaurantId = this.route.snapshot.queryParams.restaurantId;
+    this.userId = this.route.snapshot.queryParams.userId;
     this.role = this.route.snapshot.queryParams.role;
-    
+
+    this.data.changeRestaurantId(this.restaurantId);
+    this.data.changeUserId(this.userId);
+    this.data.changeRole(this.role);
+
     if (!this.restaurantId || this.role !== 'RO') {
       this.router.navigate([''], {
-        queryParams: { role: this.role, restaurantId: this.restaurantId },
+        queryParams: {
+          role: this.role,
+          userId: this.userId,
+          restaurantId: this.restaurantId,
+        },
       });
       alert('No matching restaurant found for this profile!');
     }

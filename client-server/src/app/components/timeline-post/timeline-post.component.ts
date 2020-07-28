@@ -2,6 +2,8 @@ import { Component, OnInit, Input } from '@angular/core';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { TimelineService } from 'src/app/service/timeline.service';
 import { RestaurantsService } from 'src/app/service/restaurants.service';
+import { LoginService } from 'src/app/service/login.service';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'app-timeline-post',
@@ -10,8 +12,10 @@ import { RestaurantsService } from 'src/app/service/restaurants.service';
 })
 export class TimelinePostComponent implements OnInit {
   @Input() role: string;
+  @Input() id: string;
   @Input() post: any;
 
+  currentUser: any = {};
   comments: any[] = [];
 
   postId: string = '';
@@ -22,8 +26,10 @@ export class TimelinePostComponent implements OnInit {
   inputComment: string = '';
 
   constructor(
+    public auth: AuthService,
     private timeline: TimelineService,
-    private restaurantsService: RestaurantsService
+    private restaurantsService: RestaurantsService,
+    private loginService: LoginService
   ) {}
 
   ngOnInit(): void {
@@ -34,10 +40,9 @@ export class TimelinePostComponent implements OnInit {
       });
 
     this.loadComments();
-
-    // pass in post
-    // set the ids somewhere
-    // need do to stuff with comment list id
+    this.loginService.getUser({ email: this.id }).subscribe((data) => {
+      this.currentUser.pic_url = data.picture;
+    });
   }
 
   loadRestaurant() {}
@@ -45,17 +50,22 @@ export class TimelinePostComponent implements OnInit {
   loadComments() {
     for (var i = 0; i < this.post.comments.length; i++) {
       this.timeline.getComment(this.post.comments[i]).subscribe((data) => {
-        this.comments.push(data);
+        const userData = {
+          email: data.user_email,
+        };
+        this.loginService.getUser(userData).subscribe((user) => {
+          data.user_name = user.name;
+          data.user_pic = user.picture;
+          this.comments.push(data);
+        });
       });
     }
   }
 
   addComment() {
     if (this.inputComment != '') {
-      // call the endpoint to add comment to post using id
     }
 
     this.inputComment = '';
-    // reload comments for the post
   }
 }

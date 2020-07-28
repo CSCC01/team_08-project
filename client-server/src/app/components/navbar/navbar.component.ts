@@ -2,7 +2,6 @@ import { Component, OnInit, HostListener, Input } from '@angular/core';
 import { AuthService } from '../../auth/auth.service';
 import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
 import { LoginService } from '../../service/login.service';
-import { HomeComponent } from '../../pages/home/home.component';
 import { DataService } from 'src/app/service/data.service';
 
 @Component({
@@ -13,6 +12,7 @@ import { DataService } from 'src/app/service/data.service';
 export class NavbarComponent implements OnInit {
   restaurantId: string = '';
   role: string = '';
+  userId: string = '';
 
   title = 'client-server';
   faUserCircle = faUserCircle;
@@ -37,6 +37,7 @@ export class NavbarComponent implements OnInit {
   ngOnInit(): void {
     this.data.restaurantId.subscribe((id) => (this.restaurantId = id));
     this.data.role.subscribe((role) => (this.role = role));
+    this.data.userId.subscribe((userId) => (this.userId = userId));
   }
 
   upgradeUser(): void {

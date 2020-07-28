@@ -12,6 +12,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 })
 export class TimelineComponent implements OnInit {
   restaurantId: string = '';
+  userId: string = '';
   role: string = '';
   restaurantName: string = '';
 
@@ -29,12 +30,14 @@ export class TimelineComponent implements OnInit {
 
   ngOnInit(): void {
     this.role = this.route.snapshot.queryParams.role;
+    this.userId = this.route.snapshot.queryParams.userId;
     this.restaurantId = this.route.snapshot.queryParams.restaurantId;
 
     this.data.changeRole(this.role);
+    this.data.changeUserId(this.userId);
     this.data.changeRestaurantId(this.restaurantId);
 
-    if (this.restaurantId == undefined) {
+    if (this.restaurantId == undefined || this.restaurantId == '') {
       this.loadTimeline();
     } else {
       this.getRestaurantName();
