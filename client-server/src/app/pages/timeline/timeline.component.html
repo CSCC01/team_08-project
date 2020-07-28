@@ -24,7 +24,10 @@
   </button>
 </div>
 
-<div *ngFor="let post of posts" class="d-flex justify-content-center">
+<div
+  *ngFor="let post of posts; let i = index"
+  class="d-flex justify-content-center"
+>
   <app-timeline-post
     [post]="post"
     [role]="role"
@@ -34,7 +37,7 @@
   <div *ngIf="role == 'RO'" class="text-right">
     <button
       class="btn trashBtn"
-      (click)="openDeleteModal(deleteModal, post._id)"
+      (click)="openDeleteModal(deleteModal, post._id, i)"
     >
       <fa-icon [icon]="faTrash"></fa-icon>
     </button>
