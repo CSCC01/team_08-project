@@ -1,9 +1,17 @@
 <div *ngIf="restaurantDetails">
-  <img
-    src="{{ restaurantDetails.cover_photo_url }}"
-    alt="header"
-    class="header-img"
-  />
+  <div class="text-right">
+    <div class="button-container">
+      <img
+        src="{{ restaurantDetails.cover_photo_url }}"
+        alt="header"
+        class="header-img"
+      />
+      <button *ngIf="role == 'RO'" class="btn editRestaurant">
+        <fa-icon [icon]="faEdit"></fa-icon>
+        <b>EDIT RESTAURANT DETAILS</b>
+      </button>
+    </div>
+  </div>
 
   <div>
     <div class="card infoCard">
