@@ -6,7 +6,11 @@
         alt="header"
         class="header-img"
       />
-      <button *ngIf="role == 'RO'" class="btn editRestaurant">
+      <button
+        *ngIf="role == 'RO'"
+        class="btn editRestaurant"
+        (click)="editRestaurant()"
+      >
         <fa-icon [icon]="faEdit"></fa-icon>
         <b>EDIT RESTAURANT DETAILS</b>
       </button>
