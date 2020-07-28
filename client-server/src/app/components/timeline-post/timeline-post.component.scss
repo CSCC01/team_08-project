@@ -73,3 +73,18 @@
   border-radius: 40px;
   border: 1px solid $grey-color;
 }
+
+.postBtn {
+  padding: 5px 30px;
+}
+
+.cancel {
+  background-color: white;
+  color: $secondary-color;
+  border-color: $secondary-color;
+}
+
+.cancel:hover {
+  background-color: $secondary-color;
+  color: white;
+}

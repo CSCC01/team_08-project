@@ -51,25 +51,25 @@ export class TimelineService {
   }
 
   /*
-  @Input: JSON object restaurant_id, user_id, and content
+  @Input: JSON object restaurant_id, user_email, and content
   @Output: None
 
   Creates a post on the for the restaurant on their timeline.
   */
   createPost(postInfo): void {
     const endpoint = `${TimelineService.TL_ENDPOINT}/post/upload/`;
-    this.http.post<any>(endpoint, postInfo);
+    this.http.post<any>(endpoint, postInfo).subscribe((data) => {});
   }
 
   /*
-  @Input: JSON object post_id, user_id, and content
+  @Input: JSON object post_id, user_email, and content
   @Output: None
 
   Creates a comment on the post using post id and user id.
   */
   createComment(commentInfo): void {
     const endpoint = `${TimelineService.TL_ENDPOINT}/comment/upload/`;
-    this.http.post<any>(endpoint, commentInfo);
+    this.http.post<any>(endpoint, commentInfo).subscribe((data) => {});
   }
 
   /*
@@ -78,9 +78,12 @@ export class TimelineService {
 
   Deletes a post using post id.
   */
-  deletePost(postId): Observable<any> {
+  deletePost(postId): void {
     const endpoint = `${TimelineService.TL_ENDPOINT}/post/delete/`;
-    return this.http.post<any>(endpoint, postId);
+    const postObj = {
+      post_id: postId,
+    };
+    this.http.post<any>(endpoint, postObj).subscribe((data) => {});
   }
 
   /*
