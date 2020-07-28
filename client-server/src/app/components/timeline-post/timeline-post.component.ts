@@ -40,9 +40,12 @@ export class TimelinePostComponent implements OnInit {
       });
 
     this.loadComments();
-    this.loginService.getUser({ email: this.id }).subscribe((data) => {
-      this.currentUser.pic_url = data.picture;
-    });
+
+    if (this.id != undefined && this.id != '') {
+      this.loginService.getUser({ email: this.id }).subscribe((data) => {
+        this.currentUser.pic_url = data.picture;
+      });
+    }
   }
 
   loadRestaurant() {}
