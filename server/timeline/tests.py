@@ -161,7 +161,7 @@ class CommentSuite(TestCase):
             'likes': [],
             'content': "To be deleted"
         })
-        self.post2.comments = [self.comment._id]
+        self.post2.comments = [ObjectId(self.comment._id)]
         self.post2.save()
 
     def testUploadComment(self):
