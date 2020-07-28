@@ -11,7 +11,10 @@
   <div class="card comment-content">
     <div class="comment">
       <div class="col">
-        <div *ngFor="let comment of comments" class="row comment-group">
+        <div
+          *ngFor="let comment of comments; let i = index"
+          class="row comment-group"
+        >
           <img
             src="{{ comment.user_pic }}"
             class="user-img"
@@ -25,8 +28,48 @@
             class="text-right"
             style="padding-top: 12px;"
           >
-            <fa-icon [icon]="faTrash" class="comment-trash-icon"></fa-icon>
+            <fa-icon
+              [icon]="faTrash"
+              class="comment-trash-icon"
+              (click)="openDeleteModal(deleteModal, comment._id, i)"
+            ></fa-icon>
           </div>
+
+          <ng-template #deleteModal let-modal>
+            <div class="modal-header">
+              <h2 class="modal-title" id="modal-basic-title">
+                Delete Confirmation
+              </h2>
+              <button
+                type="button"
+                class="close"
+                aria-label="Close"
+                (click)="modal.dismiss('Cross click')"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="form-box">
+                <div class="form-group">
+                  Are you sure you would like to delete this?
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <div class="text-right">
+                <button
+                  class="btn postBtn cancel"
+                  (click)="modal.dismiss('Cross click')"
+                >
+                  CANCEL
+                </button>
+                <button class="btn postBtn" (click)="deleteComment()">
+                  CONFIRM
+                </button>
+              </div>
+            </div>
+          </ng-template>
         </div>
       </div>
     </div>
@@ -34,7 +77,7 @@
       <hr />
       <div class="col">
         <div class="row comment-group">
-          <img src="{{ currentUser.pic_url }}" class="user-img" alt="name" />
+          <img src="{{ currentUser.user_pic }}" class="user-img" alt="name" />
           <input
             type="text"
             class="form-control user-input"

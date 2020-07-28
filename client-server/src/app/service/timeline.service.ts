@@ -92,8 +92,11 @@ export class TimelineService {
 
   Deletes a comment using comment id.
   */
-  deleteComment(commentId): Observable<any> {
+  deleteComment(commentId): void {
     const endpoint = `${TimelineService.TL_ENDPOINT}/comment/delete/`;
-    return this.http.post<any>(endpoint, commentId);
+    const commentObj = {
+      _id: commentId,
+    };
+    this.http.post<any>(endpoint, commentObj).subscribe((data) => {});
   }
 }
