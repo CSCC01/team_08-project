@@ -15,11 +15,15 @@ signup_schema = {
         "email": {"type": "string"},
         "email_verified": {"type": "boolean"},
         "role": {"type": "string"},
-        "restaurant_id": {"type": "string"}
+        "restaurant_id": {"type": "string"},
+        "birthday": {"type": "string", "format": "date"},
+        "address": {"type": "string"},
+        "phone": {"type": "number"}
     }
 }
 
-user_editable = ["nickname", "name", "picture", "updated_at"]
+user_editable = ["nickname", "name", "picture", "updated_at", "birthday", "address", "phone"]
+
 
 def signup_page(request):
     """ Page to insert a user into the db provided all the user fields """
@@ -58,6 +62,7 @@ def data_page(request):
     req_email = request.GET.get('email')
     user = SDUser.objects.get(pk=req_email)
     return JsonResponse(model_to_dict(user))
+
 
 def exists_page(request):
     """ Page that checks if an email is already registered in the database provided an user email """

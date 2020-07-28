@@ -12,9 +12,9 @@ class SDUser(models.Model):
     email_verified = models.BooleanField(default=False)
     role = models.CharField(max_length=5, choices=Roles.choices(), default="BU")
     restaurant_id = models.CharField(max_length=24, blank=True, default=None)
-    birthday = models.DateField(null=True, default=None)
+    birthday = models.DateField(blank=True, default=None)
     address = models.CharField(max_length=24, blank=True, default='')
-    phone = models.BigIntegerField(null=True, default=None)
+    phone = models.BigIntegerField(blank=True, default=None)
 
 
     @classmethod
