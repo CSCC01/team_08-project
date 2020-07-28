@@ -122,7 +122,7 @@ def delete_comment_page(request):
     body = json.loads(request.body)
     comment = TimelineComment.objects.get(_id=body["_id"])
     post = TimelinePost.objects.get(_id=comment.post_id)
-    post.comments.remove(str(comment._id))
+    post.comments.remove(comment._id)
     post.save(update_fields=["comments"])
     comment.delete()
     return HttpResponse(status=200)
