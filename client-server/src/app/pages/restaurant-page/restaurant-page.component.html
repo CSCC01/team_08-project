@@ -89,7 +89,7 @@
   <mat-tab-group mat-align-tabs="center">
     <mat-tab label="About Us">
       <div style="text-align: center;">
-        <button *ngIf="role == 'RO'" class="btn editBtn">
+        <button *ngIf="role == 'RO'" class="btn editBtn" (click)="editOwner()">
           <fa-icon [icon]="faEdit"></fa-icon>
           <b>EDIT OWNER</b>
         </button>

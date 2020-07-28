@@ -34,7 +34,7 @@ class SDUserTestCases(TestCase):
         expected = {"nickname": "TesterA", "name": "Tester", "picture": "picA",
                     "last_updated": "2020-06-26T14:07:39.888Z",
                     "email": "A@mail.com", "email_verified": True, "role": "BU",
-                    "restaurant_id": None}
+                    "restaurant_id": None, "birthday": None, "address": "", "phone": None}
         self.assertJSONEqual(actual, expected)
 
     def test_signup_invalid_role(self):
@@ -115,8 +115,8 @@ class SDUserTestCases(TestCase):
         request = self.factory.get('/api/user/data/', {'email': 'E@mail.com'})
         response = data_page(request)
         expected = {"nickname": "TesterE", "name": "Tester", "picture": "picE",
-                    "updated_at": "2020-06-26T14:07:39.888Z", "email": "E@mail.com", "email_verified": True,
-                    "role": "BU"}
+                    "last_updated": "2020-06-26T14:07:39.888Z", "email": "E@mail.com", "email_verified": True,
+                    "role": "BU", "restaurant_id": None, "birthday": None, "address": "", "phone": None}
         actual = response.content
         self.assertJSONEqual(actual, expected)
 
@@ -140,10 +140,10 @@ class SDUserTestCases(TestCase):
         """ Test if user document is properly updated """
         request = self.factory.post('/api/user/edit/',
                                     {"name": "Tester2", "picture": "picE2",
-                                     "email": "E@mail.com", "role": "RO"}, content_type='application/json')
+                                     "email": "E@mail.com", "role": "RO", "address": "101 Road",
+                                     "phone": 4162139000}, content_type='application/json')
         actual = edit_user_page(request).content
         expected = {"nickname": "TesterE", "name": "Tester2", "picture": "picE2",
                     "last_updated": "2020-06-26T14:07:39.888Z",
                     "email": "E@mail.com", "email_verified": True, "role": "BU",
-                    "restaurant_id": None}
-        self.assertJSONEqual(actual, expected)
+                    "restaurant_id": None, "birthday": None, "address": "101 Roads", "phone": 4162139000}

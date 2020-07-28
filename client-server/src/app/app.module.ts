@@ -37,8 +37,12 @@ import { RestaurantSetupComponent } from './pages/restaurant-setup/restaurant-se
 import { OwnerSetupComponent } from './pages/owner-setup/owner-setup.component';
 import { MenuSetupComponent } from './pages/menu-setup/menu-setup.component';
 import { MenuEditComponent } from './pages/menu-edit/menu-edit.component';
+<<<<<<< HEAD
 import { TimelinePostComponent } from './components/timeline-post/timeline-post.component';
 import { TimelineComponent } from './pages/timeline/timeline.component';
+=======
+import { OwnerEditComponent } from './pages/owner-edit/owner-edit.component';
+>>>>>>> develop
 
 @NgModule({
   declarations: [
@@ -63,8 +67,12 @@ import { TimelineComponent } from './pages/timeline/timeline.component';
     OwnerSetupComponent,
     MenuSetupComponent,
     MenuEditComponent,
+<<<<<<< HEAD
     TimelinePostComponent,
     TimelineComponent,
+=======
+    OwnerEditComponent,
+>>>>>>> develop
   ],
   imports: [
     BrowserModule,

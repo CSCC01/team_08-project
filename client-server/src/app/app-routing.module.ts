@@ -13,6 +13,7 @@ import { OwnerSetupComponent } from './pages/owner-setup/owner-setup.component';
 import { MenuSetupComponent } from './pages/menu-setup/menu-setup.component';
 import { MenuEditComponent } from './pages/menu-edit/menu-edit.component';
 import { TimelineComponent } from './pages/timeline/timeline.component';
+import { OwnerEditComponent } from './pages/owner-edit/owner-edit.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -34,6 +35,7 @@ const routes: Routes = [
   { path: 'menu-setup', component: MenuSetupComponent },
   { path: 'menu-edit', component: MenuEditComponent },
   { path: 'timeline', component: TimelineComponent },
+  { path: 'owner-edit', component: OwnerEditComponent },
 ];
 
 @NgModule({
