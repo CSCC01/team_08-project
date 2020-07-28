@@ -5,130 +5,152 @@
     page.
   </p>
   <div class="form-box">
-    <form>
-      <div class="form-group">
-        <label for="restaurant-name" class="required">Restaurant Name</label>
-        <input
-          type="text"
-          class="form-control"
-          id="restaurant-name"
-          placeholder="Ex: Dan's Dumplings"
-          required
-        />
-      </div>
-      <div class="row">
-        <div class="form-group col-md-8">
-          <label for="restaurant-address" class="required"
-            >Restaurant Address</label
+    <div *ngIf="restaurantDetails">
+      <form>
+        <div class="form-group">
+          <label for="restaurant-name" class="required">Restaurant Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="restaurant-name"
+            placeholder="Ex: Dan's Dumplings"
+            value="{{ restaurantDetails.name | titlecase }}"
+            required
+          />
+        </div>
+        <div class="row">
+          <div class="form-group col-md-8">
+            <label for="restaurant-address" class="required"
+              >Restaurant Address</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="restaurant-address"
+              value="{{ restaurantDetails.address | titlecase }}"
+              placeholder="Ex: 1234 Address Ave"
+            />
+          </div>
+          <div class="form-group col-md-4">
+            <label for="restaurant-city" class="required">City</label>
+            <input
+              type="text"
+              class="form-control"
+              id="restaurant-city"
+              placeholder="Ex: Scarborough"
+              value="{{ restaurantDetails.city | titlecase }}"
+            />
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-md-4">
+            <label for="phone-number" class="required">Phone Number</label>
+            <input
+              type="text"
+              class="form-control"
+              id="phone-number"
+              placeholder="Ex: 4161234567"
+              value="{{ restaurantDetails.phone }}"
+            />
+          </div>
+          <div class="form-group col-md-8">
+            <label for="restaurant-email" class="required">Email</label>
+            <input
+              type="text"
+              class="form-control"
+              id="restaurant-email"
+              placeholder="Ex: sample@email.com"
+              value="{{ restaurantDetails.email }}"
+              required
+            />
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-md-4">
+            <label for="pricepoint" class="required">Pricepoint</label>
+            <select
+              id="pricepoint"
+              class="form-control"
+              value="{{ restaurantDetails.pricepoint | titlecase }}"
+            >
+              <option selected>Choose...</option>
+              <option>Low</option>
+              <option>Medium</option>
+              <option>High</option>
+            </select>
+          </div>
+          <div class="form-group col-md-8">
+            <label for="restaurant-cuisine" class="required">Cuisine</label>
+            <input
+              type="text"
+              class="form-control"
+              id="restaurant-cuisine"
+              placeholder="Ex: Chinese"
+              required
+            />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="restaurant-bio" class="required"
+            >Restaurant Biography</label
           >
-          <input
-            type="text"
+          <textarea
             class="form-control"
-            id="restaurant-address"
-            placeholder="Ex: 1234 Address Ave"
-          />
-        </div>
-        <div class="form-group col-md-4">
-          <label for="restaurant-city" class="required">City</label>
-          <input
-            type="text"
-            class="form-control"
-            id="restaurant-city"
-            placeholder="Ex: Scarborough"
-          />
-        </div>
-      </div>
-      <div class="row">
-        <div class="form-group col-md-4">
-          <label for="phone-number" class="required">Phone Number</label>
-          <input
-            type="text"
-            class="form-control"
-            id="phone-number"
-            placeholder="Ex: 4161234567"
-          />
-        </div>
-        <div class="form-group col-md-8">
-          <label for="restaurant-email" class="required">Email</label>
-          <input
-            type="text"
-            class="form-control"
-            id="restaurant-email"
-            placeholder="Ex: sample@email.com"
+            id="restaurant-bio"
+            rows="4"
+            placeholder="Tell customers about the type of dishes offered at your restaurant and unique highlights of your restaurants..."
+            value="{{ restaurantDetails.bio }}"
             required
-          />
+          ></textarea>
         </div>
-      </div>
-      <div class="row">
-        <div class="form-group col-md-4">
-          <label for="pricepoint" class="required">Pricepoint</label>
-          <select id="pricepoint" class="form-control">
-            <option selected>Choose...</option>
-            <option>Low</option>
-            <option>Medium</option>
-            <option>High</option>
-          </select>
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label for="twitter">Twitter URL</label>
+            <input
+              type="text"
+              class="form-control"
+              id="twitter"
+              value="{{ restaurantDetails.twitter }}"
+            />
+          </div>
+          <div class="form-group col-md-6">
+            <label for="instagram">Instagram URL</label>
+            <input
+              type="text"
+              class="form-control"
+              id="instagram"
+              value="{{ restaurantDetails.instagram }}"
+            />
+          </div>
         </div>
-        <div class="form-group col-md-8">
-          <label for="restaurant-cuisine" class="required">Cuisine</label>
-          <input
-            type="text"
-            class="form-control"
-            id="restaurant-cuisine"
-            placeholder="Ex: Chinese"
-            required
-          />
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="restaurant-bio" class="required"
-          >Restaurant Biography</label
-        >
-        <textarea
-          class="form-control"
-          id="restaurant-bio"
-          rows="4"
-          placeholder="Tell customers about the type of dishes offered at your restaurant and unique highlights of your restaurants..."
-          required
-        ></textarea>
-      </div>
-      <div class="row">
-        <div class="form-group col-md-6">
-          <label for="twitter">Twitter URL</label>
-          <input type="text" class="form-control" id="twitter" />
-        </div>
-        <div class="form-group col-md-6">
-          <label for="instagram">Instagram URL</label>
-          <input type="text" class="form-control" id="instagram" />
-        </div>
-      </div>
-      <div class="row">
-        <div class="form-group col-md-6">
-          <button class="btn logo-image">
-            + LOGO IMAGE
-          </button>
-        </div>
-      </div>
-      <div class="row">
-        <div class="form-group col-md-6">
-          <div class="text-left">
-            <button class="btn cancel" (click)="cancel()">
-              CANCEL
+        <div class="row">
+          <div class="form-group col-md-6">
+            <button class="btn logo-image">
+              + LOGO IMAGE
             </button>
           </div>
         </div>
-        <div class="form-group col-md-6">
-          <div class="text-right">
-            <button class="btn save-next">
-              UPDATE
-            </button>
+        <div class="row">
+          <div class="form-group col-md-6">
+            <div class="text-left">
+              <button class="btn cancel" (click)="cancel()">
+                CANCEL
+              </button>
+            </div>
+          </div>
+          <div class="form-group col-md-6">
+            <div class="text-right">
+              <button class="btn save-next">
+                UPDATE
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-    </form>
+      </form>
+    </div>
+    <img
+      class="bottom-left"
+      src="../../../assets/images/undraw_publish_post_vowb.png"
+    />
   </div>
-  <img
-    class="bottom-left"
-    src="../../../assets/images/undraw_publish_post_vowb.png"
-  />
 </div>
