@@ -8,8 +8,12 @@ class IMedia(ABC):
     """
 
     @abstractmethod
-    def upload_and_save(self, form):
+    def upload_and_save(self, post, files):
+        pass
+
+    @abstractmethod
+    def validate(self, post, files):
         pass
 
     def __init__(self):
-        self.uploader = cloud_controller
+        self.cloud = cloud_controller

@@ -3,9 +3,9 @@ from enum import Enum
 
 class AppCollection(Enum):
     """ Different possible application """
-    RE_F = "restaurant/food"
-    RE_RE = 'restaurant/restaurant'
-    U = 'user'
+    RE_F = "restaurant/FoodMedia"
+    # RE_RE = 'restaurant/restaurant'
+    # U = 'user'
 
     @classmethod
     def choices(cls):

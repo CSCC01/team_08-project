@@ -69,6 +69,10 @@ class Food(models.Model):
             response['Dishes'].append(model_to_dict(food))
         return response
 
+    @classmethod
+    def edit_dish(cls, _id):
+        Food.objects.find
+
 
 class ManualTag(models.Model):
     """ Model for Manual Tags """
