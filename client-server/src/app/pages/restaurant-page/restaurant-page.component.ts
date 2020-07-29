@@ -136,6 +136,7 @@ export class RestaurantPageComponent implements OnInit {
         role: this.role,
         userId: this.userId,
         restaurantId: this.restaurantId,
+        updates: true,
       },
     });
   }

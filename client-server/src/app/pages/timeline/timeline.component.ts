@@ -16,6 +16,7 @@ export class TimelineComponent implements OnInit {
   restaurantId: string = '';
   userId: string = '';
   role: string = '';
+  updates: boolean = false;
   restaurantName: string = '';
 
   posts: any[] = [];
@@ -42,6 +43,11 @@ export class TimelineComponent implements OnInit {
     this.role = this.route.snapshot.queryParams.role;
     this.userId = this.route.snapshot.queryParams.userId;
     this.restaurantId = this.route.snapshot.queryParams.restaurantId;
+    this.updates = this.route.snapshot.queryParams.updates;
+
+    if (this.role != 'RO' && this.updates == false) {
+      this.restaurantId = '';
+    }
 
     this.data.changeRole(this.role);
     this.data.changeUserId(this.userId);
