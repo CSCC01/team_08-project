@@ -17,6 +17,7 @@ import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatTabsModule } from '@angular/material/tabs';
 import { NumberPickerModule } from 'ng-number-picker';
+import { NgHttpLoaderModule } from 'ng-http-loader';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -82,6 +83,7 @@ import { RestaurantEditComponent } from './pages/restaurant-edit/restaurant-edit
     MatTabsModule,
     NumberPickerModule,
     NgbModule,
+    NgHttpLoaderModule.forRoot(),
   ],
   providers: [LoginService, DataService],
   bootstrap: [AppComponent],
