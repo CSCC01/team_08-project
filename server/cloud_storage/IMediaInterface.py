@@ -25,6 +25,8 @@ class IMedia(ABC):
         :return: updated docuemnt
         """
         document = collection.objects.get(**query)  # search for object
+        old_path = getattr(document, save_location)
+        self.cloud.delete(old_path)
         setattr(document, save_location, path)
         document.save()
         return document
