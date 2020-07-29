@@ -8,12 +8,26 @@ class IMedia(ABC):
     """
 
     @abstractmethod
-    def upload_and_save(self, post, files):
+    def upload(self, post, files):
         pass
 
-    @abstractmethod
     def validate(self, post, files):
-        pass
+        form = self.form(post, files)
+        return form.is_valid()
+
+    def save(self, query, collection, path, save_location):
+        """
+        Generic code to save path new location
+        :param query: query dictionary to isolate document
+        :param collection: table collection
+        :param path: path to new image
+        :param save_location: save url
+        :return: updated docuemnt
+        """
+        document = collection.objects.get(**query)  # search for object
+        setattr(document, save_location, path)
+        document.save()
+        return document
 
     def __init__(self):
         self.cloud = cloud_controller
