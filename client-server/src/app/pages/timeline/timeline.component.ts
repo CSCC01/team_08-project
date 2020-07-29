@@ -96,14 +96,13 @@ export class TimelineComponent implements OnInit {
       };
 
       this.timeline.createPost(postObj);
-      this.content = '';
 
       this.timeline.getAllPosts().subscribe((data) => {
         const len = data.Posts.length;
         this.posts.push(data.Posts[len - 1]);
+        this.postModalRef.close();
+        this.content = '';
       });
-
-      this.postModalRef.close();
     }
   }
 
