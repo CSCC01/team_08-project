@@ -108,7 +108,7 @@ export class TimelineComponent implements OnInit {
 
   deleteContent() {
     this.timeline.deletePost(this.deletePostId);
-
+    
     if (this.deletePostIndex > -1) {
       this.posts.splice(this.deletePostIndex, 1);
     }
