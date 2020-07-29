@@ -95,20 +95,18 @@ export class TimelineComponent implements OnInit {
         content: this.content,
       };
 
-      this.timeline.createPost(postObj);
-
-      this.timeline.getAllPosts().subscribe((data) => {
-        const len = data.Posts.length;
-        this.posts.push(data.Posts[len - 1]);
+      this.timeline.createPost(postObj).subscribe((data) => {
+        this.posts.push(data);
         this.postModalRef.close();
-        this.content = '';
       });
+
+      this.content = '';
     }
   }
 
   deleteContent() {
     this.timeline.deletePost(this.deletePostId);
-    
+
     if (this.deletePostIndex > -1) {
       this.posts.splice(this.deletePostIndex, 1);
     }

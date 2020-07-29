@@ -56,9 +56,9 @@ export class TimelineService {
 
   Creates a post on the for the restaurant on their timeline.
   */
-  createPost(postInfo): void {
+  createPost(postInfo): Observable<any> {
     const endpoint = `${TimelineService.TL_ENDPOINT}/post/upload/`;
-    this.http.post<any>(endpoint, postInfo).subscribe((data) => {});
+    return this.http.post<any>(endpoint, postInfo);
   }
 
   /*
