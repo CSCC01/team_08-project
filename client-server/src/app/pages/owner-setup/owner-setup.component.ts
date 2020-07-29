@@ -10,6 +10,7 @@ import { RestaurantsService } from '../../service/restaurants.service';
 })
 export class OwnerSetupComponent implements OnInit {
   restaurantId: string = '';
+  userId: string = '';
   role: string = '';
 
   constructor(
@@ -21,7 +22,9 @@ export class OwnerSetupComponent implements OnInit {
 
   ngOnInit(): void {
     this.restaurantId = this.route.snapshot.queryParams.restaurantId;
+    this.userId = this.route.snapshot.queryParams.userId;
     this.role = this.route.snapshot.queryParams.role;
+
     if (!this.restaurantId || this.role !== 'RO') {
       this.router.navigate([''], {
         queryParams: { role: this.role, restaurantId: this.restaurantId },
@@ -29,6 +32,7 @@ export class OwnerSetupComponent implements OnInit {
       alert('No matching restaurant found for this profile!');
     } else {
       this.data.changeRestaurantId(this.restaurantId);
+      this.data.changeUserId(this.userId);
       this.data.changeRole(this.role);
     }
   }
@@ -46,7 +50,11 @@ export class OwnerSetupComponent implements OnInit {
     } else {
       this.restaurantsService.editRestaurant(restaurantInfo);
       this.router.navigate(['/menu-setup'], {
-        queryParams: { role: this.role, restaurantId: this.restaurantId },
+        queryParams: {
+          role: this.role,
+          userId: this.userId,
+          restaurantId: this.restaurantId,
+        },
       });
     }
   }

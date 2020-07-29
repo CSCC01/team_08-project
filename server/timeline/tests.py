@@ -13,13 +13,13 @@ class PostSuite(TestCase):
         self.data = {
             '_id': '222222222222222222222222',
             'restaurant_id': '000000000000000000000000',
-            'user_id': '111111111111111111111111',
+            'user_email': 'hey@mail.come',
             'content': 'Post',
         }
         self.data2 = {
             '_id': '333333333333333333333333',
             'restaurant_id': '000000000000000000000000',
-            'user_id': '111111111111111111111111',
+            'user_email': 'hey@mail.come',
             'content': 'Post',
             'comments': [],
             'likes': [],
@@ -27,7 +27,7 @@ class PostSuite(TestCase):
         self.data3 = {
             '_id': '444444444444444444444444',
             'restaurant_id': '111111111111111111111111',
-            'user_id': '111111111111111111111111',
+            'user_email': 'hey@mail.come',
             'content': 'Post3',
             'comments': [],
             'likes': [],
@@ -39,7 +39,7 @@ class PostSuite(TestCase):
         self.deletepost = {
             '_id': '121212121212121212121212',
             'restaurant_id': '0000000000000000000000',
-            'user_id': '111111111111111111111111',
+            'user_email': 'hey@mail.come',
             'content': 'deletethispost',
             'comments': [],
             'likes': []
@@ -47,7 +47,7 @@ class PostSuite(TestCase):
         self.unrelatedpost = {
             '_id': '333333333333333333333334',
             'restaurant_id': '0000000000000000000000',
-            'user_id': '111111111111111111111111',
+            'user_email': 'hey@mail.come',
             'content': 'deletethispost',
             'likes': [],
             'comments': []
@@ -55,14 +55,14 @@ class PostSuite(TestCase):
         self.relatedcomment = {
             '_id': '111111111111111111111222',
             'post_id': '121212121212121212121212',
-            'user_id': '111111111111111111114444',
+            'user_email': 'hey2@mail.come',
             'content': 'this post needs to be deleted',
             'likes': []
         }
         self.unrelatedcomment = {
             '_id': '111111111111111111111333',
             'post_id': '333333333333333333333333',
-            'user_id': '111111111111111111115555',
+            'user_email': 'hey3@mail.come',
             'content': 'this post needs to remain',
             'likes': []
         }
@@ -76,7 +76,7 @@ class PostSuite(TestCase):
         expected = {
             '_id': '222222222222222222222222',
             'restaurant_id': '000000000000000000000000',
-            'user_id': '111111111111111111111111',
+            'user_email': 'hey@mail.come',
             'content': 'Post',
             'likes': [],
             'comments': [],
@@ -145,23 +145,23 @@ class CommentSuite(TestCase):
     def setUp(self):
         self.post = TimelinePost.objects.create(**{
             'restaurant_id': '000000000000000000000000',
-            'user_id': '111111111111111111111111',
+            'user_email': 'hey@mail.come',
             'content': 'Post',
         })
         self.post2 = TimelinePost.objects.create(**{
             'restaurant_id': '222222222222222222222222',
-            'user_id': '111111111111111111111111',
+            'user_email': 'hey@mail.come',
             'content': 'Post',
             'comments': []
         })
         self.comment = TimelineComment.objects.create(**{
             '_id': '333333333333333333333333',
             'post_id': self.post2._id,
-            'user_id': '111111111111111111111111',
+            'user_email': 'hey@mail.come',
             'likes': [],
             'content': "To be deleted"
         })
-        self.post2.comments = [self.comment._id]
+        self.post2.comments = [ObjectId(self.comment._id)]
         self.post2.save()
 
     def testUploadComment(self):
@@ -169,7 +169,7 @@ class CommentSuite(TestCase):
         request = RequestFactory().post('api/timeline/comment/upload/', {
             '_id': '000000000000000000000000',
             'post_id': str(self.post._id),
-            'user_id': '111111111111111111111111',
+            'user_email': 'hey@mail.come',
             'content': 'testing'
         }, content_type='application/json')
         response = server.upload_comment_page(request)
@@ -177,7 +177,7 @@ class CommentSuite(TestCase):
         expected = {
             '_id': '000000000000000000000000',
             'post_id': str(self.post._id),
-            'user_id': '111111111111111111111111',
+            'user_email': 'hey@mail.come',
             'content': 'testing',
             'likes': []
         }
@@ -208,7 +208,7 @@ class CommentSuite(TestCase):
         request = RequestFactory().post('api/timeline/comment/upload/', {
             '_id': '000000000000000000000000',
             'post_id': str(self.post._id),
-            'user_id': '111111111111111111111111',
+            'user_email': 'hey@mail.come',
             'content': 'testing'
         }, content_type='application/json')
         server.upload_comment_page(request)
@@ -224,5 +224,5 @@ class CommentSuite(TestCase):
         actual = json.loads(server.get_comment_data_page(request).content)
         del actual['Timestamp']
         expected = {'_id': '333333333333333333333333', 'post_id': str(self.post2._id),
-                    'user_id': '111111111111111111111111', 'likes': [], 'content': 'To be deleted'}
+                    'user_email': 'hey@mail.come', 'likes': [], 'content': 'To be deleted'}
         self.assertDictEqual(expected, actual)

@@ -14,11 +14,12 @@ module.exports = {
     Components: [
       "components/dish-card",
       "components/filterlist-card",
+      "components/order-card",
       "components/owner-card",
       "components/restaurant-card",
       "components/review-card",
+      "components/timeline-post",
       "components/view-review-card",
-      "components/order-card",
     ],
   },
 };

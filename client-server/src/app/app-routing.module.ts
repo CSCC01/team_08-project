@@ -12,6 +12,7 @@ import { RestaurantSetupComponent } from './pages/restaurant-setup/restaurant-se
 import { OwnerSetupComponent } from './pages/owner-setup/owner-setup.component';
 import { MenuSetupComponent } from './pages/menu-setup/menu-setup.component';
 import { MenuEditComponent } from './pages/menu-edit/menu-edit.component';
+import { TimelineComponent } from './pages/timeline/timeline.component';
 import { OwnerEditComponent } from './pages/owner-edit/owner-edit.component';
 import { RestaurantEditComponent } from './pages/restaurant-edit/restaurant-edit.component';
 
@@ -30,30 +31,13 @@ const routes: Routes = [
     component: RestuarantDashboardComponent,
     canActivate: [ROCheckGuard],
   },
-  {
-    path: 'restaurant-setup',
-    component: RestaurantSetupComponent,
-  },
-  {
-    path: 'owner-setup',
-    component: OwnerSetupComponent,
-  },
-  {
-    path: 'menu-setup',
-    component: MenuSetupComponent,
-  },
-  {
-    path: 'menu-edit',
-    component: MenuEditComponent,
-  },
-  {
-    path: 'owner-edit',
-    component: OwnerEditComponent,
-  },
-  {
-    path: 'restaurant-edit',
-    component: RestaurantEditComponent,
-  },
+  { path: 'restaurant-setup', component: RestaurantSetupComponent },
+  { path: 'owner-setup', component: OwnerSetupComponent },
+  { path: 'menu-setup', component: MenuSetupComponent },
+  { path: 'menu-edit', component: MenuEditComponent },
+  { path: 'timeline', component: TimelineComponent },
+  { path: 'owner-edit', component: OwnerEditComponent },
+  { path: 'restaurant-edit', component: RestaurantEditComponent },
 ];
 
 @NgModule({
