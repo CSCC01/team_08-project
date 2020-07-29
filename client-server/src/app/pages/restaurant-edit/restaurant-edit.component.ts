@@ -36,6 +36,7 @@ export class RestaurantEditComponent implements OnInit {
       alert('No matching restaurant found for this profile!');
     }
     this.data.changeRestaurantId(this.restaurantId);
+    this.data.changeUserId(this.userId);
     this.data.changeRole(this.role);
 
     this.restaurantsService
