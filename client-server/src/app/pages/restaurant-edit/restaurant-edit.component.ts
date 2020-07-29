@@ -39,6 +39,44 @@ export class RestaurantEditComponent implements OnInit {
       });
   }
 
+  updateRestaurantInfo() {
+    // Extract form inputs from the user
+    var restaurantInfo = {
+      restaurant_id: this.restaurantId,
+      name: (<HTMLInputElement>document.getElementById('restaurant-name'))
+        .value,
+      address: (<HTMLInputElement>document.getElementById('restaurant-address'))
+        .value,
+      city: (<HTMLInputElement>document.getElementById('restaurant-city'))
+        .value,
+      phone: (<HTMLInputElement>document.getElementById('phone-number')).value,
+      pricepoint: (<HTMLInputElement>document.getElementById('pricepoint'))
+        .value,
+      cuisine: (<HTMLInputElement>document.getElementById('restaurant-cuisine'))
+        .value,
+      bio: (<HTMLInputElement>document.getElementById('restaurant-bio')).value,
+      twitter: (<HTMLInputElement>document.getElementById('twitter')).value,
+      instagram: (<HTMLInputElement>document.getElementById('instagram')).value,
+    };
+
+    if (
+      restaurantInfo.name == '' ||
+      restaurantInfo.address == '' ||
+      restaurantInfo.city == '' ||
+      restaurantInfo.phone == '' ||
+      restaurantInfo.pricepoint == 'Choose...' ||
+      restaurantInfo.cuisine == '' ||
+      restaurantInfo.bio == ''
+    ) {
+      alert('Please enter all requried information about the restaurant!');
+    } else {
+      this.restaurantsService.editRestaurant(restaurantInfo);
+      this.router.navigate(['/restaurant'], {
+        queryParams: { role: this.role, restaurantId: this.restaurantId },
+      });
+    }
+  }
+
   cancel() {
     this.router.navigate(['/restaurant'], {
       queryParams: { role: this.role, restaurantId: this.restaurantId },
