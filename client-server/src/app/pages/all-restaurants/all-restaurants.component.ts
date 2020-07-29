@@ -3,6 +3,7 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RestaurantsService } from '../../service/restaurants.service';
 import { DataService } from 'src/app/service/data.service';
+import { LoginService } from 'src/app/service/login.service';
 
 @Component({
   selector: 'app-all-restaurants',
@@ -19,6 +20,7 @@ export class AllRestaurantsComponent implements OnInit {
 
   constructor(
     private restaurantsService: RestaurantsService,
+    private loginService: LoginService,
     private data: DataService,
     private route: ActivatedRoute,
     private router: Router
@@ -30,6 +32,11 @@ export class AllRestaurantsComponent implements OnInit {
 
     this.data.changeUserId(this.userId);
     this.data.changeRole(this.role);
+
+    // Get user long and lat
+    // this.loginService.getUser({ email: this.userId }).subscribe((data) => {
+    //   console.log(data);
+    // });
 
     // Get list of all restaurants
     this.restaurantsService.listRestaurants().subscribe((data) => {

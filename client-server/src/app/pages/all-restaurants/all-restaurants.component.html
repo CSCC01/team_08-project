@@ -1,3 +1,11 @@
+<div *ngIf="restaurants != undefined" class="map">
+  <app-map
+    [restaurants]="restaurants"
+    [userId]="userId"
+    [role]="role"
+  ></app-map>
+</div>
+
 <h2 class="header-title">Browse</h2>
 
 <mat-tab-group mat-align-tabs="center">
