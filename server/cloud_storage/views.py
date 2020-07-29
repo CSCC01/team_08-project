@@ -2,7 +2,7 @@ from django.http import JsonResponse, HttpResponseBadRequest
 from .form import MediaForm
 from utils.encoder import BSONEncoder
 import json
-from .IMedia import IMedia_dict
+from .IMediaFactory import IMedia_dict
 from django.forms import model_to_dict
 
 
