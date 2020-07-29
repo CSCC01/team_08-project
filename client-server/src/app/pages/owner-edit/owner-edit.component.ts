@@ -26,7 +26,7 @@ export class OwnerEditComponent implements OnInit {
     this.userId = this.route.snapshot.queryParams.userId;
     this.role = this.route.snapshot.queryParams.role;
 
-    if (!this.restaurantId || this.role !== 'RO') {
+    if (!this.restaurantId || this.role !== 'RO' || !this.userId) {
       this.router.navigate([''], {
         queryParams: {
           role: this.role,

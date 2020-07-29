@@ -132,7 +132,11 @@ export class RestaurantPageComponent implements OnInit {
 
   editRestaurant() {
     this.router.navigate(['/restaurant-edit'], {
-      queryParams: { role: this.role, restaurantId: this.restaurantId },
+      queryParams: {
+        role: this.role,
+        userId: this.userId,
+        restaurantId: this.restaurantId,
+      },
     });
   }
 }

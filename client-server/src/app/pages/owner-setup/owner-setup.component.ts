@@ -25,9 +25,13 @@ export class OwnerSetupComponent implements OnInit {
     this.userId = this.route.snapshot.queryParams.userId;
     this.role = this.route.snapshot.queryParams.role;
 
-    if (!this.restaurantId || this.role !== 'RO') {
+    if (!this.restaurantId || this.role !== 'RO' || !this.userId) {
       this.router.navigate([''], {
-        queryParams: { role: this.role, restaurantId: this.restaurantId },
+        queryParams: {
+          role: this.role,
+          userId: this.userId,
+          restaurantId: this.restaurantId,
+        },
       });
       alert('No matching restaurant found for this profile!');
     } else {
