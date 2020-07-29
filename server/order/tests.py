@@ -28,7 +28,7 @@ class CartTestCases(TestCase):
         self.assertDictEqual(actual, expected)
 
     def test_insert_item_cart(self):
-        """ Test if item document is inserted into the database """
+        """ Test if the cart price was updated after item insert """
 
         req = self.factory.post('/api/order/item/insert/', {'cart_id': str(self.c1._id), 'food_id': str(self.f1._id),
                                                             'count': 2},
