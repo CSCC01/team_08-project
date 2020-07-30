@@ -70,6 +70,7 @@ class Food(models.Model):
         return response
 
 
+
 class ManualTag(models.Model):
     """ Model for Manual Tags """
     _id = models.ObjectIdField()
@@ -209,16 +210,3 @@ class Restaurant(models.Model):
             restaurant.save()
             return restaurant
 
-    @classmethod
-    def update_logo(cls, img, _id):
-        """
-        Upload image to google cloud and change restaurant logo to that link
-        :param img:
-        :param _id:
-        :return:
-        """
-        restaurant = cls.get(_id=_id)
-        url = cloud_controller.upload(img, cloud_controller.TEST_BUCKET, content_type=cloud_controller.IMAGE)
-        restaurant.logo_url = url
-        restaurant.save()
-        return url

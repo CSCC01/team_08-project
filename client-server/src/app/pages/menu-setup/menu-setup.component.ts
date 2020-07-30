@@ -40,7 +40,7 @@ export class MenuSetupComponent implements OnInit {
     this.data.changeUserId(this.userId);
     this.data.changeRole(this.role);
 
-    if (!this.restaurantId || this.role !== 'RO') {
+    if (!this.restaurantId || this.role !== 'RO' || !this.userId) {
       this.router.navigate([''], {
         queryParams: {
           role: this.role,

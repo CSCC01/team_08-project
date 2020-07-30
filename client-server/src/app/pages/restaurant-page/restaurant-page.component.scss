@@ -159,3 +159,25 @@ ngb-alert {
   margin: 30px auto;
   padding: 40px 75px;
 }
+
+.button-container {
+  display: inline-block;
+  position: relative;
+}
+
+.editRestaurant {
+  position: absolute;
+  top: 100px;
+  right: 2px;
+  height: 50px;
+
+  fa-icon {
+    color: white;
+  }
+}
+
+.editRestaurant:hover {
+  fa-icon {
+    color: $secondary-color;
+  }
+}

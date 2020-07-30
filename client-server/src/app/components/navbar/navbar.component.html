@@ -14,13 +14,25 @@
   </button>
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item nav-link">
+      <li *ngIf="role == 'RO'" class="nav-item nav-link">
         <a
           routerLink="/"
           [queryParams]="{
             role: role,
             userId: userId,
             restaurantId: restaurantId
+          }"
+          class="nav-link"
+        >
+          HOME
+        </a>
+      </li>
+      <li *ngIf="role != 'RO'" class="nav-item nav-link">
+        <a
+          routerLink="/"
+          [queryParams]="{
+            role: role,
+            userId: userId
           }"
           class="nav-link"
         >
@@ -79,13 +91,26 @@
           BROWSE
         </a>
       </li>
-      <li class="nav-item nav-link">
+      <li *ngIf="role == 'RO'" class="nav-item nav-link">
         <a
           routerLink="timeline"
           [queryParams]="{
             role: role,
             userId: userId,
             restaurantId: restaurantId
+          }"
+          routerLinkActive="active"
+          class="nav-link"
+        >
+          TIMELINE
+        </a>
+      </li>
+      <li *ngIf="role != 'RO'" class="nav-item nav-link">
+        <a
+          routerLink="timeline"
+          [queryParams]="{
+            role: role,
+            userId: userId
           }"
           routerLinkActive="active"
           class="nav-link"
