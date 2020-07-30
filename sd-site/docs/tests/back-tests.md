@@ -11,6 +11,7 @@ Specific apps, test suites, or even individual test cases can be run using the f
 
 #### Testing table legend
 | Column                      | Column Description                                                                                                                                                   |
+| :-------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
 | Test Case Name              | Name of Test Case                                                                                                                                                    |
 | App                         | Django app test case is testing                                                                                                                                      |
 | Test Suite                  | Test Suite for test case                                                                                                                                             |
