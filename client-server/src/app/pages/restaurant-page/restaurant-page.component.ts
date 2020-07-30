@@ -18,10 +18,10 @@ import { DataService } from 'src/app/service/data.service';
   styleUrls: ['./restaurant-page.component.scss'],
 })
 export class RestaurantPageComponent implements OnInit {
-  @Input() userId: any; // pass the user id everywhere
+  restaurantId: string = '';
+  userId: string = '';
+  role: string = '';
 
-  restaurantId: string;
-  role: string;
   dishes: any[] = [];
   reviews: any[] = [];
   restaurantDetails: any;
@@ -61,9 +61,11 @@ export class RestaurantPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.restaurantId = this.route.snapshot.queryParams.restaurantId;
+    this.userId = this.route.snapshot.queryParams.userId;
     this.role = this.route.snapshot.queryParams.role;
 
     this.data.changeRestaurantId(this.restaurantId);
+    this.data.changeUserId(this.userId);
     this.data.changeRole(this.role);
 
     // generate restaurant page
@@ -98,9 +100,44 @@ export class RestaurantPageComponent implements OnInit {
     }
   }
 
+  viewTimeline() {
+    this.router.navigate(['/timeline'], {
+      queryParams: {
+        role: this.role,
+        userId: this.userId,
+        restaurantId: this.restaurantId,
+      },
+    });
+  }
+
   editMenu() {
     this.router.navigate(['/menu-edit'], {
-      queryParams: { role: this.role, restaurantId: this.restaurantId },
+      queryParams: {
+        role: this.role,
+        userId: this.userId,
+        restaurantId: this.restaurantId,
+      },
+    });
+  }
+
+  editOwner() {
+    this.router.navigate(['/owner-edit'], {
+      queryParams: {
+        role: this.role,
+        userId: this.userId,
+        restaurantId: this.restaurantId,
+      },
+    });
+  }
+
+  editRestaurant() {
+    this.router.navigate(['/restaurant-edit'], {
+      queryParams: {
+        role: this.role,
+        userId: this.userId,
+        restaurantId: this.restaurantId,
+        updates: true,
+      },
     });
   }
 }

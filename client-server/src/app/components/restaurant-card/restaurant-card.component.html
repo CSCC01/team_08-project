@@ -30,7 +30,11 @@
             <a
               class="btn"
               [routerLink]="['/restaurant']"
-              [queryParams]="{ restaurantId: restaurant._id }"
+              [queryParams]="{
+                restaurantId: restaurant._id,
+                role: role,
+                userId: userId
+              }"
             >
               View Restaurant
             </a>

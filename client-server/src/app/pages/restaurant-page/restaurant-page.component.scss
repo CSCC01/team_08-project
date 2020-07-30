@@ -112,6 +112,19 @@ ngb-alert {
   }
 }
 
+.story-card {
+  width: 80%;
+  height: auto;
+  margin: 30px auto;
+  padding: 40px 75px;
+  box-shadow: 5px 5px 5px rgb(150, 150, 150);
+
+  @media screen and (max-width: 900px) {
+    width: 90%;
+    padding: 20px;
+  }
+}
+
 .editBtn {
   height: 50px;
   padding: 0 15px 0 5px;
@@ -123,6 +136,47 @@ ngb-alert {
 }
 
 .editBtn:hover {
+  fa-icon {
+    color: $secondary-color;
+  }
+}
+
+.owner-image {
+  width: 300px;
+  height: 300px;
+  margin-top: 5%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+
+  @media screen and (max-width: 900px) {
+    width: 90%;
+    height: auto;
+  }
+}
+
+.owner-name {
+  margin: 30px auto;
+  padding: 40px 75px;
+}
+
+.button-container {
+  display: inline-block;
+  position: relative;
+}
+
+.editRestaurant {
+  position: absolute;
+  top: 100px;
+  right: 2px;
+  height: 50px;
+
+  fa-icon {
+    color: white;
+  }
+}
+
+.editRestaurant:hover {
   fa-icon {
     color: $secondary-color;
   }

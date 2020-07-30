@@ -46,6 +46,7 @@ export class AuthService {
   // Create a local property for login status
   loggedIn: boolean = null;
   role: string = '';
+  userId: string = '';
   restaurantId: string = '';
 
   constructor(
@@ -126,6 +127,7 @@ export class AuthService {
           if (bool.exists) {
             this.loginService.getUser(user).subscribe((data) => {
               this.role = data.role;
+              this.userId = data.email;
               if (data.role == 'RO') {
                 this.restaurantId = data.restaurant_id;
                 this.data.changeRestaurantId('RO');
@@ -138,11 +140,14 @@ export class AuthService {
                 .navigate([targetRoute], {
                   queryParams: {
                     role: this.role,
+                    userId: this.userId,
                     restaurantId: this.restaurantId,
                   },
                 })
                 .then(() => {
-                  window.location.reload();
+                  setTimeout(function () {
+                    window.location.reload();
+                  }, 1000);
                 });
             });
           } else {
@@ -151,9 +156,11 @@ export class AuthService {
             this.loginService.addNewUser(user);
             this.role = 'BU';
 
+            this.data.changeUserId(user.email);
+
             this.router
               .navigate([targetRoute], {
-                queryParams: { role: this.role },
+                queryParams: { role: this.role, userId: user.email },
               })
               .then(() => {
                 setTimeout(function () {

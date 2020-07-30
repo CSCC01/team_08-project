@@ -17,6 +17,7 @@ import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatTabsModule } from '@angular/material/tabs';
 import { NumberPickerModule } from 'ng-number-picker';
+import { NgHttpLoaderModule } from 'ng-http-loader';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -37,6 +38,10 @@ import { RestaurantSetupComponent } from './pages/restaurant-setup/restaurant-se
 import { OwnerSetupComponent } from './pages/owner-setup/owner-setup.component';
 import { MenuSetupComponent } from './pages/menu-setup/menu-setup.component';
 import { MenuEditComponent } from './pages/menu-edit/menu-edit.component';
+import { TimelinePostComponent } from './components/timeline-post/timeline-post.component';
+import { TimelineComponent } from './pages/timeline/timeline.component';
+import { OwnerEditComponent } from './pages/owner-edit/owner-edit.component';
+import { RestaurantEditComponent } from './pages/restaurant-edit/restaurant-edit.component';
 
 @NgModule({
   declarations: [
@@ -61,6 +66,10 @@ import { MenuEditComponent } from './pages/menu-edit/menu-edit.component';
     OwnerSetupComponent,
     MenuSetupComponent,
     MenuEditComponent,
+    TimelinePostComponent,
+    TimelineComponent,
+    OwnerEditComponent,
+    RestaurantEditComponent,
   ],
   imports: [
     BrowserModule,
@@ -74,6 +83,7 @@ import { MenuEditComponent } from './pages/menu-edit/menu-edit.component';
     MatTabsModule,
     NumberPickerModule,
     NgbModule,
+    NgHttpLoaderModule.forRoot(),
   ],
   providers: [LoginService, DataService],
   bootstrap: [AppComponent],

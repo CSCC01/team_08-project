@@ -77,27 +77,6 @@ This section will go over all the backends components of the Scarborough Dining 
     owner_picture_url = models.CharField(max_length = 200, blank=True)
 ```
 
-###### TimelinePost
-```python
-    _id = models.ObjectIdField()
-    restaurant_id = models.CharField(max_length=24)
-    user_id = models.CharField(max_length=24)
-    likes = models.ListField(default=[], blank=True)
-    content = models.TextField(max_length=4096)
-    Timestamp = models.DateTimeField(auto_now=True)
-    comments = models.ListField(default=[], blank=True)
-```
-
-##### TimelineComment
-```python
-    _id = models.ObjectIdField()
-    post_id = models.CharField(max_length=24)
-    user_id = models.CharField(max_length=24)
-    likes = models.ListField(default=[], blank=True)
-    content = models.TextField(max_length=256)
-    Timestamp = models.DateTimeField(auto_now=True)
-```
-
 ###### Prices (Enum)
 
     Low = "$"
@@ -111,6 +90,30 @@ This section will go over all the backends components of the Scarborough Dining 
     CU = "Cuisine"
     DI = "Dish"
 
+#### Timeline
+
+###### TimelinePost
+```python
+    _id = models.ObjectIdField()
+    restaurant_id = models.CharField(max_length=24)
+    user_email = models.EmailField()
+    likes = models.ListField(default=[], blank=True)
+    content = models.TextField(max_length=4096)
+    Timestamp = models.DateTimeField(auto_now=True)
+    comments = models.ListField(default=[], blank=True)
+```
+
+##### TimelineComment
+```python
+    _id = models.ObjectIdField()
+    post_id = models.CharField(max_length=24)
+    user_email = models.EmailField()
+    likes = models.ListField(default=[], blank=True)
+    content = models.TextField(max_length=256)
+    Timestamp = models.DateTimeField(auto_now=True)
+```
+
+
 ## URLs
 
 |               Address               | Required Fields (Field Type)                                                                                                                                                       | Optional Fields                                                                    | Type | Functionality                                                |
@@ -120,21 +123,26 @@ This section will go over all the backends components of the Scarborough Dining 
 |           /user/role_reassign/      | user\_email, role (_Roles_ Name), (All Fields Needed for /restaurant/insert/)                                                                                                      |                                                                                    | POST | Updates Role of SDUSer to RO and adds his restaurant page    |
 |             /user/data/             | email                                                                                                                                                                              |                                                                                    | GET  | Returns All Fields of the SDUser                             |
 |            /user/exists/            | email                                                                                                                                                                              |                                                                                    | GET  | Returns if the SDUser exists in the DB                       |
-|            /user/edit/              | email                                                                                                                                                                              | **nickname, name, picture, updated_at**                                            | POST | Updates the fields of the given User with the new data       |
+|            /user/edit/              | email                                                                                                                                                                              | **nickname, name, picture, updated_at, birthday, address, phone**                  | POST | Updates the fields of the given User with the new data       |
 |       /restaurant/tag/insert/       | food\_name, restaurant\_id, category (_Categories_ Name), value                                                                                                                    |                                                                                    | POST | Adds Tag to a Food Item                                      |
 |       /restaurant/tag/clear/        | food_name, restaurant_id                                                                                                                                                           |                                                                                    | POST | Clears All Tags on a Food Item                               |
 |        /restaurant/tag/auto/        | \_id                                                                                                                                                                               |                                                                                    | POST | Automatically tags food based on description                 |
 |      /restaurant/dish/insert/       | name, restaurant_id, description, picture, price, specials                                                                                                                         |                                                                                    | POST | Adds a dish to DB                                            |
-|      /restaurant/dish/get_all/      |                                                                                                                                                                                    |                                                                                    | GET  | retrieves all dishes                                         |
+|      /restaurant/dish/get_all/      |                                                                                                                                                                                    |                                                                                    | GET  | Retrieves all dishes                                         |
 |      /restaurant/dish/edit/         | \_id                                                                                                                                                                               | **name, description, picture, price, specials**                                    | POST | Updates the fields of the given Food with the new data       |
 |      /restaurant/dish/delete/       | food_name, restaurant_id                                                                                                                                                           |                                                                                    | POST | Deletes dish from db                                         |
-| /restaurant/dish/get_by_restaurant/ | restaurant_id                                                                                                                                                                      |                                                                                    | GET  | retrieves all dishes from restaurant                         |
+| /restaurant/dish/get_by_restaurant/ | restaurant_id                                                                                                                                                                      |                                                                                    | GET  | Retrieves all dishes from restaurant                         |
 |          /restaurant/get/           | \_id                                                                                                                                                                               |                                                                                    | GET  | Retrieves Restaurant data                                    |
 |        /restaurant/get_all/         |                                                                                                                                                                                    |                                                                                    | GET  | Retrieves all Restaurants                                    |
 |         /restaurant/insert/         | name, address, phone, email (unique), city, cuisine, pricepoint (_Price_ Name), instagram, twitter, GEO_location, external_delivery_link, bio, cover_photo_url, logo_url, rating   | owner_name, owner_story, owner_picture_url                                         | POST | Registers a Restaurant to DB                                 |
 |          /restaurant/edit/          | restaurant_id                                                                                                                                                                      | **(All Fields Needed for /restaurant/insert/ except for rating and GEO_location)** | POST | Updates the fields of the given Restaurant with the new data |
-|        /timeline/post/upload/       | restaurant_id, user_id, content                                                                                                                                                    |                                                                                    | POST | Add post to timeline table                                   |
-|      /timeline/comment/upload/      | post_id, user_id, content                                                                                                                                                          |                                                                                    | POST | Add comment to database and to post                          |
+|        /timeline/post/upload/       | restaurant_id, user_email, content                                                                                                                                                 |                                                                                    | POST | Add post to timeline table                                   |
+| /timeline/post/get_by_restaurant/   | restaurant_id                                                                                                                                                                      |                                                                                    | GET  | Retrieves all posts from restaurant                          |
+|        /timeline/post/delete/       | post_id                                                                                                                                                                            |                                                                                    | POST | deletes a post and all linked comments from the timeline table |
+|        /timeline/post/get_all/      |                                                                                                                                                                                    |                                                                                    | GET  | Retrieves all posts                                          |
+|      /timeline/comment/upload/      | post_id, user_email, content                                                                                                                                                       |                                                                                    | POST | Add comment to database and to post                          |
+|      /timeline/comment/delete/      | \_id                                                                                                                                                                               |                                                                                    | POST | Deletes a comment from the database                          |
+|      /timeline/comment/get/         | \_id                                                                                                                                                                                |                                                                                   | GET  | Retrieves comment data                                       |
 
 All requests should be sent in a JSON format. Optional parameters can be left blank Ex: {"Role" : ""}. Bolded Fields can be omitted entirely.
 
@@ -238,12 +246,17 @@ Specific apps, test suites, or even individual test cases can be run using the f
 |  test_insert_restaurant               | restaurant | RestaurantTestCases | Given restaurant data, restaurant document is inserted into database representing said data                                                                                               | New restaurants cannot be added to the database                                                          |    High   |     High    |   High   |
 |  test_edit_restaurant                 | restaurant | RestaurantTestCases | Given new restaurant data, restaurant document is updated to represent new data                                                                                                           | Restaurant data becomes static and cannot be changed by restaurant owner                                 |   Medium  |    Medium   |  Medium  |
 |  test_upload                          | timeline   | PostSuite           | Given post data, Post document is generated in the database                                                                                                                               | No Post can be created                                                                                   |   Medium  |     High    |  Medium  |
+|  test_get_post_by_restaurant          | timeline   | PostSuite           | All post documents for a restaurant within the database are correctly retrieved                                                                                                           | Restaurant Timelines will not be populated properly                                                      |   Medium  |     High    |  Medium  |
+|  test_delete                          | timeline   | PostSuite           | Given post id, post and its related comments are deleted from the database                                                                                                                        | No Post can be deleted                                                                             |   Medium  |     Medium    |  Medium  |
+|  test_get_all_post                    | timeline   | PostSuite           | All post documents within the database are correctly retrieved                                                                                                                            | Story tab will not be populated properly                                                                 |   Medium  |     High    |  High    |
 |  test_upload_comment                  | timeline   | CommentSuite        | Given Comment data, Comment document is generated in the database                                                                                                                         | No Comments can be created                                                                               |   Medium  |     High    |  Medium  |
 |  test_upload_post                     | timeline   | CommentSuite        | Given Comment data, Comment document id is added to original post's comments                                                                                                              | No Comments can be viewed                                                                                |   Medium  |     High    |  Medium  |
+|  test_comment_delete_comment          | timeline   | CommentSuite        | Given the id of the comment, comment is deleted on the comment side                                                                                                                       | No Comments can be deleted                                                                               |   Low     |     Medium  |  Medium  |
+|  test_comment_delete_post             | timeline   | CommentSuite        | Given the id of the comment, comment is deleted on the post side                                                                                                                          | Posts will include deleted comments                                                                      |   Low     |     Medium  |  Medium  |
+|  test_get_comment                     | timeline   | CommentSuite        | Correct comment document is retrieved given primary key 'id'                                                                                                                              | Comments can not be viewed                                                                               |   Medium  |     Medium  |  Medium  |
 |  test_upload                          | cloud_storage | CloudStorageTestCases | File is uploaded to cloud, and correct path pointing to file is returned                                                                                                             | Images media cannot be changed                                                                           |   High    |     High    |   High   |
 |  test_delete                          | cloud_storage | CloudStorageTestCases | File is removed from the cloud                                                                                                                                                       | Images remain clogging the storage                                                                       |   Medium  |    Medium   |  Medium  |
 |  test_delete_default                  | cloud_storage | CloudStorageTestCases | Files in default-buckets are not deleted                                                                                                                                             | Default images are deleted, affecting many users unwantingly                                             |   High    |     High    |   High   |
-
 ## API and Microservices
 
 ### Cloud-storage

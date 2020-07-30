@@ -11,6 +11,7 @@ import { DataService } from 'src/app/service/data.service';
 })
 export class RestuarantDashboardComponent implements OnInit {
   restaurantId: string = '';
+  userId: string = '';
   role: string = '';
 
   new_orders: any[];
@@ -43,9 +44,20 @@ export class RestuarantDashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.role = this.route.snapshot.queryParams.role;
+    this.userId = this.route.snapshot.queryParams.userId;
     this.restaurantId = this.route.snapshot.queryParams.restaurantId;
-
+    if (!this.restaurantId || this.role !== 'RO' || !this.userId) {
+      this.router.navigate([''], {
+        queryParams: {
+          role: this.role,
+          userId: this.userId,
+          restaurantId: this.restaurantId,
+        },
+      });
+      alert('No matching restaurant found for this profile!');
+    }
     this.data.changeRestaurantId(this.restaurantId);
+    this.data.changeUserId(this.userId);
     this.data.changeRole(this.role);
   }
 }

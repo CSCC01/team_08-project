@@ -15,11 +15,15 @@ signup_schema = {
         "email": {"type": "string"},
         "email_verified": {"type": "boolean"},
         "role": {"type": "string"},
-        "restaurant_id": {"type": "string"}
+        "restaurant_id": {"type": "string"},
+        "birthday": {"type": "string", "format": "date"},
+        "address": {"type": "string"},
+        "phone": {"type": "number"}
     }
 }
 
-user_editable = ["nickname", "name", "picture", "updated_at"]
+user_editable = ["nickname", "name", "picture", "updated_at", "birthday", "address", "phone"]
+
 
 def signup_page(request):
     """ Page to insert a user into the db provided all the user fields """
@@ -57,9 +61,7 @@ def data_page(request):
     """ Page that returns all the user_data provided the user email """
     req_email = request.GET.get('email')
     user = SDUser.objects.get(pk=req_email)
-    return JsonResponse(
-        {'nickname': user.nickname, 'name': user.name, 'picture': user.picture, 'updated_at': user.last_updated,
-         'email': user.email, 'email_verified': user.email_verified, 'role': user.role})
+    return JsonResponse(model_to_dict(user))
 
 
 def exists_page(request):
