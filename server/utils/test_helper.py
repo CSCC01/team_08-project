@@ -3,13 +3,10 @@ from django.forms import model_to_dict
 from django.http import QueryDict
 from .encoder import BSONEncoder
 
+
 # Test case utilities
 
 class TestHelper:
-    def process_expected(self, model):
-        """Reloads model from db, and trasnforms it into a dictionary"""
-        model.refresh_from_db()
-        return json.loads(json.dumps(model_to_dict(model), cls=BSONEncoder))
 
     # Not an elegant solution, however due to the bug in django
     # where multipart form request should produce a mutable POST field but doesn't

@@ -12,7 +12,9 @@ from . import views
 import json
 from django.core.files.uploadedfile import SimpleUploadedFile
 from .AppType import AppCollection
+from django.forms import model_to_dict
 from utils.test_helper import TestHelper
+from utils.encoder import BSONEncoder
 
 class Upload(TestCase):
 
@@ -167,7 +169,8 @@ class CloudEndPoints(TestCase):
         )
         response = views.media_upload_page(request)
         actual = json.loads(response.content)
-        expected = self.helper.process_expected(self.restaurant)
+        expected = json.loads(json.dumps(model_to_dict(self.restaurant), cls=BSONEncoder))
+        expected['logo_url'] = 'test_path'
         self.assertDictEqual(actual, expected)
 
     def test_restaurant_cover_photo(self):
@@ -185,7 +188,8 @@ class CloudEndPoints(TestCase):
         )
         response = views.media_upload_page(request)
         actual = json.loads(response.content)
-        expected = self.helper.process_expected(self.restaurant)
+        expected = json.loads(json.dumps(model_to_dict(self.restaurant), cls=BSONEncoder))
+        expected['cover_photo_url'] = 'test_path'
         self.assertDictEqual(actual, expected)
 
     def test_restaurant_owner_photo_url(self):
@@ -203,7 +207,8 @@ class CloudEndPoints(TestCase):
         )
         response = views.media_upload_page(request)
         actual = json.loads(response.content)
-        expected = self.helper.process_expected(self.restaurant)
+        expected = json.loads(json.dumps(model_to_dict(self.restaurant), cls=BSONEncoder))
+        expected['owner_picture_url'] = 'test_path'
         self.assertDictEqual(actual, expected)
 
     def test_food_picture(self):
@@ -221,7 +226,8 @@ class CloudEndPoints(TestCase):
         )
         response = views.media_upload_page(request)
         actual = json.loads(response.content)
-        expected = self.helper.process_expected(self.Food)
+        expected = json.loads(json.dumps(model_to_dict(self.Food),  cls=BSONEncoder))
+        expected['picture'] = 'test_path'
         self.assertDictEqual(actual, expected)
 
     def test_owner_picture(self):
@@ -239,5 +245,6 @@ class CloudEndPoints(TestCase):
         )
         response = views.media_upload_page(request)
         actual = json.loads(response.content)
-        expected = self.helper.process_expected(self.User)
+        expected = json.loads(json.dumps(model_to_dict(self.User), cls=BSONEncoder))
+        expected['picture'] = 'test_path'
         self.assertDictEqual(actual, expected)

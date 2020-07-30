@@ -69,9 +69,6 @@ class Food(models.Model):
             response['Dishes'].append(model_to_dict(food))
         return response
 
-    @classmethod
-    def edit_dish(cls, _id):
-        Food.objects.find
 
 
 class ManualTag(models.Model):
@@ -213,16 +210,3 @@ class Restaurant(models.Model):
             restaurant.save()
             return restaurant
 
-    @classmethod
-    def update_logo(cls, img, _id):
-        """
-        Upload image to google cloud and change restaurant logo to that link
-        :param img:
-        :param _id:
-        :return:
-        """
-        restaurant = cls.get(_id=_id)
-        url = cloud_controller.upload(img, cloud_controller.TEST_BUCKET, content_type=cloud_controller.IMAGE)
-        restaurant.logo_url = url
-        restaurant.save()
-        return url

@@ -241,13 +241,13 @@ def test(file):
 #### URLS and Usage
 
 All media uploads use the same endpoint. However the input form decides where the image is saved
+(save locations are fields in mongodb model, however are listed here for convenience)
 
-
-|        APP String             |     Extra parameters       |           URL             |
-| :---------------------------: | :------------------------: | :-----------------------: |
-| restaurant_RestaurantMedia    | file, save_location, _id   | api/cloud_storage/upload/ |
-| restaurant_FoodMedia          | file, save_location, _id   | api/cloud_storage/upload/ |
-  user_SDUserMedia              | file, save_location, email | api/cloud_storage/upload/ |
+|        APP String             |     Extra parameters       |           URL             | save_locations                               |
+| :---------------------------: | :------------------------: | :-----------------------: | :------------------------------------------: |
+| restaurant_RestaurantMedia    | file, save_location, _id   | api/cloud_storage/upload/ | cover_photo_url, logo_url, owner_picture_url |
+| restaurant_FoodMedia          | file, save_location, _id   | api/cloud_storage/upload/ | picture                                      |
+  user_SDUserMedia              | file, save_location, email | api/cloud_storage/upload/ | picture                                      |
   
 ![image info](./examples/example1.PNG)
   

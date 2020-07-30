@@ -6,14 +6,14 @@ from .form import SDUserForm
 class SDUserMedia(IMediaInterface.IMedia):
     """Implement media upload for SDUser model"""
 
-    def upload(self, post, files):
+    def upload_and_save(self, post, files):
         """
         Configure parameters to save uploaded file to database
         :return: updated model
         """
         query = {'email': post['email']}
-        path = self.cloud.upload(files['file'], self.cloud.TEST_BUCKET,
-                                 content_type=self.cloud.IMAGE)  # upload and save path
+        # not defining image constant bc media content_type changes (could be video)
+        path = self.upload(files['file'], self.cloud.IMAGE)  # upload and save path
         return self.save(query, SDUser, path, post['save_location'])
 
     def __init__(self):

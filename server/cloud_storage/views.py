@@ -15,7 +15,7 @@ def media_upload_page(request):
     if form.is_valid():  # initial validate form
         IMedia = factory[request.POST['app']]
         if IMedia.validate(request.POST, request.FILES):    # App Validation
-            model = model_to_dict(IMedia.upload(request.POST, request.FILES))
+            model = model_to_dict(IMedia.upload_and_save(request.POST, request.FILES))
             return JsonResponse(json.loads(json.dumps(model, cls=BSONEncoder)))
         else:
             return HttpResponseBadRequest('Invalid form')

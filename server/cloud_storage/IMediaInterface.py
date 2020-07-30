@@ -1,4 +1,4 @@
-from cloud_storage import cloud_controller
+from . import cloud_controller
 from abc import ABC, abstractmethod
 
 
@@ -6,13 +6,19 @@ class IMedia(ABC):
     """Interface for saving images in cloud bucket to appropriate database entry"""
 
     @abstractmethod
-    def upload(self, post, files):
+    def upload_and_save(self, post, files):
         """Configures parameters per endpoint for save method in IMedia"""
         pass
 
     def validate(self, post, files):
         form = self.form(post, files)
         return form.is_valid()
+
+    def upload(self, file, content_type, bucket=None):
+        """Upload media to cloud"""
+        if bucket is None:  # default bucket is set, allow option to change bucket
+            bucket = self.bucket
+        return self.cloud.upload(file, bucket, content_type)
 
     def save(self, query, collection, path, save_location):
         """
@@ -31,5 +37,6 @@ class IMedia(ABC):
         return document
 
     def __init__(self):
-        """Setup cloud controller for class"""
+        """Setup cloud controller constants"""
         self.cloud = cloud_controller
+        self.bucket = cloud_controller.TEST_BUCKET
