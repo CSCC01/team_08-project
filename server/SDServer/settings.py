@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'user',
     'restaurant',
     'timeline',
-    'order'
+    'order',
+    'utils'
 ]
 
 MIDDLEWARE = [

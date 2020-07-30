@@ -2,7 +2,6 @@ from bson import ObjectId
 from djongo import models
 from restaurant.models import Food
 
-
 class Cart(models.Model):
     """ Model for a user's Cart in order dashboard """
     _id = models.ObjectIdField()
@@ -13,6 +12,7 @@ class Cart(models.Model):
     send_tstmp = models.DateTimeField(blank=True, default=None)
     accept_tstmp = models.DateTimeField(blank=True, default=None)
     complete_tstmp = models.DateTimeField(blank=True, default=None)
+
 
     @classmethod
     def new_cart(cls, restaurant_id, user_email):
@@ -63,7 +63,6 @@ class Cart(models.Model):
         pass
 
 
-#
 class Item(models.Model):
     """ Model for one type of Item in the cart """
     _id = models.ObjectIdField()

@@ -24,6 +24,7 @@ item_schema = {
         "count": {"type": "number"},
     }
 }
+
 def insert_cart_page(request):
     """ Insert cart to database """
     validate(instance=request.body, schema=cart_schema)
@@ -31,7 +32,6 @@ def insert_cart_page(request):
     cart = Cart.new_cart(body['restaurant_id'], body['user_email'])
     cart._id = str(cart._id)
     return JsonResponse(model_to_dict(cart))
-
 
 def insert_item_page(request):
     """ Insert item to database """
