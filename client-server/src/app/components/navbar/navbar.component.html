@@ -170,6 +170,9 @@
                 *ngIf="auth.loggedIn"
                 data-dismiss="modal"
                 [routerLink]="['../restaurant-setup']"
+                [queryParams]="{
+                  userId: userId
+                }"
               >
                 Confirm
               </button>

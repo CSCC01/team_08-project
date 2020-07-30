@@ -90,7 +90,9 @@ export class MenuSetupComponent implements OnInit {
           specials: '',
         };
 
-        this.restaurantsService.createDish(dishInfo);
+        this.restaurantsService.createDish(dishInfo).subscribe((data) => {
+          this.dishes.push(data);
+        });
 
         this.dishName = '';
         this.price = '';
@@ -99,9 +101,7 @@ export class MenuSetupComponent implements OnInit {
         this.dishInfo = '';
         this.allergy = '';
 
-        this.loadAllDishes();
         this.modalRef.close();
-        this.loadAllDishes();
       } else {
         alert('Please enter a valid price!');
       }
