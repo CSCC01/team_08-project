@@ -42,20 +42,12 @@ export class MapComponent implements OnInit {
 
     for (var i = 0; i < this.restaurants.length; i++) {
       var index = this.restaurants[i];
-      var long = index.GEO_location.substring(
-        2,
-        index.GEO_location.indexOf("'", 2)
-      );
-      console.log(
-        index.GEO_location.indexOf("'", index.GEO_location.indexOf("'", 2) + 4)
-      );
-      var lati = index.GEO_location.substring(
-        index.GEO_location.indexOf("'", 2) + 2,
-        index.GEO_location.indexOf("'", index.GEO_location.indexOf("'", 2) + 2)
-      );
-      if (index.GEO_location != 'blank' || long != '{"') {
+
+      var GEOJson = JSON.parse(index.GEO_location.replace(/\'/g, '"'));
+
+      if (index.GEO_location != 'blank' && GEOJson.long != undefined) {
         var marker = new mapboxgl.Marker({ color: '#CB1E21' })
-          .setLngLat([+long, this.lat])
+          .setLngLat([GEOJson.long, GEOJson.lat])
           .setPopup(
             new mapboxgl.Popup().setHTML(
               `<h2>${index.name}</h2>
