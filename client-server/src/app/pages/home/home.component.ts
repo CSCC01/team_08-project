@@ -4,12 +4,14 @@ import 'aos/dist/aos.css';
 import {
   faArrowCircleUp,
   faArrowCircleDown,
+  faCalendar,
 } from '@fortawesome/free-solid-svg-icons';
 import dishes from '../../../assets/data/dishes.json';
 import stories from '../../../assets/data/stories.json';
 import { AuthService } from 'src/app/auth/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from 'src/app/service/data.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-home',
@@ -26,6 +28,7 @@ export class HomeComponent implements OnInit {
   faArrowCircleUp = faArrowCircleUp;
   faArrowCircleDown = faArrowCircleDown;
   arrowsOutside = true;
+  faCalendar = faCalendar;
 
   totalStars: number = 5;
   dishes: any[];
@@ -69,6 +72,7 @@ export class HomeComponent implements OnInit {
     public auth: AuthService,
     private data: DataService,
     private route: ActivatedRoute,
+    private modalService: NgbModal,
     private router: Router
   ) {
     this.dishes = dishes;
@@ -149,5 +153,9 @@ export class HomeComponent implements OnInit {
 
   browseListings() {
     this.router.navigate(['/all-listings']);
+  }
+
+  openDishModal(content) {
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
   }
 }
