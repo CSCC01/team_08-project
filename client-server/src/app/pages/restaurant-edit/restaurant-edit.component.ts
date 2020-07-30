@@ -4,11 +4,11 @@ import { DataService } from 'src/app/service/data.service';
 import { RestaurantsService } from '../../service/restaurants.service';
 
 @Component({
-  selector: 'app-owner-edit',
-  templateUrl: './owner-edit.component.html',
-  styleUrls: ['./owner-edit.component.scss'],
+  selector: 'app-restaurant-edit',
+  templateUrl: './restaurant-edit.component.html',
+  styleUrls: ['./restaurant-edit.component.scss'],
 })
-export class OwnerEditComponent implements OnInit {
+export class RestaurantEditComponent implements OnInit {
   restaurantId: string = '';
   restaurantDetails: any;
   userId: string = '';
@@ -25,7 +25,6 @@ export class OwnerEditComponent implements OnInit {
     this.restaurantId = this.route.snapshot.queryParams.restaurantId;
     this.userId = this.route.snapshot.queryParams.userId;
     this.role = this.route.snapshot.queryParams.role;
-
     if (!this.restaurantId || this.role !== 'RO' || !this.userId) {
       this.router.navigate([''], {
         queryParams: {
@@ -40,7 +39,6 @@ export class OwnerEditComponent implements OnInit {
     this.data.changeUserId(this.userId);
     this.data.changeRole(this.role);
 
-    // generate restaurant page
     this.restaurantsService
       .getRestaurant(this.restaurantId)
       .subscribe((data) => {
@@ -48,16 +46,36 @@ export class OwnerEditComponent implements OnInit {
       });
   }
 
-  updateOwnerInfo() {
+  updateRestaurantInfo() {
+    // Extract form inputs from the user
     var restaurantInfo = {
       restaurant_id: this.restaurantId,
-      owner_name: (<HTMLInputElement>document.getElementById('owner-name'))
+      name: (<HTMLInputElement>document.getElementById('restaurant-name'))
         .value,
-      owner_story: (<HTMLInputElement>document.getElementById('owner-story'))
+      address: (<HTMLInputElement>document.getElementById('restaurant-address'))
         .value,
+      city: (<HTMLInputElement>document.getElementById('restaurant-city'))
+        .value,
+      phone: (<HTMLInputElement>document.getElementById('phone-number')).value,
+      pricepoint: (<HTMLInputElement>document.getElementById('pricepoint'))
+        .value,
+      cuisine: (<HTMLInputElement>document.getElementById('restaurant-cuisine'))
+        .value,
+      bio: (<HTMLInputElement>document.getElementById('restaurant-bio')).value,
+      twitter: (<HTMLInputElement>document.getElementById('twitter')).value,
+      instagram: (<HTMLInputElement>document.getElementById('instagram')).value,
     };
-    if (restaurantInfo.owner_name == '' || restaurantInfo.owner_story == '') {
-      alert('Please enter all requried information about the owner!');
+
+    if (
+      restaurantInfo.name == '' ||
+      restaurantInfo.address == '' ||
+      restaurantInfo.city == '' ||
+      restaurantInfo.phone == '' ||
+      restaurantInfo.pricepoint == 'Choose...' ||
+      restaurantInfo.cuisine == '' ||
+      restaurantInfo.bio == ''
+    ) {
+      alert('Please enter all requried information about the restaurant!');
     } else {
       this.restaurantsService.editRestaurant(restaurantInfo);
       this.router.navigate(['/restaurant'], {

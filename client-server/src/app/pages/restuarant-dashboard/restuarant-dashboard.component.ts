@@ -46,7 +46,16 @@ export class RestuarantDashboardComponent implements OnInit {
     this.role = this.route.snapshot.queryParams.role;
     this.userId = this.route.snapshot.queryParams.userId;
     this.restaurantId = this.route.snapshot.queryParams.restaurantId;
-
+    if (!this.restaurantId || this.role !== 'RO' || !this.userId) {
+      this.router.navigate([''], {
+        queryParams: {
+          role: this.role,
+          userId: this.userId,
+          restaurantId: this.restaurantId,
+        },
+      });
+      alert('No matching restaurant found for this profile!');
+    }
     this.data.changeRestaurantId(this.restaurantId);
     this.data.changeUserId(this.userId);
     this.data.changeRole(this.role);

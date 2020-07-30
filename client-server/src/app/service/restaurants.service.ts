@@ -108,7 +108,7 @@ export class RestaurantsService {
   @Input: JSON object containing restaurant info (must have ID)
   @Output: None
 
-  Creates an entry for the dish for a particular restuarant using its id.
+  Edits information for a restuarant using its id.
   */
   editRestaurant(restInfo): void {
     const endpoint = `${RestaurantsService.RO_ENDPOINT}/edit/`;
