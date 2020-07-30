@@ -18,11 +18,12 @@ signup_schema = {
         "restaurant_id": {"type": "string"},
         "birthday": {"type": "string", "format": "date"},
         "address": {"type": "string"},
-        "phone": {"type": "number"}
+        "phone": {"type": "number"},
+        "GEO_location": {"type": "string"}
     }
 }
 
-user_editable = ["nickname", "name", "picture", "updated_at", "birthday", "address", "phone"]
+user_editable = ["nickname", "name", "picture", "updated_at", "birthday", "address", "phone", "GEO_location"]
 
 
 def signup_page(request):
