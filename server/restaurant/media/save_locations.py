@@ -2,7 +2,7 @@ from enum import Enum
 
 
 class FoodSaveLocations(Enum):
-    """ Different possible application """
+    """Enum for valid save locations"""
     picture = 'Food Picture'
 
     @classmethod
@@ -15,7 +15,7 @@ class FoodSaveLocations(Enum):
 
 
 class RestaurantSaveLocations(Enum):
-    """ Different possible application """
+    """Enum for valid save locations"""
     cover_photo_url = "Cover Photo"
     logo_url = 'Logo'
     owner_picture_url = 'Owner Picture'

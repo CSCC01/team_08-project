@@ -2,7 +2,7 @@ from enum import Enum
 
 
 class SDUserSaveLocations(Enum):
-    """ Different possible application """
+    """Enum for valid save locations"""
     picture = 'User Picture'
 
     @classmethod

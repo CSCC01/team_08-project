@@ -3,6 +3,6 @@ from .save_locations import SDUserSaveLocations
 
 
 class SDUserForm(forms.Form):
-    file = forms.ImageField()
-    email = forms.EmailField()
-    save_location = forms.ChoiceField(choices=SDUserSaveLocations.choices())  # guard against random overwriting
+    file = forms.ImageField()                                                   # File to be uploaded
+    email = forms.EmailField()                                                  # identify document
+    save_location = forms.ChoiceField(choices=SDUserSaveLocations.choices())    # Validate save location

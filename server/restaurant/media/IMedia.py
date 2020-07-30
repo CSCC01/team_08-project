@@ -4,12 +4,12 @@ from .form import FoodForm, RestaurantForm
 
 
 class FoodMedia(IMediaInterface.IMedia):
-    """Implement food for Imedia uploading"""
+    """Implement media upload for Food model"""
 
     def upload(self, post, files):
         """
-        Implement uploading file to cloud and then saving in save location
-        :return:
+        Configure parameters to save uploaded file to database
+        :return: updated model
         """
         query = {'_id': post['_id']}
         path = self.cloud.upload(files['file'], self.cloud.TEST_BUCKET,
@@ -22,12 +22,12 @@ class FoodMedia(IMediaInterface.IMedia):
 
 
 class RestaurantMedia(IMediaInterface.IMedia):
-    """Implement food for Imedia uploading"""
+    """Implement media upload for restaurant model"""
 
     def upload(self, post, files):
         """
-        Implement uploading file to cloud and then saving in save location
-        :return:
+        Configure parameters to save uploaded file to database
+        :return: updated model
         """
         query = {'_id': post['_id']}
         path = self.cloud.upload(files['file'], self.cloud.TEST_BUCKET,

@@ -3,12 +3,11 @@ from abc import ABC, abstractmethod
 
 
 class IMedia(ABC):
-    """
-    Interface for saving images in cloud bucket to appropriate database entry
-    """
+    """Interface for saving images in cloud bucket to appropriate database entry"""
 
     @abstractmethod
     def upload(self, post, files):
+        """Configures parameters per endpoint for save method in IMedia"""
         pass
 
     def validate(self, post, files):
@@ -17,7 +16,7 @@ class IMedia(ABC):
 
     def save(self, query, collection, path, save_location):
         """
-        Generic code to save path new location
+        Generic code to save path new location in document identified by query
         :param query: query dictionary to isolate document
         :param collection: table collection
         :param path: path to new image
@@ -32,4 +31,5 @@ class IMedia(ABC):
         return document
 
     def __init__(self):
+        """Setup cloud controller for class"""
         self.cloud = cloud_controller

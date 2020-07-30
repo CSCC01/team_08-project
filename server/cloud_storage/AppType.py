@@ -2,7 +2,11 @@ from enum import Enum
 
 
 class AppCollection(Enum):
-    """ Different possible application """
+    """
+    Enum for different media endpoint constants.
+    If adding a new endpoint, make sure to include it here as well in fomat
+    {app}_{name of IMedia class}
+    """
     restaurant_FoodMedia = 'Restaurant.Food'
     restaurant_RestaurantMedia = 'Restaurant.Restaurant'
     user_SDUserMedia = 'User.SDUser'

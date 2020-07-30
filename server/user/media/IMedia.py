@@ -4,12 +4,12 @@ from .form import SDUserForm
 
 
 class SDUserMedia(IMediaInterface.IMedia):
-    """Implement food for Imedia uploading"""
+    """Implement media upload for SDUser model"""
 
     def upload(self, post, files):
         """
-        Implement uploading file to cloud and then saving in save location
-        :return:
+        Configure parameters to save uploaded file to database
+        :return: updated model
         """
         query = {'email': post['email']}
         path = self.cloud.upload(files['file'], self.cloud.TEST_BUCKET,

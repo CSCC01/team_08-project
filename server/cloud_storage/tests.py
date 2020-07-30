@@ -5,7 +5,7 @@ from PIL import Image
 from io import BytesIO
 import requests
 from . import cloud_controller
-from .IMediaFactory import IMedia_dict
+from .IMediaFactory import factory
 from restaurant.models import Restaurant, Food
 from user.models import SDUser
 from . import views
@@ -88,8 +88,8 @@ class CloudEndPoints(TestCase):
             def delete(self, file_path):
                 return('delete')
         mock = Mock()
-        for app in IMedia_dict: # replace all cloud_controller in imageuploaders with mocks
-            IMedia_dict[app].cloud = mock
+        for app in factory: # replace all cloud_controller in imageuploaders with mocks
+            factory[app].cloud = mock
 
         # create objects
         self.restaurant = Restaurant.objects.create(**
