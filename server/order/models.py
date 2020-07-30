@@ -28,6 +28,15 @@ class Cart(models.Model):
         cart.save()
         return cart
 
+    def add_to_total(self, food_id, count):
+        """
+        Calculates and changes the new total price for a cart
+        :param food_id: id of food item being added to cart
+        :param count: number of food items to add to cart
+        """
+        self.price = float(self.price) + (float(Food.objects.get(_id=ObjectId(food_id)).price) * count)
+        self.save(update_fields=["price"])
+
     # updates the send_timestamp of the given cart to now,
     # indicating that the cart has reached the RO
     def send_cart(self, cart_id):
@@ -75,9 +84,7 @@ class Item(models.Model):
         item.clean_fields()
         item.clean()
         item.save()
-        cart = Cart.objects.get(_id=ObjectId(cart_id))
-        cart.price = float(cart.price) + (float(Food.objects.get(_id=ObjectId(food_id)).price) * count)
-        cart.save(update_fields=["price"])
+        Cart.objects.get(_id=ObjectId(cart_id)).add_to_total(food_id, count)
         return item
 
     # deletes an order
