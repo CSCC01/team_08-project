@@ -11,16 +11,19 @@
 
 <div class="dishes">
   <div class="row equal">
-    <div *ngFor="let dish of dishes" class="col-sm-4 d-flex">
+    <div *ngFor="let dish of dishes; let i = index" class="col-sm-4 d-flex">
       <div class="col">
         <div class="row">
           <app-dish-card [dish]="dish"></app-dish-card>
         </div>
         <div class="row">
-          <button class="icon btn" (click)="openDishModal(dishModal, dish)">
+          <button class="icon btn" (click)="openDishModal(dishModal, dish, i)">
             <fa-icon [icon]="faEdit"></fa-icon>
           </button>
-          <button class="icon btn" (click)="openDeleteModal(deleteModal, dish)">
+          <button
+            class="icon btn"
+            (click)="openDeleteModal(deleteModal, dish, i)"
+          >
             <fa-icon [icon]="faTrash"></fa-icon>
           </button>
         </div>

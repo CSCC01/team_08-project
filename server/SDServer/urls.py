@@ -20,8 +20,10 @@ urlpatterns = [
     path('user/', include('user.urls')),
     path('admin/', admin.site.urls),
     path('restaurant/', include('restaurant.urls')),
-    path('timeline/', include('timeline.urls'))
+    path('timeline/', include('timeline.urls')),
+    path('order/', include('order.urls')),
+    path('cloud_storage/', include('cloud_storage.urls'))
 ]
 
-#prefix all URLpatterns with api/ i.e. api/urlpattern
+# prefix all URLpatterns with api/ i.e. api/urlpattern
 urlpatterns = [path('api/', include(urlpatterns))]

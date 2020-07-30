@@ -22,6 +22,8 @@ export class MenuEditComponent implements OnInit {
   dishModalRef: any;
   dishEdit: boolean = false;
   dishes: any[];
+  dishIndex: number;
+
   dishId: string = '';
   dishName: string = '';
   price: string = '';
@@ -78,8 +80,9 @@ export class MenuEditComponent implements OnInit {
     this.allergy = '';
   }
 
-  openDishModal(content, dish?) {
+  openDishModal(content, dish?, index?) {
     if (dish !== undefined) {
+      // dish edit
       this.dishId = dish._id;
       this.dishName = dish.name;
       this.price = dish.price;
@@ -89,6 +92,7 @@ export class MenuEditComponent implements OnInit {
       this.allergy = 'default';
 
       this.dishEdit = true;
+      this.dishIndex = index;
     } else {
       this.clearInput();
     }
@@ -96,8 +100,9 @@ export class MenuEditComponent implements OnInit {
     this.dishModalRef = this.dishModalService.open(content, { size: 'xl' });
   }
 
-  openDeleteModal(content, dish) {
+  openDeleteModal(content, dish, index) {
     this.dishName = dish.name;
+    this.dishIndex = index;
     this.deleteModalRef = this.deleteModalService.open(content, { size: 's' });
   }
 
@@ -127,16 +132,19 @@ export class MenuEditComponent implements OnInit {
         };
 
         if (this.dishEdit) {
-          this.restaurantsService.editDish(dishInfo);
+          this.restaurantsService.editDish(dishInfo).subscribe((data) => {
+            this.dishes[this.dishIndex] = data;
+            this.dishIndex = 0;
+          });
         } else {
-          this.restaurantsService.createDish(dishInfo);
+          this.restaurantsService.createDish(dishInfo).subscribe((data) => {
+            this.dishes.push(data);
+          });
         }
 
         this.clearInput();
-        this.loadAllDishes();
         this.dishEdit = false;
         this.dishModalRef.close();
-        this.loadAllDishes();
       } else {
         alert('Please enter a valid price!');
       }
@@ -150,10 +158,14 @@ export class MenuEditComponent implements OnInit {
     };
 
     this.restaurantsService.deleteDish(dishInfo);
+
+    if (this.dishIndex > -1) {
+      this.dishes.splice(this.dishIndex, 1);
+    }
+
     this.clearInput();
-    this.loadAllDishes();
+    this.dishIndex = 0;
     this.deleteModalRef.close();
-    this.loadAllDishes();
   }
 
   back() {
