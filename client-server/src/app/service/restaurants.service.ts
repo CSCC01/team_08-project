@@ -132,4 +132,14 @@ export class RestaurantsService {
 
     return this.http.post<any>(endpoint, formData);
   }
+
+  uploadFoodMedia(formData, id): Observable<any> {
+    const endpoint = `${RestaurantsService.UPLOAD_ENDPOINT}`;
+
+    formData.append('save_location', 'picture');
+    formData.append('app', 'restaurant_FoodMedia');
+    formData.append('_id', id);
+
+    return this.http.post<any>(endpoint, formData);
+  }
 }

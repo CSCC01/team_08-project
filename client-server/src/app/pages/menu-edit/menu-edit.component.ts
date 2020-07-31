@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DataService } from 'src/app/service/data.service';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
@@ -14,6 +15,9 @@ export class MenuEditComponent implements OnInit {
   restaurantId: string = '';
   userId: string = '';
   role: string = '';
+
+  uploadForm: FormGroup;
+  newImage: boolean = false;
 
   faEdit = faEdit;
   faTrash = faTrash;
@@ -36,6 +40,7 @@ export class MenuEditComponent implements OnInit {
     private data: DataService,
     private route: ActivatedRoute,
     private router: Router,
+    private formBuilder: FormBuilder,
     private restaurantsService: RestaurantsService,
     private dishModalService: NgbModal,
     private deleteModalService: NgbModal
@@ -60,6 +65,10 @@ export class MenuEditComponent implements OnInit {
     this.data.changeUserId(this.userId);
     this.data.changeRole(this.role);
     this.loadAllDishes();
+
+    this.uploadForm = this.formBuilder.group({
+      file: [''],
+    });
   }
 
   loadAllDishes() {
@@ -120,30 +129,36 @@ export class MenuEditComponent implements OnInit {
       if (!isNaN(Number(this.price))) {
         const price: number = +this.price;
         //TODO: picture currently defaulted, will be changed when Google Cloud is implemented
-        var dishInfo = {
-          _id: this.dishId,
-          name: this.dishName,
-          restaurant_id: this.restaurantId,
-          description: this.dishInfo,
-          picture:
-            'https://www.bbcgoodfood.com/sites/default/files/recipe-collections/collection-image/2013/05/chorizo-mozarella-gnocchi-bake-cropped.jpg',
-          price: price.toFixed(2),
-          specials: '',
-        };
+        var dishInfo = {};
+        dishInfo['_id'] = this.dishId;
+        dishInfo['name'] = this.dishName;
+        dishInfo['restaurant_id'] = this.restaurantId;
+        dishInfo['description'] = this.dishInfo;
+        dishInfo['price'] = price.toFixed(2);
+        dishInfo['specials'] = '';
 
         if (this.dishEdit) {
           this.restaurantsService.editDish(dishInfo).subscribe((data) => {
-            this.dishes[this.dishIndex] = data;
-            this.dishIndex = 0;
+            if (this.newImage) {
+              this.onSubmit(data._id);
+            } else {
+              this.dishes[this.dishIndex] = data;
+              this.dishIndex = 0;
+              this.dishEdit = false;
+            }
           });
         } else {
+          dishInfo['picture'] = '';
           this.restaurantsService.createDish(dishInfo).subscribe((data) => {
-            this.dishes.push(data);
+            if (this.newImage) {
+              this.onSubmit(data._id);
+            } else {
+              this.dishes.push(data);
+            }
           });
         }
 
         this.clearInput();
-        this.dishEdit = false;
         this.dishModalRef.close();
       } else {
         alert('Please enter a valid price!');
@@ -176,5 +191,32 @@ export class MenuEditComponent implements OnInit {
         restaurantId: this.restaurantId,
       },
     });
+  }
+
+  onFileSelect(event) {
+    if (event.target.files.length > 0) {
+      this.newImage = true;
+      const file = event.target.files[0];
+      this.uploadForm.get('file').setValue(file);
+    }
+  }
+
+  onSubmit(id: string) {
+    const formData = new FormData();
+    formData.append('file', this.uploadForm.get('file').value);
+    this.restaurantsService.uploadFoodMedia(formData, id).subscribe((data) => {
+      if (this.dishEdit) {
+        this.dishes[this.dishIndex] = data;
+        this.dishIndex = 0;
+      } else {
+        this.dishes.push(data);
+      }
+      this.dishEdit = false;
+    });
+
+    this.uploadForm = this.formBuilder.group({
+      file: [''],
+    });
+    this.newImage = false;
   }
 }
