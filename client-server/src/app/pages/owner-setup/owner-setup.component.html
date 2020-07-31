@@ -4,7 +4,7 @@
     Please provide information about the owner.
   </p>
   <div class="form-box">
-    <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
+    <form [formGroup]="uploadForm" (ngSubmit)="updateOwner()">
       <div class="form-group">
         <label for="owner-name" class="required">Owner Name</label>
         <input

@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import {
   faMapMarkerAlt,
   faPhone,
@@ -11,6 +12,7 @@ import { RestaurantsService } from 'src/app/service/restaurants.service';
 import dishes from '../../../assets/data/dishes.json';
 import reviews from '../../../assets/data/reviews.json';
 import { DataService } from 'src/app/service/data.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-restaurant-page',
@@ -21,6 +23,10 @@ export class RestaurantPageComponent implements OnInit {
   restaurantId: string = '';
   userId: string = '';
   role: string = '';
+
+  headerModalRef: any;
+  uploadForm: FormGroup;
+  newImage: boolean = false;
 
   dishes: any[] = [];
   reviews: any[] = [];
@@ -53,7 +59,9 @@ export class RestaurantPageComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private restaurantsService: RestaurantsService,
-    private data: DataService
+    private data: DataService,
+    private headerModalService: NgbModal,
+    private formBuilder: FormBuilder
   ) {
     this.dishes = dishes;
     this.reviews = reviews;
@@ -69,11 +77,7 @@ export class RestaurantPageComponent implements OnInit {
     this.data.changeRole(this.role);
 
     // generate restaurant page
-    this.restaurantsService
-      .getRestaurant(this.restaurantId)
-      .subscribe((data) => {
-        this.restaurantDetails = data;
-      });
+    this.loadRestaurant();
 
     // generate restaurant menu
     this.restaurantsService
@@ -81,6 +85,10 @@ export class RestaurantPageComponent implements OnInit {
       .subscribe((data) => {
         this.restaurantMenu = data.Dishes;
       });
+
+    this.uploadForm = this.formBuilder.group({
+      file: [''],
+    });
   }
 
   @HostListener('window:resize', ['$event'])
@@ -98,6 +106,14 @@ export class RestaurantPageComponent implements OnInit {
       el2.classList.add('col-md-5');
       el3.classList.add('row');
     }
+  }
+
+  loadRestaurant() {
+    this.restaurantsService
+      .getRestaurant(this.restaurantId)
+      .subscribe((data) => {
+        this.restaurantDetails = data;
+      });
   }
 
   viewTimeline() {
@@ -139,5 +155,28 @@ export class RestaurantPageComponent implements OnInit {
         updates: true,
       },
     });
+  }
+
+  openEditHeaderModal(content) {
+    this.headerModalRef = this.headerModalService.open(content, { size: 's' });
+  }
+
+  onFileSelect(event) {
+    if (event.target.files.length > 0) {
+      this.newImage = true;
+      const file = event.target.files[0];
+      this.uploadForm.get('file').setValue(file);
+    }
+  }
+
+  onSubmit() {
+    const formData = new FormData();
+    formData.append('file', this.uploadForm.get('file').value);
+    this.restaurantsService
+      .uploadRestaurantMedia(formData, this.restaurantId, 'cover')
+      .subscribe((data) => {});
+    this.newImage = false;
+    this.loadRestaurant();
+    this.headerModalRef.close();
   }
 }

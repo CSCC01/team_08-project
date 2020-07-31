@@ -14,8 +14,55 @@
       <fa-icon [icon]="faEdit"></fa-icon>
       <b>EDIT RESTAURANT DETAILS</b>
     </button>
+    <button
+      *ngIf="role == 'RO'"
+      class="btn editHeader"
+      (click)="openEditHeaderModal(headerModal)"
+    >
+      <fa-icon [icon]="faEdit"></fa-icon>
+      <b>EDIT HEADER</b>
+    </button>
     <!-- </div> -->
   </div>
+
+  <ng-template #headerModal let-modal>
+    <div class="modal-header">
+      <h2 class="modal-title" id="modal-basic-title">Edit Header Image</h2>
+      <button
+        type="button"
+        class="close"
+        aria-label="Close"
+        (click)="modal.dismiss('Cross click')"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label for="cover">Add cover image:</label>
+            <input
+              type="file"
+              name="cover"
+              id="cover"
+              (change)="onFileSelect($event)"
+            />
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <div class="text-right">
+        <button class="btn saveBtn skip" (click)="modal.dismiss('Cross click')">
+          CANCEL
+        </button>
+        <button class="btn saveBtn" type="submit" (click)="onSubmit()">
+          CONFIRM
+        </button>
+      </div>
+    </div>
+  </ng-template>
 
   <div>
     <div class="card infoCard">

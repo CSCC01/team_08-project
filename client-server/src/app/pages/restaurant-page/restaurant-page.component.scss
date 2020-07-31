@@ -180,3 +180,20 @@ ngb-alert {
     color: $secondary-color;
   }
 }
+
+.editHeader {
+  position: absolute;
+  top: 160px;
+  right: 2px;
+  height: 50px;
+
+  fa-icon {
+    color: white;
+  }
+}
+
+.editHeader:hover {
+  fa-icon {
+    color: $secondary-color;
+  }
+}

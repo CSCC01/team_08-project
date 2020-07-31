@@ -5,7 +5,7 @@
   </p>
   <div class="form-box">
     <div *ngIf="restaurantDetails">
-      <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
+      <form [formGroup]="uploadForm" (ngSubmit)="updateOwnerInfo()">
         <div class="form-group">
           <label for="owner-name" class="required">Owner Name</label>
           <input

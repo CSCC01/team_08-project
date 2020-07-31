@@ -15,6 +15,7 @@ export class OwnerSetupComponent implements OnInit {
   role: string = '';
 
   uploadForm: FormGroup;
+  newImage: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -61,6 +62,9 @@ export class OwnerSetupComponent implements OnInit {
       alert('Please enter all requried information about the owner!');
     } else {
       this.restaurantsService.editRestaurant(restaurantInfo);
+      if (this.newImage) {
+        this.onSubmit();
+      }
       this.router.navigate(['/menu-setup'], {
         queryParams: {
           role: this.role,
@@ -73,6 +77,7 @@ export class OwnerSetupComponent implements OnInit {
 
   onFileSelect(event) {
     if (event.target.files.length > 0) {
+      this.newImage = true;
       const file = event.target.files[0];
       this.uploadForm.get('file').setValue(file);
     }
@@ -84,5 +89,6 @@ export class OwnerSetupComponent implements OnInit {
     this.restaurantsService
       .uploadRestaurantMedia(formData, this.restaurantId, 'owner')
       .subscribe((data) => {});
+    this.newImage = false;
   }
 }

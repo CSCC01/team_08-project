@@ -16,7 +16,7 @@ export class RestaurantEditComponent implements OnInit {
   role: string = '';
 
   uploadForm: FormGroup;
-  uploadType: string = '';
+  newImage: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -87,6 +87,9 @@ export class RestaurantEditComponent implements OnInit {
       alert('Please enter all requried information about the restaurant!');
     } else {
       this.restaurantsService.editRestaurant(restaurantInfo);
+      if (this.newImage) {
+        this.onSubmit();
+      }
       this.router.navigate(['/restaurant'], {
         queryParams: {
           role: this.role,
@@ -107,9 +110,9 @@ export class RestaurantEditComponent implements OnInit {
     });
   }
 
-  onFileSelect(event, type: string) {
-    this.uploadType = type;
+  onFileSelect(event) {
     if (event.target.files.length > 0) {
+      this.newImage = true;
       const file = event.target.files[0];
       this.uploadForm.get('file').setValue(file);
     }
@@ -119,8 +122,8 @@ export class RestaurantEditComponent implements OnInit {
     const formData = new FormData();
     formData.append('file', this.uploadForm.get('file').value);
     this.restaurantsService
-      .uploadRestaurantMedia(formData, this.restaurantId, this.uploadType)
+      .uploadRestaurantMedia(formData, this.restaurantId, 'logo')
       .subscribe((data) => {});
-    this.uploadType = '';
+    this.newImage = false;
   }
 }
