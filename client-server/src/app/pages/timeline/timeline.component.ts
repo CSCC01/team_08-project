@@ -50,7 +50,6 @@ export class TimelineComponent implements OnInit {
     this.userId = sessionStorage.getItem('userId');
     this.ROrestaurantId = sessionStorage.getItem('restaurantId');
 
-    console.log(this.ROrestaurantId);
     if (this.updates == 'true' || this.ROrestaurantId) {
       if (this.ROrestaurantId != null) {
         this.restaurantId = this.ROrestaurantId;
