@@ -108,7 +108,10 @@
       </div>
       <div class="row" style="margin: 0;">
         <div class="form-group col-md-5">
-          <img class="owner-image" src="assets/images/owner.jpg" />
+          <img
+            class="owner-image"
+            src="{{ restaurantDetails.owner_picture_url }}"
+          />
         </div>
         <div class="form-group col-md-7">
           <h2 class="owner-name">{{ restaurantDetails.owner_name }}</h2>
