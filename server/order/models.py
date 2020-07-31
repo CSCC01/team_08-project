@@ -1,4 +1,6 @@
+from bson import ObjectId
 from djongo import models
+from restaurant.models import Food
 
 class Cart(models.Model):
     """ Model for a user's Cart in order dashboard """
@@ -26,6 +28,15 @@ class Cart(models.Model):
         cart.save()
         return cart
 
+    def add_to_total(self, food_id, count):
+        """
+        Calculates and changes the new total price for a cart
+        :param food_id: id of food item being added to cart
+        :param count: number of food items to add to cart
+        """
+        self.price = float(self.price) + (float(Food.objects.get(_id=ObjectId(food_id)).price) * count)
+        self.save(update_fields=["price"])
+
     # updates the send_timestamp of the given cart to now,
     # indicating that the cart has reached the RO
     def send_cart(self, cart_id):
@@ -52,22 +63,29 @@ class Cart(models.Model):
         pass
 
 
-# Model for a single Order in the cart
-# class Order(models.Model):
-#     _id = models.ObjectIdField()
-#     cart_id = models.ForeignKey(Cart)
-#     food_id = models.ForeignKey(Food)
-#     count = models.IntegerField(default=1)
-#
-#     # Creates an order, count is 1 by default
-#     @classmethod
-#     def new_order(cls, user_id, cart_id, food_id, count=1):
-#         order = cls(user_id, cart_id, food_id, count)
-#         order.clean_fields()
-#         order.clean()
-#         order.save()
-#         return order
-#
-#     # deletes an order
-#     def delete_order(self):
-#         pass
+class Item(models.Model):
+    """ Model for one type of Item in the cart """
+    _id = models.ObjectIdField()
+    cart_id = models.CharField(max_length=24)
+    food_id = models.CharField(max_length=24)
+    count = models.IntegerField(default=1)
+
+    @classmethod
+    def new_item(cls, cart_id, food_id, count):
+        """
+        Creates a new item and adds it the database
+        :param cart_id: the id of cart to add the item to
+        :param food_id: the id of food item to be added
+        :param count: The number of items to add to the cart
+        :return: the item instance
+        """
+        item = cls(cart_id=cart_id, food_id=food_id, count=count)
+        item.clean_fields()
+        item.clean()
+        item.save()
+        Cart.objects.get(_id=ObjectId(cart_id)).add_to_total(food_id, count)
+        return item
+
+    # deletes an order
+    def delete_order(self):
+        pass

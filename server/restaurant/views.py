@@ -59,8 +59,9 @@ restaurant_schema = {
 dish_editable = ["name", "description", "picture", "price", "specials"]
 
 restaurant_editable = ["name", "address", "phone", "updated_at", "email", "city", "cuisine", "pricepoint", "twitter",
-                       "instagram", "bio", "external_delivery_link", "cover_photo_url", "logo_url",
+                       "instagram", "bio", "GEO_location", "external_delivery_link", "cover_photo_url", "logo_url",
                        "owner_name", "owner_story", "owner_picture_url"]
+
 
 def insert_tag_page(request):
     """Insert tag to database"""
@@ -76,6 +77,7 @@ def clear_tags_page(request):
     body = json.loads(request.body)
     ManualTag.clear_food_tags(body['food_name'], body['restaurant_id'])
     return HttpResponse(status=200)
+
 
 def get_dish_by_restaurant_page(request):
     """Retrieve all dishes from a restaurant"""
@@ -141,7 +143,6 @@ def insert_restaurant_page(request):
         return HttpResponseBadRequest('duplicate email')
 
 
-
 def edit_restaurant_page(request):
     """Update restaurant data"""
     validate(instance=request.body, schema=restaurant_schema)
@@ -164,6 +165,7 @@ def update_logo(request):
         Restaurant.update_logo(request.FILES['image'], request.POST['_id'])
         return HttpResponse('SUCCESS')
     return HttpResponse('FAILURE')
+
 
 def edit_dish_page(request):
     """Update Dish data"""

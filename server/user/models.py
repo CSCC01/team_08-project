@@ -15,6 +15,7 @@ class SDUser(models.Model):
     birthday = models.DateField(blank=True, default=None)
     address = models.CharField(max_length=24, blank=True, default='')
     phone = models.BigIntegerField(blank=True, default=None)
+    GEO_location = models.CharField(max_length=200, blank=True, default='')
 
 
     @classmethod
