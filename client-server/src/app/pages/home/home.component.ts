@@ -196,10 +196,11 @@ export class HomeComponent implements OnInit {
     if (
       (userInfo.phone != null && userInfo.phone.length != 10) ||
       (userInfo.birthday != null &&
-        !userInfo.birthday.match('^\\d{4}-\\d{2}-\\d{2}$'))
+        !userInfo.birthday.match('^\\d{4}-\\d{2}-\\d{2}$')) ||
+      !userInfo.name
     ) {
       alert(
-        'Please ensure formats are proper. Phone numbers should be 10 digits with no dashes and birthday should be YYYY-MM-DD'
+        'Please ensure formats are proper. Name should not empty, phone numbers should be 10 digits with no dashes and birthday should be YYYY-MM-DD'
       );
     } else {
       this.loginService.editUser(userInfo);
