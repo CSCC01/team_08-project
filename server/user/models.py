@@ -1,3 +1,4 @@
+import requests
 from django.db import models
 from user.enum import Roles
 
@@ -16,7 +17,6 @@ class SDUser(models.Model):
     address = models.CharField(max_length=24, blank=True, default='')
     phone = models.BigIntegerField(blank=True, default=None)
     GEO_location = models.CharField(max_length=200, blank=True, default='')
-
 
     @classmethod
     def signup(cls, nickname, name, picture, updated, email, verified, role, restaurant_id):
@@ -54,3 +54,30 @@ class SDUser(models.Model):
             self.role = role
             self.save(update_fields=["role"])
         return None
+
+    @classmethod
+    def field_validate(self, fields):
+        """
+        Validates fields
+        :param fields: Dictionary of fields to validate
+        :return: A list of fields that were invalid. Returns None if all fields are valid
+        """
+        user_urls = ['picture']
+
+        invalid = {'Invalid': []}
+
+        for field in user_urls:
+            if field in fields and fields[field] != '':
+                try:
+                    requests.get(fields[field])
+                except (requests.ConnectionError, requests.exceptions.MissingSchema) as exception:
+                    invalid['Invalid'].append(field)
+
+        if 'phone' in fields and fields['phone'] is not None:
+            if len(str(fields['phone'])) != 10:
+                invalid['Invalid'].append('phone')
+
+        if not invalid['Invalid']:
+            return None
+        else:
+            return invalid

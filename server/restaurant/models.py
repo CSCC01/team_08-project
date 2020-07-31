@@ -5,9 +5,9 @@ from restaurant.cuisine_dict import load_dict
 from cloud_storage import cloud_controller
 from restaurant.enum import Prices, Categories
 from django.core.exceptions import ObjectDoesNotExist
+import requests
 
 
-# Model for the Food Items on the Menu
 class Food(models.Model):
     """ Model for the Food Items on the Menu """
     _id = models.ObjectIdField()
@@ -69,6 +69,27 @@ class Food(models.Model):
             response['Dishes'].append(model_to_dict(food))
         return response
 
+    @classmethod
+    def field_validate(self, fields):
+        """
+        Validates fields
+        :param fields: Dictionary of fields to validate
+        :return: A list of fields that were invalid. Returns None if all fields are valid
+        """
+        dish_urls = ['picture']
+        invalid = {'Invalid': []}
+
+        for field in dish_urls:
+            if field in fields and fields[field] != '':
+                try:
+                    requests.get(fields[field])
+                except (requests.ConnectionError, requests.exceptions.MissingSchema) as exception:
+                    invalid['Invalid'].append(field)
+
+        if not invalid['Invalid']:
+            return None
+        else:
+            return invalid
 
 
 class ManualTag(models.Model):
@@ -156,7 +177,7 @@ class Restaurant(models.Model):
     instagram = models.CharField(max_length=200, blank=True)
     bio = models.TextField(null=True)
     GEO_location = models.CharField(max_length=200)
-    external_delivery_link = models.CharField(max_length=200)
+    external_delivery_link = models.CharField(max_length=200, blank=True)
     cover_photo_url = models.CharField(max_length=200,
                                        default='https://www.nautilusplus.com/content/uploads/2016/08/Pexel_junk-food.jpeg')
     logo_url = models.CharField(max_length=200,
@@ -210,3 +231,28 @@ class Restaurant(models.Model):
             restaurant.save()
             return restaurant
 
+    @classmethod
+    def field_validate(self, fields):
+        """
+        Validates fields
+        :param fields: Dictionary of fields to validate
+        :return: A list of fields that were invalid. Returns None if all fields are valid
+        """
+        restaurant_urls = ['twitter', 'instagram', 'cover_photo_url', 'logo_url', 'owner_picture_url', 'external_delivery_link']
+
+        invalid = {'Invalid': []}
+
+        for field in restaurant_urls:
+            if field in fields and fields[field] != '':
+                try:
+                    requests.get(fields[field])
+                except (requests.ConnectionError, requests.exceptions.MissingSchema) as exception:
+                    invalid['Invalid'].append(field)
+
+        if 'phone' in fields and fields['phone'] is not None:
+            if len(str(fields['phone'])) != 10:
+                invalid['Invalid'].append('phone')
+        if len(invalid['Invalid']) == 0:
+            return None
+        else:
+            return invalid
