@@ -176,7 +176,7 @@ export class RestaurantPageComponent implements OnInit {
       .uploadRestaurantMedia(formData, this.restaurantId, 'cover')
       .subscribe((data) => {});
     this.newImage = false;
-    this.loadRestaurant();
     this.headerModalRef.close();
+    window.location.reload();
   }
 }

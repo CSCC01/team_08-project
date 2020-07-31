@@ -74,6 +74,69 @@ The combination of both is needed to:
 1. Allow refreshing the page to not reset our knowledge of what role the user is
 2. Allow for guards to do their permissions since they have a variable to access
 
+## Image Upload Process
+
+Instructions on how to implement image upload in the frontend side.
+
+Ensure that you have these pieces of code in the `.ts` file of your component
+
+```typescript
+import { FormBuilder, FormGroup } from '@angular/forms';
+...
+
+uploadForm: FormGroup;
+newImage: boolean = false;
+...
+
+constructor(private formBuilder: FormBuilder) {}
+
+ngOnInit(): void {
+  this.uploadForm = this.formBuilder.group({
+    file: [''],
+  });
+}
+...
+
+onFileSelect(event) {
+  if (event.target.files.length > 0) {
+    this.newImage = true;
+    const file = event.target.files[0];
+    this.uploadForm.get('file').setValue(file);
+  }
+}
+
+onSubmit() {
+  const formData = new FormData();
+  formData.append('file', this.uploadForm.get('file').value);
+  this.restaurantsService
+    .{{ uploadFunction }}(formData, {{ requiredId }}, {{ type? }} )
+    .subscribe((data) => {});
+  this.newImage = false;
+}
+```
+
+| Purpose                                          | Upload Function       | Required Id  | Type               | Location              |
+| :----------------------------------------------- | :-------------------- | :----------- | :----------------- | :-------------------- |
+| Change restaurant cover, logo, and owner picture | uploadRestaurantMedia | restaurantId | cover, logo, owner | restaurant.service.ts |
+| Change dish image                                | uploadFoodMedia       | dish id      | N/A                | restaurant.service.ts |
+| Change user image                                | uploadUserMedia       | user email   | N/A                | login.service.ts      |
+
+In the `.html` file, the upload should be in a form (either on its own on encapsulated by a larger form).
+
+```html
+<form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
+  ...
+
+  <label for="img">Add {{ img }} image:</label>
+  <input type="file" name="img" id="img" (change)="onFileSelect($event)" />
+  ...
+
+  <a class="btn save-next" type="submit" (click)="onSubmit()">SAVE</a>
+</form>
+```
+
+**NOTE:** Some manipluation may be needed. You can only add an image AFTER you have the repective id for it (i.e if you're making a new object, it must be created first to get the id)
+
 ## Style Guide
 
 ### Default Colours
