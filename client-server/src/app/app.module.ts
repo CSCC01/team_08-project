@@ -29,7 +29,6 @@ import { PaymentComponent } from './pages/payment/payment.component';
 import { RestaurantPageComponent } from './pages/restaurant-page/restaurant-page.component';
 
 import { LoginService } from './service/login.service';
-import { DataService } from './service/data.service';
 import { ViewReviewCardComponent } from './components/view-review-card/view-review-card.component';
 import { AllRestaurantsComponent } from './pages/all-restaurants/all-restaurants.component';
 import { OrderCardComponent } from './components/order-card/order-card.component';
@@ -87,7 +86,7 @@ import { CheckoutComponent } from './pages/checkout/checkout.component';
     NgbModule,
     NgHttpLoaderModule.forRoot(),
   ],
-  providers: [LoginService, DataService],
+  providers: [LoginService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

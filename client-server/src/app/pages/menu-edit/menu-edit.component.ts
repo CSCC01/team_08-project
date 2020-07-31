@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { DataService } from 'src/app/service/data.service';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { RestaurantsService } from 'src/app/service/restaurants.service';
 
@@ -33,7 +32,6 @@ export class MenuEditComponent implements OnInit {
   allergy: string = '';
 
   constructor(
-    private data: DataService,
     private route: ActivatedRoute,
     private router: Router,
     private restaurantsService: RestaurantsService,
@@ -42,23 +40,14 @@ export class MenuEditComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.role = this.route.snapshot.queryParams.role;
-    this.userId = this.route.snapshot.queryParams.userId;
-    this.restaurantId = this.route.snapshot.queryParams.restaurantId;
+    this.role = sessionStorage.getItem('role');
+    this.userId = sessionStorage.getItem('userId');
+    this.restaurantId = sessionStorage.getItem('restaurantId');
 
     if (!this.restaurantId || this.role !== 'RO' || !this.userId) {
-      this.router.navigate([''], {
-        queryParams: {
-          role: this.role,
-          userId: this.userId,
-          restaurantId: this.restaurantId,
-        },
-      });
+      this.router.navigate(['']);
       alert('No matching restaurant found for this profile!');
     }
-    this.data.changeRestaurantId(this.restaurantId);
-    this.data.changeUserId(this.userId);
-    this.data.changeRole(this.role);
     this.loadAllDishes();
   }
 
@@ -169,12 +158,6 @@ export class MenuEditComponent implements OnInit {
   }
 
   back() {
-    this.router.navigate(['/restaurant'], {
-      queryParams: {
-        role: this.role,
-        userId: this.userId,
-        restaurantId: this.restaurantId,
-      },
-    });
+    this.router.navigate(['/restaurant']);
   }
 }

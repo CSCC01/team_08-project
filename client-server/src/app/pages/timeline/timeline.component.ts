@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import { DataService } from 'src/app/service/data.service';
 import { TimelineService } from 'src/app/service/timeline.service';
 import { RestaurantsService } from 'src/app/service/restaurants.service';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
@@ -30,7 +29,6 @@ export class TimelineComponent implements OnInit {
   faTrash = faTrash;
 
   constructor(
-    private data: DataService,
     private timeline: TimelineService,
     private restaurantsService: RestaurantsService,
     private route: ActivatedRoute,
@@ -40,18 +38,14 @@ export class TimelineComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.role = this.route.snapshot.queryParams.role;
-    this.userId = this.route.snapshot.queryParams.userId;
-    this.restaurantId = this.route.snapshot.queryParams.restaurantId;
+    this.role = sessionStorage.getItem('role');
+    this.userId = sessionStorage.getItem('userId');
+    this.restaurantId = sessionStorage.getItem('restaurantId');
     this.updates = this.route.snapshot.queryParams.updates;
 
-    if (this.role != 'RO' && this.updates == false) {
+    if (this.updates == false) {
       this.restaurantId = '';
     }
-
-    this.data.changeRole(this.role);
-    this.data.changeUserId(this.userId);
-    this.data.changeRestaurantId(this.restaurantId);
 
     if (this.restaurantId == undefined || this.restaurantId == '') {
       this.loadTimeline();

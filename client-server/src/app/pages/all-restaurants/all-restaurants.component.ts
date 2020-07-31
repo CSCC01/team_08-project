@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { ActivatedRoute, Router } from '@angular/router';
 import { RestaurantsService } from '../../service/restaurants.service';
-import { DataService } from 'src/app/service/data.service';
 
 @Component({
   selector: 'app-all-restaurants',
@@ -23,20 +21,9 @@ export class AllRestaurantsComponent implements OnInit {
 
   faSearch = faSearch;
 
-  constructor(
-    private restaurantsService: RestaurantsService,
-    private data: DataService,
-    private route: ActivatedRoute,
-    private router: Router
-  ) {}
+  constructor(private restaurantsService: RestaurantsService) {}
 
   ngOnInit(): void {
-    this.role = this.route.snapshot.queryParams.role;
-    this.userId = this.route.snapshot.queryParams.userId;
-
-    this.data.changeUserId(this.userId);
-    this.data.changeRole(this.role);
-
     this.loadRestaurants();
     this.loadDishes();
   }

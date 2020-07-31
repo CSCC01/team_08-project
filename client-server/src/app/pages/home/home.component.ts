@@ -9,7 +9,6 @@ import dishes from '../../../assets/data/dishes.json';
 import stories from '../../../assets/data/stories.json';
 import { AuthService } from 'src/app/auth/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DataService } from 'src/app/service/data.service';
 
 @Component({
   selector: 'app-home',
@@ -67,7 +66,6 @@ export class HomeComponent implements OnInit {
 
   constructor(
     public auth: AuthService,
-    private data: DataService,
     private route: ActivatedRoute,
     private router: Router
   ) {
@@ -76,14 +74,6 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.role = this.route.snapshot.queryParams.role;
-    this.userId = this.route.snapshot.queryParams.userId;
-    this.restaurantId = this.route.snapshot.queryParams.restaurantId;
-
-    this.data.changeRestaurantId(this.restaurantId);
-    this.data.changeUserId(this.userId);
-    this.data.changeRole(this.role);
-
     AOS.init({
       delay: 300,
       duration: 1500,
