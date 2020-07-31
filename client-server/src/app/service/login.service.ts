@@ -61,4 +61,14 @@ export class LoginService {
     };
     return this.http.get(endpoint, { params: userObject });
   }
+
+  /*
+  @Input: JSON object from auth
+  @Output: Return True if user is in database, False otherwise
+  Check if user exists in the database
+  */
+  editUser(userData): void {
+    const endpoint = `${LoginService.AUTH_ENDPOINT}/edit/`;
+    this.http.post<any>(endpoint, userData).subscribe((data) => {});
+  }
 }
