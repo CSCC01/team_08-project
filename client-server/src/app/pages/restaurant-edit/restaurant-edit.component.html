@@ -5,7 +5,7 @@
   </p>
   <div class="form-box">
     <div *ngIf="restaurantDetails">
-      <form>
+      <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
         <div class="form-group">
           <label for="restaurant-name" class="required">Restaurant Name</label>
           <input
@@ -125,9 +125,24 @@
         </div>
         <div class="row">
           <div class="form-group col-md-6">
-            <button class="btn logo-image">
-              + LOGO IMAGE
-            </button>
+            <label for="avatar">Add logo image:</label>
+            <input
+              type="file"
+              name="logo"
+              id="logo"
+              (change)="onFileSelect($event, 'logo')"
+            />
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label for="avatar">Add cover photo image:</label>
+            <input
+              type="file"
+              name="cover"
+              id="cover"
+              (change)="onFileSelect($event, 'cover')"
+            />
           </div>
         </div>
         <div class="row">
@@ -140,7 +155,11 @@
           </div>
           <div class="form-group col-md-6">
             <div class="text-right">
-              <button class="btn save-next" (click)="updateRestaurantInfo()">
+              <button
+                type="submit"
+                class="btn save-next"
+                (click)="updateRestaurantInfo()"
+              >
                 UPDATE
               </button>
             </div>
