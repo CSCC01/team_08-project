@@ -1,4 +1,10 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  HostListener,
+  ViewChild,
+  TemplateRef,
+} from '@angular/core';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import {
@@ -12,6 +18,7 @@ import { AuthService } from 'src/app/auth/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from 'src/app/service/data.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { LoginService } from '../../service/login.service';
 
 @Component({
   selector: 'app-home',
@@ -22,6 +29,7 @@ export class HomeComponent implements OnInit {
   restaurantId: string = '';
   userId: string = '';
   role: string = '';
+  userInfo: any;
 
   isShow: boolean;
   topPosToStartShowing = 100;
@@ -29,6 +37,9 @@ export class HomeComponent implements OnInit {
   faArrowCircleDown = faArrowCircleDown;
   arrowsOutside = true;
   faCalendar = faCalendar;
+
+  @ViewChild('userInfo', { static: true }) content: TemplateRef<any>;
+  modalRef: any;
 
   totalStars: number = 5;
   dishes: any[];
@@ -73,7 +84,8 @@ export class HomeComponent implements OnInit {
     private data: DataService,
     private route: ActivatedRoute,
     private modalService: NgbModal,
-    private router: Router
+    private router: Router,
+    private loginService: LoginService
   ) {
     this.dishes = dishes;
     this.stories = stories;
@@ -94,6 +106,17 @@ export class HomeComponent implements OnInit {
       once: false,
       anchorPlacement: 'top-bottom',
     });
+
+    if (this.userId.length > 0) {
+      console.log(this.userId);
+      this.loginService.getUser({ email: this.userId }).subscribe((data) => {
+        this.userInfo = data;
+        if (!data.birhtday || !data.address || !data.phone) {
+          console.log('Goes in here!');
+          this.modalRef = this.modalService.open(this.content);
+        }
+      });
+    }
   }
 
   @HostListener('window:resize', ['$event'])
@@ -155,7 +178,16 @@ export class HomeComponent implements OnInit {
     this.router.navigate(['/all-listings']);
   }
 
-  openDishModal(content) {
-    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
+  updateProfile() {
+    var userInfo = {
+      email: this.userId,
+      name: (<HTMLInputElement>document.getElementById('name')).value,
+      address: (<HTMLInputElement>document.getElementById('address')).value,
+      phone: (<HTMLInputElement>document.getElementById('phone')).value,
+      birthday: (<HTMLInputElement>document.getElementById('dateOfBirth'))
+        .value,
+    };
+    this.loginService.editUser(userInfo);
+    this.modalRef.close();
   }
 }

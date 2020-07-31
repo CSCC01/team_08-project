@@ -231,7 +231,7 @@
         <label for="phone">Phone Number</label>
         <div class="input-group">
           <input
-            id="hone"
+            id="phone"
             class="form-control"
             placeholder="Ex: 647-123-4657"
           />
@@ -262,17 +262,8 @@
     </form>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn" (click)="modal.close('Save click')">
+    <button type="button" class="btn" (click)="updateProfile()">
       Save
     </button>
   </div>
 </ng-template>
-
-<button
-  class="btn btn-lg btn-outline-primary"
-  (click)="openDishModal(userInfo)"
->
-  Launch demo modal
-</button>
-
-<hr />
