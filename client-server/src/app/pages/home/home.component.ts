@@ -1,14 +1,23 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  HostListener,
+  ViewChild,
+  TemplateRef,
+} from '@angular/core';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import {
   faArrowCircleUp,
   faArrowCircleDown,
+  faCalendar,
 } from '@fortawesome/free-solid-svg-icons';
 import dishes from '../../../assets/data/dishes.json';
 import stories from '../../../assets/data/stories.json';
 import { AuthService } from 'src/app/auth/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { LoginService } from '../../service/login.service';
 
 @Component({
   selector: 'app-home',
@@ -16,15 +25,18 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-  restaurantId: string = '';
   userId: string = '';
-  role: string = '';
+  userData: any;
 
   isShow: boolean;
   topPosToStartShowing = 100;
   faArrowCircleUp = faArrowCircleUp;
   faArrowCircleDown = faArrowCircleDown;
   arrowsOutside = true;
+  faCalendar = faCalendar;
+
+  @ViewChild('userInfo', { static: true }) content: TemplateRef<any>;
+  modalRef: any;
 
   totalStars: number = 5;
   dishes: any[];
@@ -67,7 +79,9 @@ export class HomeComponent implements OnInit {
   constructor(
     public auth: AuthService,
     private route: ActivatedRoute,
-    private router: Router
+    private modalService: NgbModal,
+    private router: Router,
+    private loginService: LoginService
   ) {
     this.dishes = dishes;
     this.stories = stories;
@@ -80,6 +94,17 @@ export class HomeComponent implements OnInit {
       once: false,
       anchorPlacement: 'top-bottom',
     });
+
+    this.userId = sessionStorage.getItem('userId');
+
+    if (this.userId.length > 0) {
+      this.loginService.getUser({ email: this.userId }).subscribe((data) => {
+        this.userData = data;
+        if (!data.birthday || !data.address || !data.phone) {
+          this.modalRef = this.modalService.open(this.content);
+        }
+      });
+    }
   }
 
   @HostListener('window:resize', ['$event'])
@@ -139,5 +164,37 @@ export class HomeComponent implements OnInit {
 
   browseListings() {
     this.router.navigate(['/all-listings']);
+  }
+
+  updateProfile() {
+    var userInfo = {
+      email: this.userId,
+      name: (<HTMLInputElement>document.getElementById('name')).value,
+      address: (<HTMLInputElement>document.getElementById('address')).value,
+      phone: (<HTMLInputElement>document.getElementById('phone')).value,
+      birthday: (<HTMLInputElement>document.getElementById('dateOfBirth'))
+        .value,
+    };
+
+    if (userInfo.birthday == '') {
+      userInfo.birthday = null;
+    }
+    if (userInfo.phone == '') {
+      userInfo.phone = null;
+    }
+
+    if (
+      (userInfo.phone != null && userInfo.phone.length != 10) ||
+      (userInfo.birthday != null &&
+        !userInfo.birthday.match('^\\d{4}-\\d{2}-\\d{2}$')) ||
+      !userInfo.name
+    ) {
+      alert(
+        'Please ensure formats are proper. Name should not empty, phone numbers should be 10 digits with no dashes and birthday should be YYYY-MM-DD'
+      );
+    } else {
+      this.loginService.editUser(userInfo);
+      this.modalRef.close();
+    }
   }
 }

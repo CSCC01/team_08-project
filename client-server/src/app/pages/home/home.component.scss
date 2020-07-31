@@ -122,3 +122,18 @@ $box-border-shadow-color: rgb(175, 175, 175);
   font-size: 15px;
   font-weight: 600;
 }
+
+.calendar-date {
+  margin: 0px;
+  width: auto;
+  height: 38px;
+  align-content: center;
+}
+
+.calendar-date:hover {
+  color: $secondary-color;
+}
+
+.calendar-icon {
+  font-size: 1.2em;
+}
