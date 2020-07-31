@@ -29,7 +29,7 @@ export class HomeComponent implements OnInit {
   restaurantId: string = '';
   userId: string = '';
   role: string = '';
-  userInfo: any;
+  userData: any;
 
   isShow: boolean;
   topPosToStartShowing = 100;
@@ -108,11 +108,9 @@ export class HomeComponent implements OnInit {
     });
 
     if (this.userId.length > 0) {
-      console.log(this.userId);
       this.loginService.getUser({ email: this.userId }).subscribe((data) => {
-        this.userInfo = data;
-        if (!data.birhtday || !data.address || !data.phone) {
-          console.log('Goes in here!');
+        this.userData = data;
+        if (!data.birthday || !data.address || !data.phone) {
           this.modalRef = this.modalService.open(this.content);
         }
       });
@@ -187,7 +185,25 @@ export class HomeComponent implements OnInit {
       birthday: (<HTMLInputElement>document.getElementById('dateOfBirth'))
         .value,
     };
-    this.loginService.editUser(userInfo);
-    this.modalRef.close();
+
+    if (userInfo.birthday == '') {
+      userInfo.birthday = null;
+    }
+    if (userInfo.phone == '') {
+      userInfo.phone = null;
+    }
+
+    if (
+      (userInfo.phone != null && userInfo.phone.length != 10) ||
+      (userInfo.birthday != null &&
+        !userInfo.birthday.match('^\\d{4}-\\d{2}-\\d{2}$'))
+    ) {
+      alert(
+        'Please ensure formats are proper. Phone numbers should be 10 digits with no dashes and birthday should be YYYY-MM-DD'
+      );
+    } else {
+      this.loginService.editUser(userInfo);
+      this.modalRef.close();
+    }
   }
 }
