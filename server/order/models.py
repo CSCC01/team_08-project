@@ -1,4 +1,5 @@
 from djongo import models
+import datetime
 
 class Cart(models.Model):
     """ Model for a user's Cart in order dashboard """
@@ -29,12 +30,24 @@ class Cart(models.Model):
     # updates the send_timestamp of the given cart to now,
     # indicating that the cart has reached the RO
     def send_cart(self, cart_id):
-        pass
+        cart = Cart.objects.get(_id=cart_id)
+        if cart.accept_tstmp is None and cart.complete_tstmp is None and cart.send_tstmp is None:
+            cart.send_tstmp = datetime.datetime.now()
+        else:
+            return None
+        cart.save()
+        return cart
 
     # updates the accept_timestamp of the given cart to now,
     # indicating that the orders are being prepared by the RO
     def accept_cart(self, cart_id):
-        pass
+        cart = Cart.objects.get(_id=cart_id)
+        if cart.accept_tstmp is None and cart.complete_tstmp is None and cart.send_tstmp is not None:
+            cart.accept_tstmp = datetime.datetime.now()
+        else:
+            return None
+        cart.save()
+        return cart
 
     # updates the accept_decline_timestamp of the given cart to now
     # declines the given cart, indicating that the given cart has been declined by the RO
@@ -45,10 +58,16 @@ class Cart(models.Model):
     # note that when this timestamp is non-null it indicates the cart is CLOSED
     #   and can no longer be edited by the user
     def complete_cart(self, cart_id):
-        pass
+        cart = Cart.objects.get(_id=cart_id)
+        if cart.accept_tstmp is not None and cart.complete_tstmp is None and cart.send_tstmp is not None:
+            cart.complete_tstmp = datetime.datetime.now()
+        else:
+            return None
+        cart.save()
+        return cart
 
     # gets the user's current active cart
-    def users_active_cart(cart_id):
+    def users_active_cart(self, cart_id):
         pass
 
 
