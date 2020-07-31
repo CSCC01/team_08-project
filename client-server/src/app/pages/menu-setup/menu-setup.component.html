@@ -41,7 +41,7 @@
     </button>
   </div>
   <div class="modal-body">
-    <div class="form-box">
+    <form [formGroup]="uploadForm" (ngSubmit)="addDish()" class="form-box">
       <div class="form-group">
         <label for="dishName" class="required">
           Dish Name <span class="text-danger">*</span>
@@ -51,6 +51,7 @@
           class="form-control"
           id="dishName"
           [(ngModel)]="dishName"
+          [ngModelOptions]="{ standalone: true }"
           placeholder="Ex: Spicy Chicken"
           required
         />
@@ -65,6 +66,7 @@
           class="form-control"
           id="price"
           [(ngModel)]="price"
+          [ngModelOptions]="{ standalone: true }"
           placeholder="Ex: 12.99"
           required
         />
@@ -79,6 +81,7 @@
           class="form-control"
           id="menuCategory"
           [(ngModel)]="menuCategory"
+          [ngModelOptions]="{ standalone: true }"
           placeholder="Ex: Appetizer"
           required
         />
@@ -93,6 +96,7 @@
           class="form-control"
           id="cuisine"
           [(ngModel)]="cuisine"
+          [ngModelOptions]="{ standalone: true }"
           placeholder="Ex: Indian"
           required
         />
@@ -106,6 +110,7 @@
           class="form-control"
           id="dishInfo"
           [(ngModel)]="dishInfo"
+          [ngModelOptions]="{ standalone: true }"
           rows="4"
           placeholder="Tell customers the story of your dish..."
           required
@@ -121,6 +126,7 @@
           class="form-control"
           id="allergy"
           [(ngModel)]="allergy"
+          [ngModelOptions]="{ standalone: true }"
           placeholder="Ex: Nuts, Peanut"
           required
         />
@@ -128,19 +134,23 @@
 
       <div class="row">
         <div class="form-group col-md-6">
-          <button class="btn dish-image">
-            + DISH IMAGE
-          </button>
+          <label for="dish">Add dish image:</label>
+          <input
+            type="file"
+            name="dish"
+            id="dish"
+            (change)="onFileSelect($event)"
+          />
         </div>
       </div>
-    </div>
+    </form>
   </div>
   <div class="modal-footer">
     <div class="text-right">
       <button class="btn skip" (click)="modal.dismiss('Cross click')">
         CANCEL
       </button>
-      <button class="btn" (click)="addDish()">
+      <button class="btn" type="submit" (click)="addDish()">
         ADD DISH
       </button>
     </div>

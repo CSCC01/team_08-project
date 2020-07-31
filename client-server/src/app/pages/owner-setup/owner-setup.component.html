@@ -4,7 +4,7 @@
     Please provide information about the owner.
   </p>
   <div class="form-box">
-    <form>
+    <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
       <div class="form-group">
         <label for="owner-name" class="required">Owner Name</label>
         <input
@@ -26,14 +26,18 @@
       </div>
       <div class="row">
         <div class="form-group col-md-6">
-          <button class="btn owner-image">
-            + OWNER PICTURE
-          </button>
+          <label for="avatar">Add owner image:</label>
+          <input
+            type="file"
+            name="owner"
+            id="owner"
+            (change)="onFileSelect($event)"
+          />
         </div>
       </div>
       <div class="form-group">
         <div class="text-right">
-          <button class="btn save-next" (click)="updateOwner()">
+          <button class="btn save-next" type="submit" (click)="updateOwner()">
             SAVE & NEXT
           </button>
         </div>

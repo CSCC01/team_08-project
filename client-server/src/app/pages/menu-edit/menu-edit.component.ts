@@ -128,7 +128,6 @@ export class MenuEditComponent implements OnInit {
     } else {
       if (!isNaN(Number(this.price))) {
         const price: number = +this.price;
-        //TODO: picture currently defaulted, will be changed when Google Cloud is implemented
         var dishInfo = {};
         dishInfo['_id'] = this.dishId;
         dishInfo['name'] = this.dishName;

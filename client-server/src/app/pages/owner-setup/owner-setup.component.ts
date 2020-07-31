@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { DataService } from 'src/app/service/data.service';
 import { RestaurantsService } from '../../service/restaurants.service';
 
@@ -13,9 +14,12 @@ export class OwnerSetupComponent implements OnInit {
   userId: string = '';
   role: string = '';
 
+  uploadForm: FormGroup;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private formBuilder: FormBuilder,
     private data: DataService,
     private restaurantsService: RestaurantsService
   ) {}
@@ -39,6 +43,10 @@ export class OwnerSetupComponent implements OnInit {
       this.data.changeUserId(this.userId);
       this.data.changeRole(this.role);
     }
+
+    this.uploadForm = this.formBuilder.group({
+      file: [''],
+    });
   }
 
   updateOwner() {
@@ -61,5 +69,20 @@ export class OwnerSetupComponent implements OnInit {
         },
       });
     }
+  }
+
+  onFileSelect(event) {
+    if (event.target.files.length > 0) {
+      const file = event.target.files[0];
+      this.uploadForm.get('file').setValue(file);
+    }
+  }
+
+  onSubmit() {
+    const formData = new FormData();
+    formData.append('file', this.uploadForm.get('file').value);
+    this.restaurantsService
+      .uploadRestaurantMedia(formData, this.restaurantId, 'owner')
+      .subscribe((data) => {});
   }
 }
