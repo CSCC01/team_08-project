@@ -25,6 +25,7 @@ import { LoginService } from '../../service/login.service';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
+  role: string = '';
   userId: string = '';
   userData: any;
 
@@ -96,8 +97,9 @@ export class HomeComponent implements OnInit {
     });
 
     this.userId = sessionStorage.getItem('userId');
+    this.role = sessionStorage.getItem('role');
 
-    if (this.userId.length > 0) {
+    if (this.userId.length > 0 && this.role == 'BU') {
       this.loginService.getUser({ email: this.userId }).subscribe((data) => {
         this.userData = data;
         if (!data.birthday || !data.address || !data.phone) {

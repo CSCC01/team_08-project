@@ -1,4 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ɵCompiler_compileModuleSync__POST_R3__,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
@@ -13,9 +17,10 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 })
 export class TimelineComponent implements OnInit {
   restaurantId: string = '';
+  ROrestaurantId: string = '';
   userId: string = '';
   role: string = '';
-  updates: boolean = false;
+  updates: string = 'false';
   restaurantName: string = '';
 
   posts: any[] = [];
@@ -38,20 +43,23 @@ export class TimelineComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.role = sessionStorage.getItem('role');
-    this.userId = sessionStorage.getItem('userId');
-    this.restaurantId = sessionStorage.getItem('restaurantId');
+    this.restaurantId = this.route.snapshot.queryParams.restaurantId;
     this.updates = this.route.snapshot.queryParams.updates;
 
-    if (this.updates == false) {
-      this.restaurantId = '';
-    }
+    this.role = sessionStorage.getItem('role');
+    this.userId = sessionStorage.getItem('userId');
+    this.ROrestaurantId = sessionStorage.getItem('restaurantId');
 
-    if (this.restaurantId == undefined || this.restaurantId == '') {
-      this.loadTimeline();
-    } else {
+    if (this.updates == 'true' || this.ROrestaurantId) {
+      if (this.ROrestaurantId != null) {
+        this.restaurantId = this.ROrestaurantId;
+      }
+
       this.getRestaurantName();
       this.loadTimeline(this.restaurantId);
+    } else {
+      this.restaurantId = '';
+      this.loadTimeline();
     }
   }
 
