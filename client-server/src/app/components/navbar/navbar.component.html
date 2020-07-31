@@ -118,6 +118,19 @@
           TIMELINE
         </a>
       </li>
+      <li *ngIf="role == 'BU'" class="nav-item nav-link">
+        <a
+          routerLink="checkout"
+          [queryParams]="{
+            role: role,
+            userId: userId
+          }"
+          routerLinkActive="active"
+          class="nav-link"
+        >
+          CART
+        </a>
+      </li>
     </ul>
     <ul class="navbar-nav">
       <button

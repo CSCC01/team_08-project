@@ -148,6 +148,7 @@ This section will go over all the backends components of the Scarborough Dining 
 |      /timeline/comment/delete/      | \_id                                                                                                                                                                               |                                                                                    | POST | Deletes a comment from the database                          |
 |      /timeline/comment/get/         | \_id                                                                                                                                                                               |                                                                                    | GET  | Retrieves comment data                                       |
 |      /order/cart/insert/            | restaurant_id, user_email                                                                                                                                                          |                                                                                    | POST | Add cart to database                                         |
+|      /order/item/insert/            | cart_id, food_id, count                                                                                                                                                            |                                                                                    | POST | Add item to database and change cart price accordingly       |
 
 All requests should be sent in a JSON format. Optional parameters can be left blank Ex: {"Role" : ""}. Bolded Fields can be omitted entirely.
 
@@ -200,7 +201,6 @@ All requests should be sent in a JSON format. Optional parameters can be left bl
 
     #randomly generates a phone number accounting for faker's default format
     def valid_phone_number(faker)
-
 
 ## API and Microservices
 
