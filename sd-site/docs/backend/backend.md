@@ -149,6 +149,8 @@ This section will go over all the backends components of the Scarborough Dining 
 |      /timeline/comment/get/         | \_id                                                                                                                                                                               |                                                                                    | GET  | Retrieves comment data                                       |
 |      /order/cart/insert/            | restaurant_id, user_email                                                                                                                                                          |                                                                                    | POST | Add cart to database                                         |
 |      /order/item/insert/            | cart_id, food_id, count                                                                                                                                                            |                                                                                    | POST | Add item to database and change cart price accordingly       |
+|      /order/item/remove/            | item_id, count                                                                                                                                                                     |                                                                                    | POST | Remove item from database and update cart price accordingly  |                            
+
 
 All requests should be sent in a JSON format. Optional parameters can be left blank Ex: {"Role" : ""}. Bolded Fields can be omitted entirely.
 
