@@ -1,0 +1,25 @@
+@import "src/styles";
+
+.cardBox {
+  width: auto;
+  height: 125px;
+  flex: 0 0 auto;
+  border-radius: 10px;
+  background-color: white;
+  margin-bottom: 20px;
+}
+
+.dish-photo {
+  width: 185px;
+  height: 125px;
+  display: block;
+  left: 0%;
+  top: 0%;
+  bottom: 0%;
+  border-radius: 10px 0px 0px 10px;
+}
+
+.dish-info {
+  left: 0%;
+  margin-left: 0px;
+}

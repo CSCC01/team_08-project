@@ -42,6 +42,7 @@ import { TimelineComponent } from './pages/timeline/timeline.component';
 import { OwnerEditComponent } from './pages/owner-edit/owner-edit.component';
 import { RestaurantEditComponent } from './pages/restaurant-edit/restaurant-edit.component';
 import { CheckoutComponent } from './pages/checkout/checkout.component';
+import { CartCardComponent } from './components/cart-card/cart-card.component';
 
 @NgModule({
   declarations: [
@@ -71,6 +72,7 @@ import { CheckoutComponent } from './pages/checkout/checkout.component';
     OwnerEditComponent,
     RestaurantEditComponent,
     CheckoutComponent,
+    CartCardComponent,
   ],
   imports: [
     BrowserModule,
