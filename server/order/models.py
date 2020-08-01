@@ -1,5 +1,6 @@
 from djongo import models
-import datetime
+from django.utils import timezone
+
 
 class Cart(models.Model):
     """ Model for a user's Cart in order dashboard """
@@ -32,7 +33,7 @@ class Cart(models.Model):
     def send_cart(self, cart_id):
         cart = Cart.objects.get(_id=cart_id)
         if cart.accept_tstmp is None and cart.complete_tstmp is None and cart.send_tstmp is None:
-            cart.send_tstmp = datetime.datetime.now()
+            cart.send_tstmp = timezone.now()
         else:
             return None
         cart.save()
@@ -43,7 +44,7 @@ class Cart(models.Model):
     def accept_cart(self, cart_id):
         cart = Cart.objects.get(_id=cart_id)
         if cart.accept_tstmp is None and cart.complete_tstmp is None and cart.send_tstmp is not None:
-            cart.accept_tstmp = datetime.datetime.now()
+            cart.accept_tstmp = timezone.now()
         else:
             return None
         cart.save()
@@ -60,7 +61,7 @@ class Cart(models.Model):
     def complete_cart(self, cart_id):
         cart = Cart.objects.get(_id=cart_id)
         if cart.accept_tstmp is not None and cart.complete_tstmp is None and cart.send_tstmp is not None:
-            cart.complete_tstmp = datetime.datetime.now()
+            cart.complete_tstmp = timezone.now()
         else:
             return None
         cart.save()

@@ -45,4 +45,4 @@ def update_status_page(request):
                 return JsonResponse(json.loads(json.dumps(model_to_dict(cart), cls=BSONEncoder)))
             else:
                 return HttpResponseBadRequest('Cannot update order status')
-    return HttpResponseBadRequest('invalid response')
+    return HttpResponseBadRequest('invalid request')
