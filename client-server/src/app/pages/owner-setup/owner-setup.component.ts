@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { DataService } from 'src/app/service/data.service';
 import { RestaurantsService } from '../../service/restaurants.service';
 
 @Component({
@@ -21,28 +20,17 @@ export class OwnerSetupComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private formBuilder: FormBuilder,
-    private data: DataService,
     private restaurantsService: RestaurantsService
   ) {}
 
   ngOnInit(): void {
-    this.restaurantId = this.route.snapshot.queryParams.restaurantId;
-    this.userId = this.route.snapshot.queryParams.userId;
-    this.role = this.route.snapshot.queryParams.role;
+    this.restaurantId = sessionStorage.getItem('restaurantId');
+    this.userId = sessionStorage.getItem('userId');
+    this.role = sessionStorage.getItem('role');
 
-    if (!this.restaurantId || this.role !== 'RO' || !this.userId) {
-      this.router.navigate([''], {
-        queryParams: {
-          role: this.role,
-          userId: this.userId,
-          restaurantId: this.restaurantId,
-        },
-      });
+    if (!this.restaurantId || !this.userId) {
+      this.router.navigate(['']);
       alert('No matching restaurant found for this profile!');
-    } else {
-      this.data.changeRestaurantId(this.restaurantId);
-      this.data.changeUserId(this.userId);
-      this.data.changeRole(this.role);
     }
 
     this.uploadForm = this.formBuilder.group({
@@ -65,13 +53,8 @@ export class OwnerSetupComponent implements OnInit {
       if (this.newImage) {
         this.onSubmit();
       }
-      this.router.navigate(['/menu-setup'], {
-        queryParams: {
-          role: this.role,
-          userId: this.userId,
-          restaurantId: this.restaurantId,
-        },
-      });
+
+      this.router.navigate(['/menu-setup']);
     }
   }
 

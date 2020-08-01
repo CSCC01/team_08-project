@@ -11,7 +11,6 @@ import { faTwitter, faInstagram } from '@fortawesome/free-brands-svg-icons';
 import { RestaurantsService } from 'src/app/service/restaurants.service';
 import dishes from '../../../assets/data/dishes.json';
 import reviews from '../../../assets/data/reviews.json';
-import { DataService } from 'src/app/service/data.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -21,7 +20,6 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class RestaurantPageComponent implements OnInit {
   restaurantId: string = '';
-  userId: string = '';
   role: string = '';
 
   headerModalRef: any;
@@ -59,7 +57,6 @@ export class RestaurantPageComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private restaurantsService: RestaurantsService,
-    private data: DataService,
     private headerModalService: NgbModal,
     private formBuilder: FormBuilder
   ) {
@@ -68,13 +65,10 @@ export class RestaurantPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.restaurantId = this.route.snapshot.queryParams.restaurantId;
-    this.userId = this.route.snapshot.queryParams.userId;
-    this.role = this.route.snapshot.queryParams.role;
-
-    this.data.changeRestaurantId(this.restaurantId);
-    this.data.changeUserId(this.userId);
-    this.data.changeRole(this.role);
+    this.restaurantId =
+      this.route.snapshot.queryParams.restaurantId ||
+      sessionStorage.getItem('restaurantId');
+    this.role = sessionStorage.getItem('role');
 
     // generate restaurant page
     this.loadRestaurant();
@@ -119,42 +113,22 @@ export class RestaurantPageComponent implements OnInit {
   viewTimeline() {
     this.router.navigate(['/timeline'], {
       queryParams: {
-        role: this.role,
-        userId: this.userId,
         restaurantId: this.restaurantId,
+        updates: true,
       },
     });
   }
 
   editMenu() {
-    this.router.navigate(['/menu-edit'], {
-      queryParams: {
-        role: this.role,
-        userId: this.userId,
-        restaurantId: this.restaurantId,
-      },
-    });
+    this.router.navigate(['/menu-edit']);
   }
 
   editOwner() {
-    this.router.navigate(['/owner-edit'], {
-      queryParams: {
-        role: this.role,
-        userId: this.userId,
-        restaurantId: this.restaurantId,
-      },
-    });
+    this.router.navigate(['/owner-edit']);
   }
 
   editRestaurant() {
-    this.router.navigate(['/restaurant-edit'], {
-      queryParams: {
-        role: this.role,
-        userId: this.userId,
-        restaurantId: this.restaurantId,
-        updates: true,
-      },
-    });
+    this.router.navigate(['/restaurant-edit']);
   }
 
   openEditHeaderModal(content) {

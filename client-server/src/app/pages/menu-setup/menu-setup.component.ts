@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { RestaurantsService } from '../../service/restaurants.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { DataService } from 'src/app/service/data.service';
 
 @Component({
   selector: 'app-menu-setup',
@@ -31,28 +30,17 @@ export class MenuSetupComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private formBuilder: FormBuilder,
-    private data: DataService,
     private restaurantsService: RestaurantsService,
     private modalService: NgbModal
   ) {}
 
   ngOnInit(): void {
-    this.restaurantId = this.route.snapshot.queryParams.restaurantId;
-    this.userId = this.route.snapshot.queryParams.userId;
-    this.role = this.route.snapshot.queryParams.role;
+    this.restaurantId = sessionStorage.getItem('restaurantId');
+    this.userId = sessionStorage.getItem('userId');
+    this.role = sessionStorage.getItem('role');
 
-    this.data.changeRestaurantId(this.restaurantId);
-    this.data.changeUserId(this.userId);
-    this.data.changeRole(this.role);
-
-    if (!this.restaurantId || this.role !== 'RO' || !this.userId) {
-      this.router.navigate([''], {
-        queryParams: {
-          role: this.role,
-          userId: this.userId,
-          restaurantId: this.restaurantId,
-        },
-      });
+    if (!this.restaurantId || !this.userId) {
+      this.router.navigate(['']);
       alert('No matching restaurant found for this profile!');
     }
 
@@ -139,5 +127,13 @@ export class MenuSetupComponent implements OnInit {
     });
 
     this.newImage = false;
+  }
+
+  goToHome() {
+    this.router.navigate(['/']).then(() => {
+      setTimeout(function () {
+        window.location.reload();
+      }, 1000);
+    });
   }
 }
