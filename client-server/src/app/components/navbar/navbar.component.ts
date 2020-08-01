@@ -2,6 +2,7 @@ import { Component, OnInit, HostListener, Input } from '@angular/core';
 import { AuthService } from '../../auth/auth.service';
 import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
 import { LoginService } from '../../service/login.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
@@ -17,7 +18,11 @@ export class NavbarComponent implements OnInit {
   faUserCircle = faUserCircle;
   userRole: any;
 
-  constructor(public auth: AuthService, private loginService: LoginService) {}
+  constructor(
+    public auth: AuthService,
+    private loginService: LoginService,
+    private router: Router
+  ) {}
 
   @HostListener('window:resize', ['$event'])
   onResize() {
@@ -42,5 +47,21 @@ export class NavbarComponent implements OnInit {
   reload() {
     sessionStorage.clear();
     window.location.reload();
+  }
+
+  browse() {
+    this.router.navigate(['/all-listings']).then(() => {
+      setTimeout(function () {
+        window.location.reload();
+      }, 100);
+    });
+  }
+
+  timeline() {
+    this.router.navigate(['/timeline']).then(() => {
+      setTimeout(function () {
+        window.location.reload();
+      }, 100);
+    });
   }
 }
