@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Special Dish 1",
+    "photo": "assets/images/cuisines/chinese.jpg",
+    "restaurant": "Rob's Ribs",
+    "price": "2.99",
+    "quantity": 2,
+    "total": 5.98
+  },
+  {
+    "name": "Special Dish 2",
+    "photo": "assets/images/cuisines/chinese.jpg",
+    "restaurant": "Rob's Ribs",
+    "price": "2.99",
+    "quantity": 2,
+    "total": 5.98
+  },
+  {
+    "name": "Special Dish 3",
+    "photo": "assets/images/cuisines/chinese.jpg",
+    "restaurant": "Rob's Ribs",
+    "price": "2.99",
+    "quantity": 2,
+    "total": 5.98
+  }
+]
