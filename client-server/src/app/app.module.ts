@@ -29,7 +29,6 @@ import { PaymentComponent } from './pages/payment/payment.component';
 import { RestaurantPageComponent } from './pages/restaurant-page/restaurant-page.component';
 
 import { LoginService } from './service/login.service';
-import { DataService } from './service/data.service';
 import { ViewReviewCardComponent } from './components/view-review-card/view-review-card.component';
 import { AllRestaurantsComponent } from './pages/all-restaurants/all-restaurants.component';
 import { OrderCardComponent } from './components/order-card/order-card.component';
@@ -43,6 +42,7 @@ import { TimelineComponent } from './pages/timeline/timeline.component';
 import { OwnerEditComponent } from './pages/owner-edit/owner-edit.component';
 import { RestaurantEditComponent } from './pages/restaurant-edit/restaurant-edit.component';
 import { MapComponent } from './components/map/map.component';
+import { CheckoutComponent } from './pages/checkout/checkout.component';
 
 @NgModule({
   declarations: [
@@ -72,6 +72,7 @@ import { MapComponent } from './components/map/map.component';
     OwnerEditComponent,
     RestaurantEditComponent,
     MapComponent,
+    CheckoutComponent,
   ],
   imports: [
     BrowserModule,
@@ -87,7 +88,7 @@ import { MapComponent } from './components/map/map.component';
     NgbModule,
     NgHttpLoaderModule.forRoot(),
   ],
-  providers: [LoginService, DataService],
+  providers: [LoginService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

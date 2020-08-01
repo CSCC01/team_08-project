@@ -45,7 +45,9 @@ INSTALLED_APPS = [
     'jsonschema',
     'user',
     'restaurant',
-    'timeline'
+    'timeline',
+    'order',
+    'utils'
 ]
 
 MIDDLEWARE = [

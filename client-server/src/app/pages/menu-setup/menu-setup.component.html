@@ -16,11 +16,7 @@
     </div>
   </div>
   <div class="text-right">
-    <button
-      class="btn"
-      [routerLink]="['/']"
-      [queryParams]="{ role: role, userId: userId, restaurantId: restaurantId }"
-    >
+    <button class="btn" (click)="goToHome()">
       SAVE & NEXT
     </button>
   </div>

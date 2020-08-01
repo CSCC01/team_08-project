@@ -34,7 +34,7 @@ class SDUserTestCases(TestCase):
         expected = {"nickname": "TesterA", "name": "Tester", "picture": "picA",
                     "last_updated": "2020-06-26T14:07:39.888Z",
                     "email": "A@mail.com", "email_verified": True, "role": "BU",
-                    "restaurant_id": None, "birthday": None, "address": "", "phone": None}
+                    "restaurant_id": None, "birthday": None, "address": "", "phone": None, "GEO_location": ''}
         self.assertJSONEqual(actual, expected)
 
     def test_signup_invalid_role(self):
@@ -116,7 +116,8 @@ class SDUserTestCases(TestCase):
         response = data_page(request)
         expected = {"nickname": "TesterE", "name": "Tester", "picture": "picE",
                     "last_updated": "2020-06-26T14:07:39.888Z", "email": "E@mail.com", "email_verified": True,
-                    "role": "BU", "restaurant_id": None, "birthday": None, "address": "", "phone": None}
+                    "role": "BU", "restaurant_id": None, "birthday": None,
+                    "address": "", "phone": None, "GEO_location": ''}
         actual = response.content
         self.assertJSONEqual(actual, expected)
 
@@ -141,9 +142,12 @@ class SDUserTestCases(TestCase):
         request = self.factory.post('/api/user/edit/',
                                     {"name": "Tester2", "picture": "picE2",
                                      "email": "E@mail.com", "role": "RO", "address": "101 Road",
-                                     "phone": 4162139000}, content_type='application/json')
+                                     "phone": 4162139000, "GEO_location": "{'lat': '28.90054', 'long': '-81.26367'}"},
+                                    content_type='application/json')
         actual = edit_user_page(request).content
         expected = {"nickname": "TesterE", "name": "Tester2", "picture": "picE2",
                     "last_updated": "2020-06-26T14:07:39.888Z",
                     "email": "E@mail.com", "email_verified": True, "role": "BU",
-                    "restaurant_id": None, "birthday": None, "address": "101 Roads", "phone": 4162139000}
+                    "restaurant_id": None, "birthday": None, "address": "101 Road",
+                    "phone": 4162139000, "GEO_location": "{'lat': '28.90054', 'long': '-81.26367'}"}
+        self.assertJSONEqual(actual, expected)

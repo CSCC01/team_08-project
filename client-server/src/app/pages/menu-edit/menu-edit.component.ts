@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { DataService } from 'src/app/service/data.service';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { RestaurantsService } from 'src/app/service/restaurants.service';
 
@@ -22,6 +21,8 @@ export class MenuEditComponent implements OnInit {
   dishModalRef: any;
   dishEdit: boolean = false;
   dishes: any[];
+  dishIndex: number;
+
   dishId: string = '';
   dishName: string = '';
   price: string = '';
@@ -31,7 +32,6 @@ export class MenuEditComponent implements OnInit {
   allergy: string = '';
 
   constructor(
-    private data: DataService,
     private route: ActivatedRoute,
     private router: Router,
     private restaurantsService: RestaurantsService,
@@ -40,23 +40,14 @@ export class MenuEditComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.role = this.route.snapshot.queryParams.role;
-    this.userId = this.route.snapshot.queryParams.userId;
-    this.restaurantId = this.route.snapshot.queryParams.restaurantId;
+    this.role = sessionStorage.getItem('role');
+    this.userId = sessionStorage.getItem('userId');
+    this.restaurantId = sessionStorage.getItem('restaurantId');
 
     if (!this.restaurantId || this.role !== 'RO' || !this.userId) {
-      this.router.navigate([''], {
-        queryParams: {
-          role: this.role,
-          userId: this.userId,
-          restaurantId: this.restaurantId,
-        },
-      });
+      this.router.navigate(['']);
       alert('No matching restaurant found for this profile!');
     }
-    this.data.changeRestaurantId(this.restaurantId);
-    this.data.changeUserId(this.userId);
-    this.data.changeRole(this.role);
     this.loadAllDishes();
   }
 
@@ -78,8 +69,9 @@ export class MenuEditComponent implements OnInit {
     this.allergy = '';
   }
 
-  openDishModal(content, dish?) {
+  openDishModal(content, dish?, index?) {
     if (dish !== undefined) {
+      // dish edit
       this.dishId = dish._id;
       this.dishName = dish.name;
       this.price = dish.price;
@@ -89,6 +81,7 @@ export class MenuEditComponent implements OnInit {
       this.allergy = 'default';
 
       this.dishEdit = true;
+      this.dishIndex = index;
     } else {
       this.clearInput();
     }
@@ -96,8 +89,9 @@ export class MenuEditComponent implements OnInit {
     this.dishModalRef = this.dishModalService.open(content, { size: 'xl' });
   }
 
-  openDeleteModal(content, dish) {
+  openDeleteModal(content, dish, index) {
     this.dishName = dish.name;
+    this.dishIndex = index;
     this.deleteModalRef = this.deleteModalService.open(content, { size: 's' });
   }
 
@@ -127,16 +121,19 @@ export class MenuEditComponent implements OnInit {
         };
 
         if (this.dishEdit) {
-          this.restaurantsService.editDish(dishInfo);
+          this.restaurantsService.editDish(dishInfo).subscribe((data) => {
+            this.dishes[this.dishIndex] = data;
+            this.dishIndex = 0;
+          });
         } else {
-          this.restaurantsService.createDish(dishInfo);
+          this.restaurantsService.createDish(dishInfo).subscribe((data) => {
+            this.dishes.push(data);
+          });
         }
 
         this.clearInput();
-        this.loadAllDishes();
         this.dishEdit = false;
         this.dishModalRef.close();
-        this.loadAllDishes();
       } else {
         alert('Please enter a valid price!');
       }
@@ -150,19 +147,17 @@ export class MenuEditComponent implements OnInit {
     };
 
     this.restaurantsService.deleteDish(dishInfo);
+
+    if (this.dishIndex > -1) {
+      this.dishes.splice(this.dishIndex, 1);
+    }
+
     this.clearInput();
-    this.loadAllDishes();
+    this.dishIndex = 0;
     this.deleteModalRef.close();
-    this.loadAllDishes();
   }
 
   back() {
-    this.router.navigate(['/restaurant'], {
-      queryParams: {
-        role: this.role,
-        userId: this.userId,
-        restaurantId: this.restaurantId,
-      },
-    });
+    this.router.navigate(['/restaurant']);
   }
 }

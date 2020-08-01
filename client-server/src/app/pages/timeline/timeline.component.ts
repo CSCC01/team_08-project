@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ɵCompiler_compileModuleSync__POST_R3__,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import { DataService } from 'src/app/service/data.service';
 import { TimelineService } from 'src/app/service/timeline.service';
 import { RestaurantsService } from 'src/app/service/restaurants.service';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
@@ -14,8 +17,10 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 })
 export class TimelineComponent implements OnInit {
   restaurantId: string = '';
+  ROrestaurantId: string = '';
   userId: string = '';
   role: string = '';
+  updates: string = 'false';
   restaurantName: string = '';
 
   posts: any[] = [];
@@ -29,7 +34,6 @@ export class TimelineComponent implements OnInit {
   faTrash = faTrash;
 
   constructor(
-    private data: DataService,
     private timeline: TimelineService,
     private restaurantsService: RestaurantsService,
     private route: ActivatedRoute,
@@ -39,19 +43,23 @@ export class TimelineComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.role = this.route.snapshot.queryParams.role;
-    this.userId = this.route.snapshot.queryParams.userId;
     this.restaurantId = this.route.snapshot.queryParams.restaurantId;
+    this.updates = this.route.snapshot.queryParams.updates;
 
-    this.data.changeRole(this.role);
-    this.data.changeUserId(this.userId);
-    this.data.changeRestaurantId(this.restaurantId);
+    this.role = sessionStorage.getItem('role');
+    this.userId = sessionStorage.getItem('userId');
+    this.ROrestaurantId = sessionStorage.getItem('restaurantId');
 
-    if (this.restaurantId == undefined || this.restaurantId == '') {
-      this.loadTimeline();
-    } else {
+    if (this.updates == 'true' || this.ROrestaurantId) {
+      if (this.ROrestaurantId != null) {
+        this.restaurantId = this.ROrestaurantId;
+      }
+
       this.getRestaurantName();
       this.loadTimeline(this.restaurantId);
+    } else {
+      this.restaurantId = '';
+      this.loadTimeline();
     }
   }
 
