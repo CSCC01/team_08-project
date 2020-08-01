@@ -28,13 +28,13 @@ class Cart(models.Model):
         cart.save()
         return cart
 
-    def add_to_total(self, food_id, count):
+    def add_to_total(self, price, count):
         """
         Calculates and changes the new total price for a cart
-        :param food_id: id of food item being added to cart
+        :param price: price of item going into cart
         :param count: number of food items to add to cart
         """
-        self.price = float(self.price) + (float(Food.objects.get(_id=ObjectId(food_id)).price) * count)
+        self.price = float(self.price) + (price * count)
         self.save(update_fields=["price"])
 
     # updates the send_timestamp of the given cart to now,
@@ -83,9 +83,33 @@ class Item(models.Model):
         item.clean_fields()
         item.clean()
         item.save()
-        Cart.objects.get(_id=ObjectId(cart_id)).add_to_total(food_id, count)
+        Cart.objects.get(_id=ObjectId(cart_id)).add_to_total(float(Food.objects.get(_id=food_id).price), count)
         return item
 
-    # deletes an order
-    def delete_order(self):
+    @classmethod
+    def delete_order(cls):
         pass
+
+    @classmethod
+    def remove_item(cls, item_id, count):
+        """
+        Remove's count items from the cart
+        :param item_id: Identify item document
+        :param count: Amount to be removed
+        :return:
+        """
+
+        item = Item.objects.get(_id=item_id)
+        if item.count <= count:
+            item.delete()
+            cart = Cart.objects.get(_id=item.cart_id)
+            cart.add_to_total(-float(Food.objects.get(_id=item.food_id).price), item.count)
+            cart.refresh_from_db()
+            return cart
+        else:
+            item.count -= count
+            cart = Cart.objects.get(_id=item.cart_id)
+            cart.add_to_total(-float(Food.objects.get(_id=item.food_id).price), count)
+            cart.refresh_from_db()
+            return cart
+            item.save()

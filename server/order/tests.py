@@ -48,3 +48,8 @@ class CartTestCases(TestCase):
         expected = {"_id": str(Item.objects.get(cart_id=str(self.c1._id))._id),
                     "cart_id": str(self.c1._id), "food_id": str(self.f1._id), "count": 2}
         self.assertDictEqual(actual, expected)
+
+class CartRemoveTestCases(TestCase):
+
+    def setUp(self):
+        self.factory = RequestFactory()

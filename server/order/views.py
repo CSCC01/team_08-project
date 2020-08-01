@@ -3,6 +3,7 @@ from order.models import Cart, Item
 from django.forms.models import model_to_dict
 from jsonschema import validate
 import json
+from utils.encoder import BSONEncoder
 from request_form import upload_form
 
 # jsonschema validation schemes
@@ -25,6 +26,14 @@ item_schema = {
     }
 }
 
+item_schema_remove = {
+    'properties': {
+        'item_id': {'type': 'string'},
+        'count': {'type': 'integer'}
+    }
+}
+
+
 def insert_cart_page(request):
     """ Insert cart to database """
     validate(instance=request.body, schema=cart_schema)
@@ -33,6 +42,7 @@ def insert_cart_page(request):
     cart._id = str(cart._id)
     return JsonResponse(model_to_dict(cart))
 
+
 def insert_item_page(request):
     """ Insert item to database """
     validate(instance=request.body, schema=item_schema)
@@ -40,3 +50,11 @@ def insert_item_page(request):
     item = Item.new_item(body['cart_id'], body['food_id'], body['count'])
     item._id = str(item._id)
     return JsonResponse(model_to_dict(item))
+
+
+def remove_item_page(request):
+    """Insert Item to datbase"""
+    validate(instance=request.body, schema=item_schema_remove)
+    body = json.loads(request.body)
+    cart = Item.remove_item(body['item_id'], body['count'])
+    return JsonResponse(json.loads(json.dumps(model_to_dict(cart), cls=BSONEncoder)))
