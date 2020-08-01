@@ -111,5 +111,5 @@ class Item(models.Model):
             cart = Cart.objects.get(_id=item.cart_id)
             cart.add_to_total(-float(Food.objects.get(_id=item.food_id).price), count)
             cart.refresh_from_db()
-            return cart
             item.save()
+            return cart

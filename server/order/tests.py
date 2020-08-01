@@ -3,6 +3,9 @@ from order.models import Cart, Item
 from restaurant.models import Food
 import order.views as view_response
 import json
+from django.forms import model_to_dict
+from utils.encoder import BSONEncoder
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class CartTestCases(TestCase):
@@ -49,7 +52,52 @@ class CartTestCases(TestCase):
                     "cart_id": str(self.c1._id), "food_id": str(self.f1._id), "count": 2}
         self.assertDictEqual(actual, expected)
 
+
 class CartRemoveTestCases(TestCase):
 
     def setUp(self):
         self.factory = RequestFactory()
+        self.c1 = Cart.objects.create(restaurant_id='222222222222222222222222', user_email='test2@mail.com',
+                                      price="100.00")
+        self.f1 = Food.objects.create(name="foodA", restaurant_id='mock',
+                                      description="chicken", picture="picA",
+                                      price='10.00')
+        self.o = Item.objects.create(cart_id=self.c1._id, food_id=self.f1._id, count=2)
+
+    def test_remove_price(self):
+        """Test is price is correctly changed"""
+        request = self.factory.post('/api/order/item/remove/',
+                                    {'item_id': str(self.o._id), 'count': 1}, content_type='application/json')
+        cart = view_response.remove_item_page(request)
+        actual = json.loads(cart.content)
+        expected = json.loads(json.dumps(model_to_dict(self.c1), cls=BSONEncoder))
+        expected['price'] = '90.00'
+        self.assertDictEqual(actual, expected)
+
+    def test_remove_item(self):
+        """Test if item count is lowered"""
+        request = self.factory.post('/api/order/item/remove/',
+                                    {'item_id': str(self.o._id), 'count': 1}, content_type='application/json')
+        view_response.remove_item_page(request)
+        expected = json.loads(json.dumps(model_to_dict(self.o), cls=BSONEncoder))
+        expected['count'] = 1
+        self.o.refresh_from_db()
+        actual = json.loads(json.dumps(model_to_dict(self.o), cls=BSONEncoder))
+        self.assertDictEqual(actual, expected)
+
+    def test_remove_price_over(self):
+        """Test if price is not over charged"""
+        request = self.factory.post('/api/order/item/remove/',
+                                    {'item_id': str(self.o._id), 'count': 3}, content_type='application/json')
+        cart = view_response.remove_item_page(request)
+        actual = json.loads(cart.content)
+        expected = json.loads(json.dumps(model_to_dict(self.c1), cls=BSONEncoder))
+        expected['price'] = '80.00'
+        self.assertDictEqual(actual, expected)
+
+    def test_remove_item_delete(self):
+        """Test if document has been removed form database"""
+        request = self.factory.post('/api/order/item/remove/',
+                                    {'item_id': str(self.o._id), 'count': 3}, content_type='application/json')
+        view_response.remove_item_page(request)
+        self.assertRaises(ObjectDoesNotExist, Item.objects.get, _id=self.o._id)
