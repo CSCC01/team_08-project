@@ -42,6 +42,7 @@ import { TimelineComponent } from './pages/timeline/timeline.component';
 import { OwnerEditComponent } from './pages/owner-edit/owner-edit.component';
 import { RestaurantEditComponent } from './pages/restaurant-edit/restaurant-edit.component';
 import { CheckoutComponent } from './pages/checkout/checkout.component';
+import { PageErrorComponent } from './components/page-error/page-error.component';
 import { CartCardComponent } from './components/cart-card/cart-card.component';
 
 @NgModule({
@@ -73,6 +74,7 @@ import { CartCardComponent } from './components/cart-card/cart-card.component';
     RestaurantEditComponent,
     CheckoutComponent,
     CartCardComponent,
+    PageErrorComponent,
   ],
   imports: [
     BrowserModule,

@@ -38,15 +38,15 @@
       <li class="nav-item nav-link">
         <a
           *ngIf="role != 'RO'"
-          routerLink="all-listings"
           routerLinkActive="active"
           class="nav-link"
+          (click)="browse()"
         >
           BROWSE
         </a>
       </li>
       <li class="nav-item nav-link">
-        <a routerLink="timeline" routerLinkActive="active" class="nav-link">
+        <a routerLinkActive="active" class="nav-link" (click)="timeline()">
           TIMELINE
         </a>
       </li>

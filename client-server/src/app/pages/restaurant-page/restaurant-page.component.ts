@@ -19,6 +19,7 @@ import reviews from '../../../assets/data/reviews.json';
 export class RestaurantPageComponent implements OnInit {
   restaurantId: string = '';
   role: string = '';
+  error: boolean = false;
 
   dishes: any[] = [];
   reviews: any[] = [];
@@ -63,11 +64,14 @@ export class RestaurantPageComponent implements OnInit {
     this.role = sessionStorage.getItem('role');
 
     // generate restaurant page
-    this.restaurantsService
-      .getRestaurant(this.restaurantId)
-      .subscribe((data) => {
+    this.restaurantsService.getRestaurant(this.restaurantId).subscribe(
+      (data) => {
         this.restaurantDetails = data;
-      });
+      },
+      (error) => {
+        this.error = true;
+      }
+    );
 
     // generate restaurant menu
     this.restaurantsService
