@@ -12,14 +12,18 @@ This section will go over all the backends components of the Scarborough Dining 
 ###### Scarborough Dining User
 
 ```python
-     nickname = models.CharField(max_length=30, blank=True, default="")
-     name = models.CharField(max_length=50, default='')
-     picture = models.CharField(max_length=200, default='')
-     last_updated = models.CharField(max_length=200, default='')
-     email = models.EmailField(primary_key=True, default='')
-     email_verified = models.BooleanField(default=False)
-     role = models.CharField(max_length=5, choices=Roles.choices(), default="BU")
-     restaurant_id = models.CharField(max_length=24, blank=True, default=None)
+    nickname = models.CharField(max_length=30, blank=True, default="")
+    name = models.CharField(max_length=50, default='')
+    picture = models.CharField(max_length=200, default='')
+    last_updated = models.CharField(max_length=200, default='')
+    email = models.EmailField(primary_key=True, default='')
+    email_verified = models.BooleanField(default=False)
+    role = models.CharField(max_length=5, choices=Roles.choices(), default="BU")
+    restaurant_id = models.CharField(max_length=24, blank=True, default=None)
+    birthday = models.DateField(blank=True, default=None)
+    address = models.CharField(max_length=24, blank=True, default='')
+    phone = models.BigIntegerField(blank=True, default=None)
+    GEO_location = models.CharField(max_length=200, blank=True, default='')
 ```
 
 ###### Roles (Enum)
@@ -144,6 +148,7 @@ This section will go over all the backends components of the Scarborough Dining 
 |      /timeline/comment/delete/      | \_id                                                                                                                                                                               |                                                                                    | POST | Deletes a comment from the database                          |
 |      /timeline/comment/get/         | \_id                                                                                                                                                                               |                                                                                    | GET  | Retrieves comment data                                       |
 |      /order/cart/insert/            | restaurant_id, user_email                                                                                                                                                          |                                                                                    | POST | Add cart to database                                         |
+|      /order/item/insert/            | cart_id, food_id, count                                                                                                                                                            |                                                                                    | POST | Add item to database and change cart price accordingly       |
 
 All requests should be sent in a JSON format. Optional parameters can be left blank Ex: {"Role" : ""}. Bolded Fields can be omitted entirely.
 
@@ -196,7 +201,6 @@ All requests should be sent in a JSON format. Optional parameters can be left bl
 
     #randomly generates a phone number accounting for faker's default format
     def valid_phone_number(faker)
-
 
 ## API and Microservices
 
@@ -251,4 +255,4 @@ All media uploads use the same endpoint. However the input form decides where th
   user_SDUserMedia              | file, save_location, email | api/cloud_storage/upload/ | picture                                      |
   
 ![image info](./examples/example1.PNG)
-  
+ 

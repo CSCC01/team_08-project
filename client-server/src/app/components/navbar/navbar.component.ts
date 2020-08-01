@@ -2,7 +2,6 @@ import { Component, OnInit, HostListener, Input } from '@angular/core';
 import { AuthService } from '../../auth/auth.service';
 import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
 import { LoginService } from '../../service/login.service';
-import { DataService } from 'src/app/service/data.service';
 
 @Component({
   selector: 'app-navbar',
@@ -18,11 +17,7 @@ export class NavbarComponent implements OnInit {
   faUserCircle = faUserCircle;
   userRole: any;
 
-  constructor(
-    public auth: AuthService,
-    private loginService: LoginService,
-    private data: DataService
-  ) {}
+  constructor(public auth: AuthService, private loginService: LoginService) {}
 
   @HostListener('window:resize', ['$event'])
   onResize() {
@@ -35,13 +30,17 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.data.restaurantId.subscribe((id) => (this.restaurantId = id));
-    this.data.role.subscribe((role) => (this.role = role));
-    this.data.userId.subscribe((userId) => (this.userId = userId));
+    this.role = sessionStorage.getItem('role');
+    this.userId = sessionStorage.getItem('userId');
   }
 
   upgradeUser(): void {
     this.loginService.updateUser(this.auth.userProfile$.source);
     this.auth.role = 'RO';
+  }
+
+  reload() {
+    sessionStorage.clear();
+    window.location.reload();
   }
 }

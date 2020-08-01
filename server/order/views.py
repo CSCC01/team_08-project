@@ -1,5 +1,5 @@
 from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
-from order.models import Cart
+from order.models import Cart, Item
 from django.forms.models import model_to_dict
 from jsonschema import validate
 import json
@@ -18,10 +18,20 @@ cart_schema = {
     }
 }
 
+
 status_schema = {
     'properties': {
         '_id': {'type': 'string'},
         'status': {'type': 'string'}
+    }
+}
+
+item_schema = {
+    "properties": {
+        "_id": {"type": "string"},
+        "cart_id": {"type": "string"},
+        "food_id": {"type": "string"},
+        "count": {"type": "number"},
     }
 }
 
@@ -46,3 +56,13 @@ def update_status_page(request):
             else:
                 return HttpResponseBadRequest('Cannot update order status')
     return HttpResponseBadRequest('invalid request')
+
+
+def insert_item_page(request):
+    """ Insert item to database """
+    validate(instance=request.body, schema=item_schema)
+    body = json.loads(request.body)
+    item = Item.new_item(body['cart_id'], body['food_id'], body['count'])
+    item._id = str(item._id)
+    return JsonResponse(model_to_dict(item))
+

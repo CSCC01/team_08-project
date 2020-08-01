@@ -3,7 +3,6 @@ import { LoginService } from '../../service/login.service';
 import { AuthService } from '../../auth/auth.service';
 import { RestaurantsService } from '../../service/restaurants.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { DataService } from 'src/app/service/data.service';
 
 @Component({
   selector: 'app-restaurant-setup',
@@ -12,20 +11,17 @@ import { DataService } from 'src/app/service/data.service';
 })
 export class RestaurantSetupComponent implements OnInit {
   userId: string = '';
-  restaurantId: string = '';
 
   constructor(
     public auth: AuthService,
     private loginService: LoginService,
     private restaurantsService: RestaurantsService,
-    private data: DataService,
     private route: ActivatedRoute,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.userId = this.route.snapshot.queryParams.userId;
-    this.data.changeUserId(this.userId);
+    this.userId = sessionStorage.getItem('userId');
   }
 
   upgradeUser(): void {
@@ -67,26 +63,18 @@ export class RestaurantSetupComponent implements OnInit {
       // Attach a restaurant ID to the current user and upgrade them
       this.restaurantsService.getRestaurantID(restaurantInfo).subscribe(
         (data) => {
-          this.restaurantId = data._id;
-          this.router.navigate(['/owner-setup'], {
-            queryParams: {
-              role: 'RO',
-              userId: this.userId,
-              restaurantId: this.restaurantId,
-            },
-          });
+          sessionStorage.setItem('restaurantId', data._id);
+          this.router.navigate(['/owner-setup']);
           this.auth.userProfile$.source.subscribe((userInfo) => {
             userInfo.role = 'RO';
-            this.auth.role = 'RO';
             userInfo.restaurant_id = data._id;
+            sessionStorage.setItem('role', 'RO');
             this.loginService.addNewUser(userInfo);
           });
         },
         (error) => {
           alert('Sorry a restaurant with this email has already been found');
-          this.router.navigate([''], {
-            queryParams: { role: 'BU', userId: this.userId },
-          });
+          this.router.navigate(['']);
         }
       );
     }

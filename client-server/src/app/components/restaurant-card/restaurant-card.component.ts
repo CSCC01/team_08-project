@@ -1,5 +1,4 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { DataService } from 'src/app/service/data.service';
 
 @Component({
   selector: 'app-restaurant-card',
@@ -9,15 +8,9 @@ import { DataService } from 'src/app/service/data.service';
 export class RestaurantCardComponent implements OnInit {
   @Input() restaurant: any;
 
-  role: string = '';
-  userId: string = '';
-
   totalStars = 5;
 
-  constructor(private data: DataService) {}
+  constructor() {}
 
-  ngOnInit(): void {
-    this.data.role.subscribe((role) => (this.role = role));
-    this.data.userId.subscribe((userId) => (this.userId = userId));
-  }
+  ngOnInit(): void {}
 }

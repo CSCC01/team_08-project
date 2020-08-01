@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DataService } from 'src/app/service/data.service';
 import { RestaurantsService } from '../../service/restaurants.service';
 
 @Component({
@@ -17,28 +16,18 @@ export class OwnerEditComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private data: DataService,
     private restaurantsService: RestaurantsService
   ) {}
 
   ngOnInit(): void {
-    this.restaurantId = this.route.snapshot.queryParams.restaurantId;
-    this.userId = this.route.snapshot.queryParams.userId;
-    this.role = this.route.snapshot.queryParams.role;
+    this.role = sessionStorage.getItem('role');
+    this.userId = sessionStorage.getItem('userId');
+    this.restaurantId = sessionStorage.getItem('restaurantId');
 
     if (!this.restaurantId || this.role !== 'RO' || !this.userId) {
-      this.router.navigate([''], {
-        queryParams: {
-          role: this.role,
-          userId: this.userId,
-          restaurantId: this.restaurantId,
-        },
-      });
+      this.router.navigate(['']);
       alert('No matching restaurant found for this profile!');
     }
-    this.data.changeRestaurantId(this.restaurantId);
-    this.data.changeUserId(this.userId);
-    this.data.changeRole(this.role);
 
     // generate restaurant page
     this.restaurantsService
@@ -60,23 +49,11 @@ export class OwnerEditComponent implements OnInit {
       alert('Please enter all requried information about the owner!');
     } else {
       this.restaurantsService.editRestaurant(restaurantInfo);
-      this.router.navigate(['/restaurant'], {
-        queryParams: {
-          role: this.role,
-          userId: this.userId,
-          restaurantId: this.restaurantId,
-        },
-      });
+      this.router.navigate(['/restaurant']);
     }
   }
 
   cancel() {
-    this.router.navigate(['/restaurant'], {
-      queryParams: {
-        role: this.role,
-        userId: this.userId,
-        restaurantId: this.restaurantId,
-      },
-    });
+    this.router.navigate(['/restaurant']);
   }
 }

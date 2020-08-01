@@ -12,7 +12,6 @@ import {
 import { tap, catchError, concatMap, shareReplay } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { LoginService } from '../service/login.service';
-import { DataService } from '../service/data.service';
 
 @Injectable({
   providedIn: 'root',
@@ -49,11 +48,7 @@ export class AuthService {
   userId: string = '';
   restaurantId: string = '';
 
-  constructor(
-    private router: Router,
-    private loginService: LoginService,
-    private data: DataService
-  ) {
+  constructor(private router: Router, private loginService: LoginService) {
     // On initial load, check authentication state with authorization server
     // Set up local auth streams if user is already authenticated
     this.localAuthSetup();
@@ -130,25 +125,11 @@ export class AuthService {
               this.userId = data.email;
               if (data.role == 'RO') {
                 this.restaurantId = data.restaurant_id;
-                this.data.changeRestaurantId('RO');
               }
 
-              this.data.changeRestaurantId(this.restaurantId);
-
-              // Redirect to target route after callback processing
-              this.router
-                .navigate([targetRoute], {
-                  queryParams: {
-                    role: this.role,
-                    userId: this.userId,
-                    restaurantId: this.restaurantId,
-                  },
-                })
-                .then(() => {
-                  setTimeout(function () {
-                    window.location.reload();
-                  }, 1000);
-                });
+              sessionStorage.setItem('role', this.role);
+              sessionStorage.setItem('restaurantId', this.restaurantId);
+              sessionStorage.setItem('userId', this.userId);
             });
           } else {
             user.role = 'BU';
@@ -156,18 +137,15 @@ export class AuthService {
             this.loginService.addNewUser(user);
             this.role = 'BU';
 
-            this.data.changeUserId(user.email);
-
-            this.router
-              .navigate([targetRoute], {
-                queryParams: { role: this.role, userId: user.email },
-              })
-              .then(() => {
-                setTimeout(function () {
-                  window.location.reload();
-                }, 1000);
-              });
+            sessionStorage.setItem('role', this.role);
+            sessionStorage.setItem('userId', user.email);
           }
+          // Redirect to target route after callback processing
+          this.router.navigate([targetRoute]).then(() => {
+            setTimeout(function () {
+              window.location.reload();
+            }, 1000);
+          });
         });
       });
     }

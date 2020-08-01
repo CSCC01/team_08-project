@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg">
   <img src="assets/images/icon.png" style="height: 75px; width: auto;" />
-  <a class="navbar-brand" href="#">Scarborough Dining</a>
+  <div class="navbar-brand">Scarborough Dining</div>
   <button
     class="navbar-toggler"
     type="button"
@@ -14,108 +14,45 @@
   </button>
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav mr-auto">
-      <li *ngIf="role == 'RO'" class="nav-item nav-link">
-        <a
-          routerLink="/"
-          [queryParams]="{
-            role: role,
-            userId: userId,
-            restaurantId: restaurantId
-          }"
-          class="nav-link"
-        >
+      <li class="nav-item nav-link">
+        <a routerLink="/" class="nav-link">
           HOME
         </a>
       </li>
-      <li *ngIf="role != 'RO'" class="nav-item nav-link">
-        <a
-          routerLink="/"
-          [queryParams]="{
-            role: role,
-            userId: userId
-          }"
-          class="nav-link"
-        >
-          HOME
-        </a>
-      </li>
+
       <li class="nav-item nav-link" *ngIf="auth.loggedIn && role == 'BU'">
-        <a
-          routerLink="profile"
-          [queryParams]="{ role: role, userId: userId }"
-          routerLinkActive="active"
-          class="nav-link"
-        >
+        <a routerLink="profile" routerLinkActive="active" class="nav-link">
           PROFILE
         </a>
       </li>
       <li class="nav-item nav-link" *ngIf="role == 'RO'">
-        <a
-          routerLink="dashboard"
-          [queryParams]="{
-            role: role,
-            userId: userId,
-            restaurantId: restaurantId
-          }"
-          routerLinkActive="active"
-          class="nav-link"
-        >
+        <a routerLink="dashboard" routerLinkActive="active" class="nav-link">
           DASHBOARD
         </a>
       </li>
       <li class="nav-item nav-link" *ngIf="auth.loggedIn && role == 'RO'">
-        <a
-          routerLink="restaurant"
-          [queryParams]="{
-            role: role,
-            userId: userId,
-            restaurantId: restaurantId
-          }"
-          routerLinkActive="active"
-          class="nav-link"
-        >
+        <a routerLink="restaurant" routerLinkActive="active" class="nav-link">
           RESTAURANT PAGE
         </a>
       </li>
       <li class="nav-item nav-link">
         <a
-          routerLink="all-listings"
-          [queryParams]="{
-            role: role,
-            userId: userId
-          }"
           *ngIf="role != 'RO'"
+          routerLink="all-listings"
           routerLinkActive="active"
           class="nav-link"
         >
           BROWSE
         </a>
       </li>
-      <li *ngIf="role == 'RO'" class="nav-item nav-link">
-        <a
-          routerLink="timeline"
-          [queryParams]="{
-            role: role,
-            userId: userId,
-            restaurantId: restaurantId
-          }"
-          routerLinkActive="active"
-          class="nav-link"
-        >
+      <li class="nav-item nav-link">
+        <a routerLink="timeline" routerLinkActive="active" class="nav-link">
           TIMELINE
         </a>
       </li>
-      <li *ngIf="role != 'RO'" class="nav-item nav-link">
-        <a
-          routerLink="timeline"
-          [queryParams]="{
-            role: role,
-            userId: userId
-          }"
-          routerLinkActive="active"
-          class="nav-link"
-        >
-          TIMELINE
+      <li *ngIf="role == 'BU'" class="nav-item nav-link">
+        <a routerLink="checkout" routerLinkActive="active" class="nav-link">
+          CART
         </a>
       </li>
     </ul>
@@ -181,7 +118,11 @@
         <a (click)="auth.login()" *ngIf="!auth.loggedIn" class="nav-link">
           LOG IN
         </a>
-        <a (click)="auth.logout()" *ngIf="auth.loggedIn" class="nav-link">
+        <a
+          (click)="reload(); auth.logout()"
+          *ngIf="auth.loggedIn"
+          class="nav-link"
+        >
           LOG OUT
         </a>
       </li>

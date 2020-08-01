@@ -8,6 +8,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./dish-card.component.scss'],
 })
 export class DishCardComponent implements OnInit {
+  role: string = '';
   value: number = 0;
 
   @Input() dish: any;
@@ -31,7 +32,9 @@ export class DishCardComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.role = sessionStorage.getItem('role');
+  }
 
   openDish(content) {
     this.modalService.open(content, { size: 'xl' });
