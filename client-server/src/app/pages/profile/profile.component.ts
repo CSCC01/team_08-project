@@ -26,9 +26,7 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit() {
     this.userId = sessionStorage.getItem('userId');
-    this.loginService.getUser({ email: this.userId }).subscribe((data) => {
-      this.userData = data;
-    });
+    this.getUserInfo();
   }
 
   openEditModal(content) {
@@ -64,6 +62,16 @@ export class ProfileComponent implements OnInit {
     } else {
       this.loginService.editUser(userInfo);
       this.modalRef.close();
+      this.getUserInfo();
+      setTimeout(function () {
+        window.location.reload();
+      });
     }
+  }
+
+  getUserInfo() {
+    this.loginService.getUser({ email: this.userId }).subscribe((data) => {
+      this.userData = data;
+    });
   }
 }
