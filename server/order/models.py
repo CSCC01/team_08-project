@@ -106,7 +106,6 @@ class Item(models.Model):
         """
         Remove's count items from the cart
         :param item_id: Identify item document
-        :param count: Amount to be removed
         :return:
         """
 
@@ -117,3 +116,29 @@ class Item(models.Model):
         item.delete()
         if cart.num_items == 0:
             cart.delete()
+
+    @classmethod
+    def edit_item_amount(cls, item_id, count):
+        """
+        Edits item count of given item
+        :param item_id: Identify item document
+        :param count: The desired count
+        :return: whether this edit was successful or not
+        """
+        item = Item.objects.get(_id= item_id)
+        cart = Cart.objects.get(_id = item.cart_id)
+        if(count != 0):
+            currcount = item.count
+            deltacount = count - currcount
+            cart.add_to_total(float(Food.objects.get(_id=item.food_id).price), deltacount)
+            item.count = count
+            item.clean_fields()
+            item.clean()
+            item.save()
+            cart.clean_fields()
+            cart.clean()
+            cart.save()
+        # if the desired count is 0, just delete the item
+        else:
+            cls.remove_item(item_id)
+
