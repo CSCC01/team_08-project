@@ -56,3 +56,18 @@
 .upgrade-button:hover {
   color: $navigation-accent-color;
 }
+
+.confirm {
+  padding: 5px 30px;
+}
+
+.cancel {
+  background-color: white;
+  color: $secondary-color;
+  border-color: $secondary-color;
+}
+
+.cancel:hover {
+  background-color: $secondary-color;
+  color: white;
+}

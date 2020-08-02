@@ -3,6 +3,7 @@ import { AuthService } from '../../auth/auth.service';
 import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
 import { LoginService } from '../../service/login.service';
 import { Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-navbar',
@@ -16,13 +17,16 @@ export class NavbarComponent implements OnInit, AfterViewInit {
   role: string = '';
   userId: string = '';
 
+  modalRef: any;
+
   faUserCircle = faUserCircle;
   userRole: any;
 
   constructor(
     public auth: AuthService,
     private loginService: LoginService,
-    private router: Router
+    private router: Router,
+    private modalService: NgbModal
   ) {}
 
   @HostListener('window:resize', ['$event'])
@@ -69,5 +73,13 @@ export class NavbarComponent implements OnInit, AfterViewInit {
         window.location.reload();
       }, 100);
     });
+  }
+
+  openModal(content) {
+    this.modalRef = this.modalService.open(content, { size: 's' });
+  }
+
+  goToSetup() {
+    this.modalRef.close();
   }
 }
