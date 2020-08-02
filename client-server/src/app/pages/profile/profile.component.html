@@ -5,7 +5,7 @@
         <img class="profile-img" src="{{ userData.picture }}" alt="Name" />
       </div>
       <div class="col-wide">
-        <h2>{{ userData.name }}</h2>
+        <h2 class="name">{{ userData.name }}</h2>
         <p><b>Email:</b> {{ userData.email }}</p>
         <div *ngIf="!userData.email_verified">
           <p><i>Email Not Vertified</i></p>
