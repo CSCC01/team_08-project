@@ -29,7 +29,6 @@ item_schema = {
 item_schema_remove = {
     'properties': {
         'item_id': {'type': 'string'},
-        'count': {'type': 'integer'}
     }
 }
 
@@ -53,8 +52,8 @@ def insert_item_page(request):
 
 
 def remove_item_page(request):
-    """Insert Item to datbase"""
+    """Insert Item to database"""
     validate(instance=request.body, schema=item_schema_remove)
     body = json.loads(request.body)
-    cart = Item.remove_item(body['item_id'], body['count'])
-    return JsonResponse(json.loads(json.dumps(model_to_dict(cart), cls=BSONEncoder)))
+    Item.remove_item(body['item_id'])
+    return HttpResponse('success')

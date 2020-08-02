@@ -2,6 +2,7 @@ from bson import ObjectId
 from djongo import models
 from restaurant.models import Food
 
+
 class Cart(models.Model):
     """ Model for a user's Cart in order dashboard """
     _id = models.ObjectIdField()
@@ -12,7 +13,7 @@ class Cart(models.Model):
     send_tstmp = models.DateTimeField(blank=True, default=None)
     accept_tstmp = models.DateTimeField(blank=True, default=None)
     complete_tstmp = models.DateTimeField(blank=True, default=None)
-
+    num_items = models.IntegerField(default=0)
 
     @classmethod
     def new_cart(cls, restaurant_id, user_email):
@@ -36,6 +37,14 @@ class Cart(models.Model):
         """
         self.price = float(self.price) + (price * count)
         self.save(update_fields=["price"])
+
+    def update_num_items(self, amount):
+        """
+        Updates and changes total number of items in cart
+        :param amount: amount of items
+        """
+        self.num_items += amount
+        self.save(update_fields=['num_items'])
 
     # updates the send_timestamp of the given cart to now,
     # indicating that the cart has reached the RO
@@ -83,7 +92,9 @@ class Item(models.Model):
         item.clean_fields()
         item.clean()
         item.save()
-        Cart.objects.get(_id=ObjectId(cart_id)).add_to_total(float(Food.objects.get(_id=food_id).price), count)
+        cart = Cart.objects.get(_id=ObjectId(cart_id))
+        cart.add_to_total(float(Food.objects.get(_id=food_id).price), count)
+        cart.update_num_items(1)
         return item
 
     @classmethod
@@ -91,7 +102,7 @@ class Item(models.Model):
         pass
 
     @classmethod
-    def remove_item(cls, item_id, count):
+    def remove_item(cls, item_id):
         """
         Remove's count items from the cart
         :param item_id: Identify item document
@@ -100,16 +111,9 @@ class Item(models.Model):
         """
 
         item = Item.objects.get(_id=item_id)
-        if item.count <= count:
-            item.delete()
-            cart = Cart.objects.get(_id=item.cart_id)
-            cart.add_to_total(-float(Food.objects.get(_id=item.food_id).price), item.count)
-            cart.refresh_from_db()
-            return cart
-        else:
-            item.count -= count
-            cart = Cart.objects.get(_id=item.cart_id)
-            cart.add_to_total(-float(Food.objects.get(_id=item.food_id).price), count)
-            cart.refresh_from_db()
-            item.save()
-            return cart
+        cart = Cart.objects.get(_id=item.cart_id)
+        cart.add_to_total(-float(Food.objects.get(_id=item.food_id).price), item.count)
+        cart.update_num_items(-1)
+        item.delete()
+        if cart.num_items == 0:
+            cart.delete()
