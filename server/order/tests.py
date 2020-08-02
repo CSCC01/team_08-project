@@ -58,6 +58,7 @@ class CartTestCases(TestCase):
 class CartStatusCases(TestCase):
 
     def setUp(self):
+        """setup objects and constants"""
         # setup time
         self.time = datetime(2013, 4, 16, 12, 28, 52, 797923, pytz.UTC)
         self.time_str = '2013-04-16T12:28:52.797Z'
@@ -80,6 +81,7 @@ class CartStatusCases(TestCase):
         self.factory = RequestFactory()
 
     def test_send(self):
+        """Test if send timestamp is updated"""
         request = self.factory.post('api/order/cart/update_status/', {
             '_id': str(self.cart1._id),
             'status': 'snd'
@@ -108,6 +110,7 @@ class CartStatusCases(TestCase):
         self.assertDictEqual(expected, actual)
 
     def test_accept(self):
+        """Test if accept timestamp is updated"""
         request = self.factory.post('api/order/cart/update_status/', {
             '_id': str(self.cart2._id),
             'status': 'acc'
@@ -126,7 +129,6 @@ class CartStatusCases(TestCase):
 
         # setup actual, expected with mocked views
         response = view_response.update_status_page(request)
-        print(response)
         actual = json.loads(response.content)
         expected = json.loads(json.dumps(model_to_dict(self.cart2), cls=BSONEncoder))
         expected['accept_tstmp'] = self.time_str
@@ -138,6 +140,7 @@ class CartStatusCases(TestCase):
 
 
     def test_complete(self):
+        """Test is complete timestamp is updated"""
         request = self.factory.post('api/order/cart/update_status/', {
             '_id': str(self.cart3._id),
             'status': 'cmt'
@@ -156,7 +159,6 @@ class CartStatusCases(TestCase):
 
         # setup actual, expected with mocked views
         response = view_response.update_status_page(request)
-        print(response.content)
         actual = json.loads(response.content)
         expected = json.loads(json.dumps(model_to_dict(self.cart3), cls=BSONEncoder))
         expected['complete_tstmp'] = self.time_str
@@ -168,6 +170,7 @@ class CartStatusCases(TestCase):
 
 
     def test_order_fail(self):
+        """Test is appropriate error response is sent upon invalid order"""
         request = self.factory.post('api/order/cart/update_status/', {
             '_id': str(self.cart1._id),
             'status': 'cmt'
@@ -177,6 +180,7 @@ class CartStatusCases(TestCase):
         self.assertEqual(str(actual), 'Cannot update order status')
 
     def test_invalid_form(self):
+        """Test if appropriate error response is sent upon invalid status"""
         request = self.factory.post('api/order/cart/update_status/', {
             '_id': str(self.cart1._id),
             'status': 'cmweft'
