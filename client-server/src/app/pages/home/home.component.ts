@@ -4,6 +4,7 @@ import {
   HostListener,
   ViewChild,
   TemplateRef,
+  AfterViewInit,
 } from '@angular/core';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
@@ -24,7 +25,7 @@ import { LoginService } from '../../service/login.service';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, AfterViewInit {
   role: string = '';
   userId: string = '';
   userData: any;
@@ -106,6 +107,12 @@ export class HomeComponent implements OnInit {
           this.modalRef = this.modalService.open(this.content);
         }
       });
+    }
+  }
+
+  ngAfterViewInit(): void {
+    if (window.innerWidth < 850) {
+      this.onResize();
     }
   }
 

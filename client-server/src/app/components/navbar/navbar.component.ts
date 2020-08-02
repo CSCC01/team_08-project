@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, Input } from '@angular/core';
+import { Component, OnInit, HostListener, AfterViewInit } from '@angular/core';
 import { AuthService } from '../../auth/auth.service';
 import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
 import { LoginService } from '../../service/login.service';
@@ -9,12 +9,13 @@ import { Router } from '@angular/router';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss'],
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent implements OnInit, AfterViewInit {
+  title: string = 'Scarborough Dining';
+
   restaurantId: string = '';
   role: string = '';
   userId: string = '';
 
-  title = 'client-server';
   faUserCircle = faUserCircle;
   userRole: any;
 
@@ -26,17 +27,22 @@ export class NavbarComponent implements OnInit {
 
   @HostListener('window:resize', ['$event'])
   onResize() {
-    var el = document.getElementById('footer-main-links');
-    if (window.innerWidth < 850) {
-      el.classList.remove('row');
+    if (window.innerWidth < 650) {
+      this.title = 'SDining';
     } else {
-      el.classList.add('row');
+      this.title = 'Scarborough Dining';
     }
   }
 
   ngOnInit(): void {
     this.role = sessionStorage.getItem('role');
     this.userId = sessionStorage.getItem('userId');
+  }
+
+  ngAfterViewInit(): void {
+    if (window.innerWidth < 650) {
+      this.onResize();
+    }
   }
 
   upgradeUser(): void {
