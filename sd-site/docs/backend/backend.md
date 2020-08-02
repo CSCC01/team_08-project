@@ -262,14 +262,6 @@ All media uploads use the same endpoint. However the input form decides where th
 | restaurant_RestaurantMedia    | file, save_location, _id   | api/cloud_storage/upload/ | cover_photo_url, logo_url, owner_picture_url |
 | restaurant_FoodMedia          | file, save_location, _id   | api/cloud_storage/upload/ | picture                                      |
   user_SDUserMedia              | file, save_location, email | api/cloud_storage/upload/ | picture                                      |
-  
-![image info](./examples/example1.PNG)
- api/cloud_storage/upload/ | picture                                      |
-  user_SDUserMedia              | file, save_location, email | api/cloud_storage/upload/ | picture                                      |
-  
-![image info](./examples/example1.PNG)
-         |
-  user_SDUserMedia              | file, save_location, email | api/cloud_storage/upload/ | picture                                      |
-  
+
 ![image info](./examples/example1.PNG)
  
