@@ -1,8 +1,24 @@
-<div id="profilePage" *ngIf="auth.userProfile$ | async as profile">
-  <img src="{{ profile.picture }}" />
-  <h2>{{ profile.nickname }} | {{ profile.name }}</h2>
-  <p><b>Email: </b>{{ profile.email }}</p>
-  <p><b>Verified: </b> {{ profile.email_verified }}</p>
-  <p><b>Last Updated: </b>{{ profile.updated_at }}</p>
-  <code>{{ profile | json }}</code>
+<div class="profile-box">
+  <div class="content-wrap">
+    <div class="col-narrow">
+      <img class="profile-img" src="{{ userInfo.picture }}" alt="Name" />
+    </div>
+    <div class="col-wide">
+      <h2>{{ userInfo.name }}</h2>
+      <p><b>Email:</b> {{ userInfo.email }}</p>
+      <div *ngIf="!userInfo.email_verified">
+        <p><i>Email Not Vertified</i></p>
+      </div>
+      <div *ngIf="userInfo.email_verified">
+        <p><i>Email Vertified</i></p>
+      </div>
+      <p><b>Birthday:</b> {{ userInfo.birthday }}</p>
+      <br />
+      <br />
+      <p><b>Address:</b> {{ userInfo.address | titlecase }}</p>
+      <p><b>Phone:</b> {{ userInfo.phone }}</p>
+      <button class="btn edit-profile">Edit Profile</button>
+      <button class="btn all-orders">View All Transaction Orders</button>
+    </div>
+  </div>
 </div>
