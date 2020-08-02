@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
@@ -43,6 +43,8 @@ import { OwnerEditComponent } from './pages/owner-edit/owner-edit.component';
 import { RestaurantEditComponent } from './pages/restaurant-edit/restaurant-edit.component';
 import { MapComponent } from './components/map/map.component';
 import { CheckoutComponent } from './pages/checkout/checkout.component';
+import { PageErrorComponent } from './components/page-error/page-error.component';
+import { CartCardComponent } from './components/cart-card/cart-card.component';
 
 @NgModule({
   declarations: [
@@ -73,6 +75,8 @@ import { CheckoutComponent } from './pages/checkout/checkout.component';
     RestaurantEditComponent,
     MapComponent,
     CheckoutComponent,
+    CartCardComponent,
+    PageErrorComponent,
   ],
   imports: [
     BrowserModule,
@@ -80,6 +84,7 @@ import { CheckoutComponent } from './pages/checkout/checkout.component';
     HttpClientModule,
     AppRoutingModule,
     FormsModule,
+    ReactiveFormsModule,
     FontAwesomeModule,
     RatingModule,
     CarouselModule.forRoot(),

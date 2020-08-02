@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { RestaurantsService } from '../../service/restaurants.service';
 
 @Component({
@@ -12,9 +13,13 @@ export class OwnerSetupComponent implements OnInit {
   userId: string = '';
   role: string = '';
 
+  uploadForm: FormGroup;
+  newImage: boolean = false;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private formBuilder: FormBuilder,
     private restaurantsService: RestaurantsService
   ) {}
 
@@ -27,6 +32,10 @@ export class OwnerSetupComponent implements OnInit {
       this.router.navigate(['']);
       alert('No matching restaurant found for this profile!');
     }
+
+    this.uploadForm = this.formBuilder.group({
+      file: [''],
+    });
   }
 
   updateOwner() {
@@ -41,7 +50,28 @@ export class OwnerSetupComponent implements OnInit {
       alert('Please enter all requried information about the owner!');
     } else {
       this.restaurantsService.editRestaurant(restaurantInfo);
+      if (this.newImage) {
+        this.onSubmit();
+      }
+
       this.router.navigate(['/menu-setup']);
     }
+  }
+
+  onFileSelect(event) {
+    if (event.target.files.length > 0) {
+      this.newImage = true;
+      const file = event.target.files[0];
+      this.uploadForm.get('file').setValue(file);
+    }
+  }
+
+  onSubmit() {
+    const formData = new FormData();
+    formData.append('file', this.uploadForm.get('file').value);
+    this.restaurantsService
+      .uploadRestaurantMedia(formData, this.restaurantId, 'owner')
+      .subscribe((data) => {});
+    this.newImage = false;
   }
 }

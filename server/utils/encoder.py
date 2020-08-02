@@ -1,9 +1,10 @@
 import json
 from bson import ObjectId
+from django.core.serializers.json import DjangoJSONEncoder
 
-class BSONEncoder(json.JSONEncoder):
+class BSONEncoder(DjangoJSONEncoder):
     def default(self, o):
         if isinstance(o, ObjectId):
             return str(o)
-        return json.JSONEncoder.default(self, o)
+        return DjangoJSONEncoder.default(self, o)
 

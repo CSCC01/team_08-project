@@ -1,9 +1,28 @@
+from unittest import mock
+
 from django.test import TestCase, RequestFactory
 from restaurant.models import Food, ManualTag
 from django.forms.models import model_to_dict
 from restaurant.models import Restaurant
 import restaurant.views as view_response
 import json
+import requests
+
+
+def mocked_requests_get(*args, **kwargs):
+    """ Load Mock Reponses"""
+
+    class MockResponse:
+        def __init__(self, json_data, status_code):
+            self.json_data = json_data
+            self.status_code = status_code
+
+        def json(self):
+            return self.json_data
+
+    if args[0] == 'http://link':
+        return MockResponse({"key1": "value1"}, 200)
+    raise requests.ConnectionError
 
 
 class TagClearCases(TestCase):
@@ -148,6 +167,31 @@ class FoodTestCases(TestCase):
                                          price='20.99')
         self.factory = RequestFactory()
 
+    @mock.patch('requests.get', side_effect=mocked_requests_get)
+    def test_insert_food_valid(self, mock_get):
+        """ Test if food is properly inserted into the database """
+        request = self.factory.post('/api/restaurant/dish/insert/', {"name": 'foodC', 'restaurant_id': "restC",
+                                                                     'description': "descripC",
+                                                                     'picture': "http://link",
+                                                                     "price": '10.99', 'specials': ""
+                                                                     }, content_type="application/json")
+        actual = json.loads(view_response.insert_dish_page(request).content)
+        expected = Food(_id=actual['_id'], name="foodC", restaurant_id="restC", description="descripC",
+                        picture="http://link",
+                        price='10.99')
+        self.assertDictEqual(model_to_dict(expected), actual)
+
+    @mock.patch('requests.get', side_effect=mocked_requests_get)
+    def test_insert_food_invalid(self, mock_get):
+        """ Test if correct invalid fields are returned """
+        request = self.factory.post('/api/restaurant/dish/insert/', {"name": 'foodC', 'restaurant_id': "restC",
+                                                                     'description': "descripC",
+                                                                     'picture': "http://invalid", 'specials': "",
+                                                                     "price": '10.99'}, content_type="application/json")
+        actual = json.loads(view_response.insert_dish_page(request).content)
+        expected = {'Invalid': ['picture']}
+        self.assertDictEqual(expected, actual)
+
     def test_get_all_foods(self):
         """ Test if all foods from db are retrieved """
         req = self.factory.get('api/restaurant/get_all/')
@@ -166,17 +210,28 @@ class FoodTestCases(TestCase):
         expected['Dishes'][0]['_id'] = str(expected['Dishes'][0]['_id'])
         self.assertDictEqual(expected, actual)
 
-    def test_edit_dish(self):
+    @mock.patch('requests.get', side_effect=mocked_requests_get)
+    def test_edit_dish_valid(self, mock_get):
         """ Test if dish document is properly updated """
         id = Food.objects.get(name="foodB")._id
         request = self.factory.post('/api/restaurant/dish/edit/',
                                     {"_id": str(id), "name": "foodB2", "description": "nutter butter",
-                                     "price": "10.99"}, content_type='application/json')
-        view_response.edit_dish_page(request)
-        actual = Food.objects.get(_id=id)
-        expected = Food(_id=id, name="foodB2", restaurant_id="restB", description="nutter butter", picture="picB",
-                        price='10.99')
-        self.assertDictEqual(model_to_dict(actual), model_to_dict(expected))
+                                     "picture": "http://link", "price": "10.99"}, content_type='application/json')
+        actual = json.loads(view_response.edit_dish_page(request).content)
+        expected = Food(_id=str(id), name="foodB2", restaurant_id="restB", description="nutter butter",
+                        picture="http://link", price='10.99')
+        self.assertDictEqual(actual, model_to_dict(expected))
+
+    @mock.patch('requests.get', side_effect=mocked_requests_get)
+    def test_edit_dish_invalid(self, mock_get):
+        """ Test if correct invalid fields are returned """
+        id = Food.objects.get(name="foodB")._id
+        request = self.factory.post('/api/restaurant/dish/edit/',
+                                    {"_id": str(id), "name": "foodB2", "description": "nutter butter",
+                                     "picture": "invalid", "price": "10.99"}, content_type='application/json')
+        actual = json.loads(view_response.edit_dish_page(request).content)
+        expected = {'Invalid': ['picture']}
+        self.assertDictEqual(actual, expected)
 
     def test_delete_food(self):
         """ Test if the food is deleted """
@@ -202,17 +257,17 @@ class RestaurantTestCases(TestCase):
             'email': 'alac@gmail.com',
             'cuisine': 'american',
             'pricepoint': 'High',
-            'twitter': 'https://twitter.com/SupremeDreams_1',
-            'instagram': 'https://www.instagram.com/rdcworld1/?hl=en',
+            'twitter': 'http://link',
+            'instagram': 'http://link',
             'bio': 'Finger licking good chicken',
             'GEO_location': '{\'longitude\': 44.068203, \'latitude\':-114.742043}',
-            'external_delivery_link': 'https://docs.djangoproject.com/en/topics/testing/overview/',
-            'cover_photo_url': 'link',
-            'logo_url': 'link',
+            'external_delivery_link': 'http://link',
+            'cover_photo_url': 'http://link',
+            'logo_url': 'http://link',
             'rating': '3.00',
             'owner_name': 'Colonel Sanders',
             'owner_story': 'i made chicken',
-            'owner_picture_url': 'https://www.imgur.com/image.jpg'#this is not real
+            'owner_picture_url': 'http://link'
         }
 
         self.expected2 = {
@@ -224,17 +279,17 @@ class RestaurantTestCases(TestCase):
             'email': 'calvin@gmail.com',
             'cuisine': 'african',
             'pricepoint': 'Medium',
-            'twitter': 'https://twitter.com/SupremeDreams_1',
-            'instagram': 'https://www.instagram.com/rdcworld1/?hl=en',
+            'twitter': 'http://link',
+            'instagram': 'http://link',
             'bio': 'Finger licking good chicken',
             'GEO_location': '{\'longitude\': 44.068203, \'latitude\':-114.742043}',
-            'external_delivery_link': 'https://docs.djangoproject.com/en/topics/testing/overview/',
-            'cover_photo_url': 'link',
-            'logo_url': 'link',
+            'external_delivery_link': 'http://link',
+            'cover_photo_url': 'http://link',
+            'logo_url': 'http://link',
             'rating': '3.00',
             'owner_name': 'Colonel Calvino',
             'owner_story': 'i made it boys',
-            'owner_picture_url': 'https://www.imgur.com/image.jpg'#this is not real
+            'owner_picture_url': 'http://link'
         }
 
         self.expected3 = {
@@ -246,17 +301,39 @@ class RestaurantTestCases(TestCase):
             'email': 'winnie@gmail.com',
             'cuisine': 'asina fusion',
             'pricepoint': 'High',
-            'twitter': 'https://twitter.com/SupremeDreams_1',
-            'instagram': 'https://www.instagram.com/rdcworld1/?hl=en',
+            'twitter': 'http://link',
+            'instagram': 'http://link',
             'bio': 'Finger licking good chicken',
             'GEO_location': '{\'longitude\': 44.068203, \'latitude\':-114.742043}',
-            'external_delivery_link': 'https://docs.djangoproject.com/en/topics/testing/overview/',
-            'cover_photo_url': 'link',
-            'logo_url': 'link',
+            'external_delivery_link': 'http://link',
+            'cover_photo_url': 'http://link',
+            'logo_url': 'http://link',
             'rating': '3.00',
             'owner_name': 'Colonel Lam',
             'owner_story': 'lambs are a thing',
-            'owner_picture_url': ''#test for blank image url validity
+            'owner_picture_url': ''  # test for blank image url validity
+        }
+
+        self.expected4 = {
+            '_id': '444444444444444444444444',
+            'name': 'Winnies lambs2',
+            'address': '221 chicago',
+            'phone': 6475040682,
+            'city': 'Chicago2',
+            'email': 'winnie2@gmail.com',
+            'cuisine': 'asina fusion',
+            'pricepoint': 'High',
+            'twitter': 'http://link',
+            'instagram': 'http://link',
+            'bio': 'Finger licking good chicken',
+            'GEO_location': '{\'longitude\': 44.068203, \'latitude\':-114.742043}',
+            'external_delivery_link': 'http://link',
+            'cover_photo_url': 'http://invalid',
+            'logo_url': 'invalid',
+            'rating': '3.00',
+            'owner_name': 'Colonel Lam',
+            'owner_story': 'lambs are a thing',
+            'owner_picture_url': ''  # test for blank image url validity
         }
 
         Restaurant.objects.create(**self.expected)
@@ -276,13 +353,22 @@ class RestaurantTestCases(TestCase):
         actual = json.loads(view_response.get_all_restaurants_page(request).content)['Restaurants']
         self.assertListEqual(expected, actual)
 
-    def test_insert_restaurant(self):
-        """ Test is restaurant is properly inserted into the database """
+    @mock.patch('requests.get', side_effect=mocked_requests_get)
+    def test_insert_restaurant_valid(self, mock_get):
+        """ Test if restaurant is properly inserted into the database """
         request = self.factory.post('/api/restaurant/insert/', self.expected3, content_type="application/json")
         actual = json.loads(view_response.insert_restaurant_page(request).content)
         self.assertDictEqual(self.expected3, actual)
 
-    def test_edit_restaurant(self):
+    @mock.patch('requests.get', side_effect=mocked_requests_get)
+    def test_insert_restaurant_invalid(self, mock_get):
+        """ Test if correct invalid fields are returned """
+        request = self.factory.post('/api/restaurant/insert/', self.expected4, content_type="application/json")
+        actual = json.loads(view_response.insert_restaurant_page(request).content)
+        expected = {'Invalid': ['cover_photo_url', 'logo_url']}
+        self.assertDictEqual(expected, actual)
+
+    def test_edit_restaurant_valid(self):
         """ Test if restaurant document is properly updated """
         id = Restaurant.objects.get(_id="111111111111111111111111")._id
         request = self.factory.post('/api/restaurant/edit/',
@@ -296,9 +382,18 @@ class RestaurantTestCases(TestCase):
                               cuisine='american', pricepoint='High', twitter='', instagram='',
                               bio='Finger licking good chicken',
                               GEO_location='{\'longitude\': 44.068203, \'latitude\':-114.742043}',
-                              external_delivery_link='https://docs.djangoproject.com/en/topics/testing/overview/',
-                              cover_photo_url='link', logo_url='link', rating='3.00',
-                              owner_name= 'Colonel Sanders',
-                              owner_story = 'i made chicken',
-                              owner_picture_url = 'https://www.imgur.com/image.jpg')
+                              external_delivery_link='http://link', cover_photo_url='http://link',
+                              logo_url='http://link', rating='3.00', owner_name='Colonel Sanders',
+                              owner_story='i made chicken', owner_picture_url='http://link')
         self.assertDictEqual(model_to_dict(actual), model_to_dict(expected))
+
+    def test_edit_restaurant_invalid(self):
+        """ Test if correct invalid fields are returned """
+        id = Restaurant.objects.get(_id="111111111111111111111111")._id
+        request = self.factory.post('/api/restaurant/edit/',
+                                    {"restaurant_id": "111111111111111111111111", "name": "kfc2",
+                                     "address": "211 Cambodia", "twitter": "invalid", "instagram": "http://invalid",
+                                     "rating": "1.00"}, content_type='application/json')
+        actual = json.loads(view_response.edit_restaurant_page(request).content)
+        expected = {'Invalid': ['twitter', 'instagram']}
+        self.assertDictEqual(actual, expected)

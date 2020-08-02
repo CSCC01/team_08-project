@@ -40,6 +40,7 @@ const routes: Routes = [
   { path: 'owner-edit', component: OwnerEditComponent },
   { path: 'restaurant-edit', component: RestaurantEditComponent },
   { path: 'checkout', component: CheckoutComponent },
+  { path: '**', redirectTo: '' },
 ];
 
 @NgModule({

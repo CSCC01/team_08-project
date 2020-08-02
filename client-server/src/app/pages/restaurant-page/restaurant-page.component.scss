@@ -10,6 +10,10 @@ mat-tab-group {
   @media screen and (max-width: 1500px) {
     margin: 75px;
   }
+
+  @media screen and (max-width: 700px) {
+    margin: 0;
+  }
 }
 
 ngb-alert {
@@ -143,7 +147,7 @@ ngb-alert {
 
 .owner-image {
   width: 300px;
-  height: 300px;
+  height: auto;
   margin-top: 5%;
   display: block;
   margin-left: auto;
@@ -151,7 +155,6 @@ ngb-alert {
 
   @media screen and (max-width: 900px) {
     width: 90%;
-    height: auto;
   }
 }
 
@@ -177,6 +180,23 @@ ngb-alert {
 }
 
 .editRestaurant:hover {
+  fa-icon {
+    color: $secondary-color;
+  }
+}
+
+.editHeader {
+  position: absolute;
+  top: 160px;
+  right: 2px;
+  height: 50px;
+
+  fa-icon {
+    color: white;
+  }
+}
+
+.editHeader:hover {
   fa-icon {
     color: $secondary-color;
   }

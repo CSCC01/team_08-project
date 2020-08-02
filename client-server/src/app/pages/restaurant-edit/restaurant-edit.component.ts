@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { RestaurantsService } from '../../service/restaurants.service';
 
 @Component({
@@ -13,9 +14,13 @@ export class RestaurantEditComponent implements OnInit {
   userId: string = '';
   role: string = '';
 
+  uploadForm: FormGroup;
+  newImage: boolean = false;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private formBuilder: FormBuilder,
     private restaurantsService: RestaurantsService
   ) {}
 
@@ -34,6 +39,10 @@ export class RestaurantEditComponent implements OnInit {
       .subscribe((data) => {
         this.restaurantDetails = data;
       });
+
+    this.uploadForm = this.formBuilder.group({
+      file: [''],
+    });
   }
 
   updateRestaurantInfo() {
@@ -68,11 +77,32 @@ export class RestaurantEditComponent implements OnInit {
       alert('Please enter all requried information about the restaurant!');
     } else {
       this.restaurantsService.editRestaurant(restaurantInfo);
+      if (this.newImage) {
+        this.onSubmit();
+      }
+
       this.router.navigate(['/restaurant']);
     }
   }
 
   cancel() {
     this.router.navigate(['/restaurant']);
+  }
+
+  onFileSelect(event) {
+    if (event.target.files.length > 0) {
+      this.newImage = true;
+      const file = event.target.files[0];
+      this.uploadForm.get('file').setValue(file);
+    }
+  }
+
+  onSubmit() {
+    const formData = new FormData();
+    formData.append('file', this.uploadForm.get('file').value);
+    this.restaurantsService
+      .uploadRestaurantMedia(formData, this.restaurantId, 'logo')
+      .subscribe((data) => {});
+    this.newImage = false;
   }
 }

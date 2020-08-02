@@ -1,6 +1,8 @@
 from bson import ObjectId
 from djongo import models
+from django.utils import timezone
 from restaurant.models import Food
+
 
 class Cart(models.Model):
     """ Model for a user's Cart in order dashboard """
@@ -12,7 +14,7 @@ class Cart(models.Model):
     send_tstmp = models.DateTimeField(blank=True, default=None)
     accept_tstmp = models.DateTimeField(blank=True, default=None)
     complete_tstmp = models.DateTimeField(blank=True, default=None)
-
+    num_items = models.IntegerField(default=0)
 
     @classmethod
     def new_cart(cls, restaurant_id, user_email):
@@ -28,24 +30,42 @@ class Cart(models.Model):
         cart.save()
         return cart
 
-    def add_to_total(self, food_id, count):
+    def add_to_total(self, price, count):
         """
         Calculates and changes the new total price for a cart
-        :param food_id: id of food item being added to cart
+        :param price: price of item going into cart
         :param count: number of food items to add to cart
         """
-        self.price = float(self.price) + (float(Food.objects.get(_id=ObjectId(food_id)).price) * count)
+        self.price = float(self.price) + (price * count)
         self.save(update_fields=["price"])
+
+    def update_num_items(self, amount):
+        """
+        Updates and changes total number of items in cart
+        :param amount: amount of items
+        """
+        self.num_items += amount
+        self.save(update_fields=['num_items'])
 
     # updates the send_timestamp of the given cart to now,
     # indicating that the cart has reached the RO
     def send_cart(self, cart_id):
-        pass
+        cart = Cart.objects.get(_id=cart_id)
+        if cart.accept_tstmp is None and cart.complete_tstmp is None and cart.send_tstmp is None:
+            cart.send_tstmp = timezone.now()
+            cart.save(update_fields=['send_tstmp'])
+            return cart
+        raise ValueError('Could not send order')
 
     # updates the accept_timestamp of the given cart to now,
     # indicating that the orders are being prepared by the RO
     def accept_cart(self, cart_id):
-        pass
+        cart = Cart.objects.get(_id=cart_id)
+        if cart.accept_tstmp is None and cart.complete_tstmp is None and cart.send_tstmp is not None:
+            cart.accept_tstmp = timezone.now()
+            cart.save(update_fields=['accept_tstmp'])
+            return cart
+        raise ValueError('Could not accept order')
 
     # updates the accept_decline_timestamp of the given cart to now
     # declines the given cart, indicating that the given cart has been declined by the RO
@@ -56,10 +76,16 @@ class Cart(models.Model):
     # note that when this timestamp is non-null it indicates the cart is CLOSED
     #   and can no longer be edited by the user
     def complete_cart(self, cart_id):
-        pass
+        cart = Cart.objects.get(_id=cart_id)
+        if cart.accept_tstmp is not None and cart.complete_tstmp is None and cart.send_tstmp is not None:
+            cart.complete_tstmp = timezone.now()
+            cart.save(update_fields=['complete_tstmp'])
+            return cart
+        else:
+            raise ValueError('Could not complete order')
 
     # gets the user's current active cart
-    def users_active_cart(cart_id):
+    def users_active_cart(self, cart_id):
         pass
 
 
@@ -83,9 +109,28 @@ class Item(models.Model):
         item.clean_fields()
         item.clean()
         item.save()
-        Cart.objects.get(_id=ObjectId(cart_id)).add_to_total(food_id, count)
+        cart = Cart.objects.get(_id=ObjectId(cart_id))
+        cart.add_to_total(float(Food.objects.get(_id=food_id).price), count)
+        cart.update_num_items(1)
         return item
 
-    # deletes an order
-    def delete_order(self):
+    @classmethod
+    def delete_order(cls):
         pass
+
+    @classmethod
+    def remove_item(cls, item_id):
+        """
+        Remove's count items from the cart
+        :param item_id: Identify item document
+        :param count: Amount to be removed
+        :return:
+        """
+
+        item = Item.objects.get(_id=item_id)
+        cart = Cart.objects.get(_id=item.cart_id)
+        cart.add_to_total(-float(Food.objects.get(_id=item.food_id).price), item.count)
+        cart.update_num_items(-1)
+        item.delete()
+        if cart.num_items == 0:
+            cart.delete()

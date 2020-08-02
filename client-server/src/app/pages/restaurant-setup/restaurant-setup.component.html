@@ -5,7 +5,7 @@
     page.
   </p>
   <div class="form-box">
-    <form>
+    <form [formGroup]="uploadForm" (ngSubmit)="upgradeUser()">
       <div class="form-group">
         <label for="restaurant-name" class="required">Restaurant Name</label>
         <input
@@ -104,9 +104,13 @@
       </div>
       <div class="row">
         <div class="form-group col-md-6">
-          <button class="btn logo-image">
-            + LOGO IMAGE
-          </button>
+          <label for="logo">Add logo image:</label>
+          <input
+            type="file"
+            name="logo"
+            id="logo"
+            (change)="onFileSelect($event)"
+          />
         </div>
       </div>
       <div class="form-group">

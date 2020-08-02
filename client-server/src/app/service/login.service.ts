@@ -8,6 +8,7 @@ import { environment } from '../../environments/environment';
 })
 export class LoginService {
   private static readonly AUTH_ENDPOINT = `${environment.endpoint_url}/user`;
+  private static readonly UPLOAD_ENDPOINT = `${environment.endpoint_url}/cloud_storage/upload/`;
 
   constructor(private http: HttpClient) {}
 
@@ -54,6 +55,16 @@ export class LoginService {
   @Output: Return True if user is in database, False otherwise
   Check if user exists in the database
   */
+  editUser(userData): void {
+    const endpoint = `${LoginService.AUTH_ENDPOINT}/edit/`;
+    this.http.post<any>(endpoint, userData).subscribe((data) => {});
+  }
+
+  /*
+  @Input: JSON object from auth
+  @Output: Return True if user is in database, False otherwise
+  Check if user exists in the database
+  */
   checkUserExists(userData): Observable<any> {
     const endpoint = `${LoginService.AUTH_ENDPOINT}/exists/`;
     const userObject = {
@@ -62,13 +73,13 @@ export class LoginService {
     return this.http.get(endpoint, { params: userObject });
   }
 
-  /*
-  @Input: JSON object from auth
-  @Output: Return True if user is in database, False otherwise
-  Check if user exists in the database
-  */
-  editUser(userData): void {
-    const endpoint = `${LoginService.AUTH_ENDPOINT}/edit/`;
-    this.http.post<any>(endpoint, userData).subscribe((data) => {});
+  uploadUserMedia(formData, id): Observable<any> {
+    const endpoint = `${LoginService.UPLOAD_ENDPOINT}`;
+
+    formData.append('save_location', 'picture');
+    formData.append('app', 'user_SDUserMedia');
+    formData.append('_id', id);
+
+    return this.http.post<any>(endpoint, formData);
   }
 }

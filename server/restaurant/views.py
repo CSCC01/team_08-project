@@ -94,6 +94,9 @@ def insert_dish_page(request):
     """Insert dish into database"""
     validate(instance=request.body, schema=food_schema)
     body = json.loads(request.body)
+    invalid = Food.field_validate(body)
+    if invalid is not None:
+        return JsonResponse(invalid)
     food = Food.add_dish(body)
     food._id = str(food._id)
     return JsonResponse(model_to_dict(food))
@@ -135,7 +138,11 @@ def get_all_restaurants_page(request):
 def insert_restaurant_page(request):
     """Insert new restaurant into database"""
     validate(instance=request.body, schema=restaurant_schema)
-    restaurant = Restaurant.insert(json.loads(request.body))
+    body = json.loads(request.body)
+    invalid = Restaurant.field_validate(body)
+    if invalid is not None:
+        return JsonResponse(invalid)
+    restaurant = Restaurant.insert(body)
     if restaurant is not None:
         restaurant._id = str(restaurant._id)
         return JsonResponse(model_to_dict(restaurant))
@@ -147,6 +154,9 @@ def edit_restaurant_page(request):
     """Update restaurant data"""
     validate(instance=request.body, schema=restaurant_schema)
     body = json.loads(request.body)
+    invalid = Restaurant.field_validate(body)
+    if invalid is not None:
+        return JsonResponse(invalid)
     restaurant = Restaurant.get(body["restaurant_id"])
     for field in body:
         if field in restaurant_editable:
@@ -171,6 +181,9 @@ def edit_dish_page(request):
     """Update Dish data"""
     validate(instance=request.body, schema=food_schema)
     body = json.loads(request.body)
+    invalid = Food.field_validate(body)
+    if invalid is not None:
+        return JsonResponse(invalid)
     dish = Food.objects.get(_id=body["_id"])
     for field in body:
         if field in dish_editable:
