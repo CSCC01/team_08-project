@@ -1,17 +1,27 @@
-<div class = "payment-page" data-aos="fade-up">
+<div class="payment-page">
   <div class="payment-box">
     <div class="payment-header">
-        <h2>Payment</h2>
-        <p>Please fill out the fields below and scroll to the 'Pay Now!' button to submit payment</p>
+      <h2>Payment</h2>
+      <p>
+        Please fill out the fields below and scroll to the 'Pay Now!' button to
+        submit payment
+      </p>
     </div>
     <form>
       <div class="cardInformation">
         <h4>Card Information</h4>
         <div class="input-group mb-3">
           <div class="input-group-prepend input-group-lg">
-            <span class="input-group-text input-addon" id="basic-addon1"><fa-icon class="payment-icons" [icon]="faCreditCard"></fa-icon> </span>
+            <span class="input-group-text input-addon" id="basic-addon1"
+              ><fa-icon class="payment-icons" [icon]="faCreditCard"></fa-icon>
+            </span>
           </div>
-          <input type="text" class="form-control" id="cardNumber" placeholder="Card Number (Ex: 1234 5678 9876 5432)">
+          <input
+            type="text"
+            class="form-control"
+            id="cardNumber"
+            placeholder="Card Number (Ex: 1234 5678 9876 5432)"
+          />
         </div>
         <div class="input-group mb-3">
           <div class="input-group-prepend input-group-lg">
@@ -19,26 +29,48 @@
               <fa-icon class="payment-icons" [icon]="faUser"></fa-icon>
             </span>
           </div>
-          <input type="text" aria-label="First name" class="form-control" placeholder="Cardholder First Name (Ex: Jane)">
-          <input type="text" aria-label="Last name" class="form-control" placeholder="Cardholder Last Name (Ex: Doe)">
+          <input
+            type="text"
+            aria-label="First name"
+            class="form-control"
+            placeholder="Cardholder First Name (Ex: Jane)"
+          />
+          <input
+            type="text"
+            aria-label="Last name"
+            class="form-control"
+            placeholder="Cardholder Last Name (Ex: Doe)"
+          />
         </div>
         <div class="input-group mb-3">
           <div class="input-group-prepend input-group-lg">
-            <span class="input-group-text input-addon" id="basic-addon1"><fa-icon class="payment-icons" [icon]="faCalendarAlt"></fa-icon>
+            <span class="input-group-text input-addon" id="basic-addon1"
+              ><fa-icon class="payment-icons" [icon]="faCalendarAlt"></fa-icon>
             </span>
           </div>
-          <input type="text" class="form-control" id="cardExpiry" placeholder="Card Expiry Date: MM/YY">
+          <input
+            type="text"
+            class="form-control"
+            id="cardExpiry"
+            placeholder="Card Expiry Date: MM/YY"
+          />
         </div>
         <div class="input-group mb-3">
           <div class="input-group-prepend input-group-lg">
-            <span class="input-group-text input-addon" id="basic-addon1"><fa-icon class="payment-icons" [icon]="faKey"></fa-icon>
+            <span class="input-group-text input-addon" id="basic-addon1"
+              ><fa-icon class="payment-icons" [icon]="faKey"></fa-icon>
             </span>
           </div>
-          <input type="text" class="form-control" id="cardCVV" placeholder="CVV (Ex: 123)">
+          <input
+            type="text"
+            class="form-control"
+            id="cardCVV"
+            placeholder="CVV (Ex: 123)"
+          />
         </div>
-    </div>
+      </div>
       <div class="billing">
-          <h4>Billing Information</h4>
+        <h4>Billing Information</h4>
       </div>
       <div class="input-group mb-3">
         <div class="input-group-prepend input-group-lg">
@@ -46,59 +78,104 @@
             <fa-icon class="payment-icons" [icon]="faUser"></fa-icon>
           </span>
         </div>
-        <input type="text" aria-label="First name" class="form-control" placeholder="First Name (Ex: Jane)">
-        <input type="text" aria-label="Last name" class="form-control" placeholder="Last Name (Ex: Doe)">
+        <input
+          type="text"
+          aria-label="First name"
+          class="form-control"
+          placeholder="First Name (Ex: Jane)"
+        />
+        <input
+          type="text"
+          aria-label="Last name"
+          class="form-control"
+          placeholder="Last Name (Ex: Doe)"
+        />
       </div>
       <div class="input-group mb-3">
         <div class="input-group-prepend input-group-lg">
-          <span class="input-group-text input-addon" id="basic-addon1"><fa-icon class="payment-icons" [icon]="faHome"></fa-icon> </span>
+          <span class="input-group-text input-addon" id="basic-addon1"
+            ><fa-icon class="payment-icons" [icon]="faHome"></fa-icon>
+          </span>
         </div>
-        <input type="text" class="form-control" id="billingHome" placeholder="Street Address (Ex: 1234 Main St)">
+        <input
+          type="text"
+          class="form-control"
+          id="billingHome"
+          placeholder="Street Address (Ex: 1234 Main St)"
+        />
       </div>
       <div class="input-group mb-3">
         <div class="input-group-prepend input-group-lg">
-          <span class="input-group-text input-addon" id="basic-addon1"><fa-icon class="payment-icons" [icon]="faBuilding"></fa-icon> </span>
+          <span class="input-group-text input-addon" id="basic-addon1"
+            ><fa-icon class="payment-icons" [icon]="faBuilding"></fa-icon>
+          </span>
         </div>
-        <input type="text" class="form-control" id="billingHomeTwo" placeholder="Street Address 2: (Apartment, studio, or floor)">
-      </div>    
+        <input
+          type="text"
+          class="form-control"
+          id="billingHomeTwo"
+          placeholder="Street Address 2: (Apartment, studio, or floor)"
+        />
+      </div>
       <div class="input-group mb-3">
         <div class="input-group-prepend input-group-lg">
-          <span class="input-group-text input-addon" id="basic-addon1"><fa-icon class="payment-icons" [icon]="faCity"></fa-icon> </span>
+          <span class="input-group-text input-addon" id="basic-addon1"
+            ><fa-icon class="payment-icons" [icon]="faCity"></fa-icon>
+          </span>
         </div>
-        <input type="text" class="form-control" id="billingCity" placeholder="City (Ex: Toronto)">
-      </div>   
-        <div class="form-row">
-          <div class="form-group col-md-6">
-            <label for="inputProvince">Province</label>
-            <select id="inputProvince" class="form-control">
-              <option selected>Choose...</option>
-              <option>Alberta</option>
-              <option>British Columbia</option>
-              <option>Maintoba</option>
-              <option>New Brunswick</option>
-              <option>Northwest Territories</option>
-              <option>Nova Scotia</option>
-              <option>Nunavut</option>
-              <option>Ontario</option>
-              <option>Price Edward Island</option>
-              <option>Quebec </option>
-              <option>Saskatchewan</option>
-            </select>
-          </div>
-          <div class="form-group col-md-6">
-            <label for="inputPostal">Postal Code</label>
-            <input type="text" class="form-control" id="inputPostal" placeholder="Ex: M1C 1A4">
-          </div>
+        <input
+          type="text"
+          class="form-control"
+          id="billingCity"
+          placeholder="City (Ex: Toronto)"
+        />
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="inputProvince">Province</label>
+          <select id="inputProvince" class="form-control">
+            <option selected>Choose...</option>
+            <option>Alberta</option>
+            <option>British Columbia</option>
+            <option>Maintoba</option>
+            <option>New Brunswick</option>
+            <option>Northwest Territories</option>
+            <option>Nova Scotia</option>
+            <option>Nunavut</option>
+            <option>Ontario</option>
+            <option>Price Edward Island</option>
+            <option>Quebec </option>
+            <option>Saskatchewan</option>
+          </select>
         </div>
-        <div class="form-group">
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="" id="termsAndConditions">
-                I Agree to terms and conditions.
-            </div>
-          </div>
-        <div class="submit">
-            <button class="btn btn-outline-secondary">Pay Now!</button>
+        <div class="form-group col-md-6">
+          <label for="inputPostal">Postal Code</label>
+          <input
+            type="text"
+            class="form-control"
+            id="inputPostal"
+            placeholder="Ex: M1C 1A4"
+          />
         </div>
+      </div>
+      <div class="form-group">
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            value=""
+            id="termsAndConditions"
+          />
+          I Agree to terms and conditions.
+        </div>
+      </div>
+      <div class="submit">
+        <button class="btn btn-outline-secondary">Pay Now!</button>
+      </div>
     </form>
   </div>
+  <img
+    class="bottom-left"
+    src="../../../assets/images/undraw_payments_21w6.png"
+  />
 </div>

@@ -14,6 +14,10 @@
   width: 50%;
   margin: auto;
   padding-bottom: 20px;
+
+  @media screen and (max-width: 1000px) {
+    width: 95%;
+  }
 }
 
 .no-orders-image {

@@ -21,6 +21,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 export class RestaurantPageComponent implements OnInit {
   restaurantId: string = '';
   role: string = '';
+  error: boolean = false;
 
   headerModalRef: any;
   uploadForm: FormGroup;
@@ -71,7 +72,14 @@ export class RestaurantPageComponent implements OnInit {
     this.role = sessionStorage.getItem('role');
 
     // generate restaurant page
-    this.loadRestaurant();
+    this.restaurantsService.getRestaurant(this.restaurantId).subscribe(
+      (data) => {
+        this.restaurantDetails = data;
+      },
+      (error) => {
+        this.error = true;
+      }
+    );
 
     // generate restaurant menu
     this.restaurantsService
@@ -100,14 +108,6 @@ export class RestaurantPageComponent implements OnInit {
       el2.classList.add('col-md-5');
       el3.classList.add('row');
     }
-  }
-
-  loadRestaurant() {
-    this.restaurantsService
-      .getRestaurant(this.restaurantId)
-      .subscribe((data) => {
-        this.restaurantDetails = data;
-      });
   }
 
   viewTimeline() {

@@ -137,17 +137,28 @@ class SDUserTestCases(TestCase):
         actual = response.content
         self.assertJSONEqual(actual, expected)
 
-    def test_edit_user(self):
+    def test_edit_user_valid(self):
         """ Test if user document is properly updated """
         request = self.factory.post('/api/user/edit/',
-                                    {"name": "Tester2", "picture": "picE2",
+                                    {"name": "Tester2",
                                      "email": "E@mail.com", "role": "RO", "address": "101 Road",
                                      "phone": 4162139000, "GEO_location": "{'lat': '28.90054', 'long': '-81.26367'}"},
                                     content_type='application/json')
         actual = edit_user_page(request).content
-        expected = {"nickname": "TesterE", "name": "Tester2", "picture": "picE2",
+        expected = {"nickname": "TesterE", "name": "Tester2", "picture": "picE",
                     "last_updated": "2020-06-26T14:07:39.888Z",
                     "email": "E@mail.com", "email_verified": True, "role": "BU",
                     "restaurant_id": None, "birthday": None, "address": "101 Road",
                     "phone": 4162139000, "GEO_location": "{'lat': '28.90054', 'long': '-81.26367'}"}
+        self.assertJSONEqual(actual, expected)
+
+    def test_edit_user_invalid(self):
+        """ Test if invalid fields are returned """
+        request = self.factory.post('/api/user/edit/',
+                                    {"name": "Tester2", "picture": "picE2",
+                                     "email": "E@mail.com", "role": "RO", "address": "101 Road",
+                                     "phone": 416213900, "GEO_location": "{'lat': '28.90054', 'long': '-81.26367'}"},
+                                    content_type='application/json')
+        actual = edit_user_page(request).content
+        expected = {"Invalid": ['picture', 'phone']}
         self.assertJSONEqual(actual, expected)

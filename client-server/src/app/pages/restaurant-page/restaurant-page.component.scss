@@ -10,6 +10,10 @@ mat-tab-group {
   @media screen and (max-width: 1500px) {
     margin: 75px;
   }
+
+  @media screen and (max-width: 700px) {
+    margin: 0;
+  }
 }
 
 ngb-alert {

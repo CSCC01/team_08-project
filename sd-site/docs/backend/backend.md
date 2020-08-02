@@ -93,6 +93,12 @@ This section will go over all the backends components of the Scarborough Dining 
     FR = "Food Restriction"
     CU = "Cuisine"
     DI = "Dish"
+    
+###### Order States (Enum)
+
+    acc = "accept_cart"
+    cmt = "complete_cart"
+    snd = "send_cart"
 
 #### Timeline
 
@@ -149,6 +155,9 @@ This section will go over all the backends components of the Scarborough Dining 
 |      /timeline/comment/get/         | \_id                                                                                                                                                                               |                                                                                    | GET  | Retrieves comment data                                       |
 |      /order/cart/insert/            | restaurant_id, user_email                                                                                                                                                          |                                                                                    | POST | Add cart to database                                         |
 |      /order/item/insert/            | cart_id, food_id, count                                                                                                                                                            |                                                                                    | POST | Add item to database and change cart price accordingly       |
+|      /order/update_status/          | _id, status (snd, cmt, acc)                                                                                                                                                        |                                                                                    | POST | Update status of given cart                                  |                                                                                                                         |      
+|      /order/item/remove/            | item_id                                                                                                                                                                            |                                                                                    | POST | Remove item from db and update cart price (remove cart if last)|                            
+
 
 All requests should be sent in a JSON format. Optional parameters can be left blank Ex: {"Role" : ""}. Bolded Fields can be omitted entirely.
 

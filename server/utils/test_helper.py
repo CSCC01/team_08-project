@@ -1,7 +1,4 @@
-import json
-from django.forms import model_to_dict
 from django.http import QueryDict
-from .encoder import BSONEncoder
 
 
 # Test case utilities
@@ -18,3 +15,19 @@ class TestHelper:
         request.POST.update(post)
         request.POST._mutable = False
         return request
+
+
+class MockModule:
+
+    # save original and mock value
+    def __init__(self, var, mock_obj):
+        self.var = var
+        self.mock_obj = mock_obj
+
+    # replace original value with mock
+    def mock(self):
+        return self.mock_obj
+
+    # replace mock value with mock
+    def undo(self):
+        return self.var

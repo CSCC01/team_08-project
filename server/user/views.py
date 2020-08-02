@@ -75,6 +75,9 @@ def edit_user_page(request):
     """Update User data"""
     validate(instance=request.body, schema=signup_schema)
     body = json.loads(request.body)
+    invalid = SDUser.field_validate(body)
+    if invalid is not None:
+        return JsonResponse(invalid)
     user = SDUser.objects.get(email=body["email"])
     del body['email']
     for field in body:
