@@ -272,8 +272,4 @@ All media uploads use the same endpoint. However the input form decides where th
   user_SDUserMedia              | file, save_location, email | api/cloud_storage/upload/ | picture                                      |
   
 ![image info](./examples/example1.PNG)
-         |
-  user_SDUserMedia              | file, save_location, email | api/cloud_storage/upload/ | picture                                      |
-  
-![image info](./examples/example1.PNG)
  
