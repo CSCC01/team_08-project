@@ -64,7 +64,6 @@ export class ProfileComponent implements OnInit {
     } else {
       this.loginService.editUser(userInfo);
       this.modalRef.close();
-      // window.location.reload();
     }
   }
 }
