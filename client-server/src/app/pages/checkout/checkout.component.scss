@@ -1,0 +1,24 @@
+@import "src/styles";
+
+.order-box {
+  background: hsl(0, 0%, 96%);
+  border: 1px solid #dddddd;
+  box-sizing: border-box;
+  border-radius: 10px;
+  text-align: center;
+  margin: 40px auto 40px auto;
+  width: 900px;
+  padding: 20px 20px 20px 20px;
+}
+
+.total {
+  font-size: 25px;
+  font-style: normal;
+  font-weight: normal;
+  margin-bottom: 10px;
+}
+
+.place-order {
+  width: 200px;
+  border-radius: 10px;
+}

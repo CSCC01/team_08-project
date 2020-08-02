@@ -1,0 +1,61 @@
+@import "src/styles";
+
+.cardBox {
+  width: 700px;
+  height: 126px;
+  flex: 0 0 auto;
+  border-radius: 10px;
+  background-color: white;
+  margin: 40px auto 40px auto;
+  @media screen and (max-width: 1300px) {
+    height: 50%;
+  }
+}
+
+.dish-photo {
+  width: 185px;
+  height: 125px;
+  display: block;
+  left: 0%;
+  top: 0%;
+  bottom: 0%;
+  border-radius: 10px 0px 0px 10px;
+  object-fit: cover;
+
+  @media screen and (max-width: 1300px) {
+    width: 100%;
+  }
+}
+
+.info-body {
+  height: 125px;
+  text-align: left;
+
+  @media screen and (max-width: 1300px) {
+    height: 50%;
+  }
+}
+
+.number-picker {
+  width: 150px;
+  right: 50px;
+  margin: auto;
+
+  @media screen and (max-width: 1300px) {
+    height: 50%;
+  }
+}
+
+.info {
+  font-size: 20px;
+  margin: 10px 0px 15px 0px;
+  font-weight: bold;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.total {
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  margin: 10px 0px 10px 0px;
+  font-size: 16px;
+  line-height: 18px;
+}
