@@ -47,7 +47,7 @@ class Cart(models.Model):
             cart.send_tstmp = timezone.now()
             cart.save(update_fields=['send_tstmp'])
             return cart
-        return None
+        raise ValueError('Could not send order')
 
     # updates the accept_timestamp of the given cart to now,
     # indicating that the orders are being prepared by the RO
@@ -57,7 +57,7 @@ class Cart(models.Model):
             cart.accept_tstmp = timezone.now()
             cart.save(update_fields=['accept_tstmp'])
             return cart
-        return None
+        raise ValueError('Could not accept order')
 
     # updates the accept_decline_timestamp of the given cart to now
     # declines the given cart, indicating that the given cart has been declined by the RO
@@ -73,7 +73,8 @@ class Cart(models.Model):
             cart.complete_tstmp = timezone.now()
             cart.save(update_fields=['complete_tstmp'])
             return cart
-        return None
+        else:
+            raise ValueError('Could not complete order')
 
     # gets the user's current active cart
     def users_active_cart(self, cart_id):

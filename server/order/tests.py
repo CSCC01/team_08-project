@@ -177,7 +177,7 @@ class CartStatusCases(TestCase):
         }, content_type='application/json')
 
         actual = view_response.update_status_page(request).content.decode("utf-8")
-        self.assertEqual(str(actual), 'Cannot update order status')
+        self.assertEqual(str(actual), 'Could not complete order')
 
     def test_invalid_form(self):
         """Test if appropriate error response is sent upon invalid status"""
@@ -187,4 +187,4 @@ class CartStatusCases(TestCase):
         }, content_type='application/json')
 
         actual = view_response.update_status_page(request).content.decode("utf-8")
-        self.assertEqual(str(actual), 'invalid request')
+        self.assertEqual(str(actual), 'Invalid request, please use check your request')

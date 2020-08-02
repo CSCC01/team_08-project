@@ -50,12 +50,12 @@ def update_status_page(request):
     body = json.loads(request.body)
     for status in OrderStates:
         if status.name == body['status']:
-            cart = getattr(Cart, status.value)(Cart, body['_id'])
-            if cart:
+            try:
+                cart = getattr(Cart, status.value)(Cart, body['_id'])
                 return JsonResponse(json.loads(json.dumps(model_to_dict(cart), cls=BSONEncoder)))
-            else:
-                return HttpResponseBadRequest('Cannot update order status')
-    return HttpResponseBadRequest('invalid request')
+            except ValueError as error:
+                return HttpResponseBadRequest(str(error))
+    return HttpResponseBadRequest('Invalid request, please use check your request')
 
 
 def insert_item_page(request):
