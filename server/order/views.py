@@ -90,3 +90,10 @@ def edit_item_amount_page(request):
         if not type(responsemessage[entry]) == dict:
             responsemessage[entry] = model_to_dict(responsemessage[entry])
     return JsonResponse(json.loads(json.dumps(responsemessage, cls=BSONEncoder)))
+
+def get_items_by_cart_page(request):
+    """Get all tiems associated with a given cart"""
+    body = json.loads(request.body)
+    items = Item.get_items_by_cart(body['cart_id'])
+    items = [model_to_dict(item) for item in items]
+    return JsonResponse(json.loads(json.dumps({'items': items}, cls=BSONEncoder)))

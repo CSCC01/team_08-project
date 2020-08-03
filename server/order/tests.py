@@ -21,6 +21,7 @@ class CartTestCases(TestCase):
         self.f1 = Food.objects.create(name="foodA", restaurant_id='mock',
                                       description="chicken", picture="picA",
                                       price='10.99')
+        self.i = Item.objects.create(cart_id=self.c1._id, food_id=self.f1._id, count=2)
 
     def test_insert_cart(self):
         """ Test if cart document is inserted into the database """
@@ -55,6 +56,9 @@ class CartTestCases(TestCase):
         expected = {"_id": str(Item.objects.get(cart_id=str(self.c1._id))._id),
                     "cart_id": str(self.c1._id), "food_id": str(self.f1._id), "count": 2}
         self.assertDictEqual(actual, expected)
+
+    def test_get_items_by_cart(self):
+        
 
 class CartStatusCases(TestCase):
 

@@ -160,4 +160,7 @@ class Item(models.Model):
         else:
             cls.remove_item(item_id)
             return {'item': {}}
-        
+
+    @classmethod
+    def get_items_by_cart(cls, cart_id):
+        return list(Item.objects.filter(cart_id=cart_id))
