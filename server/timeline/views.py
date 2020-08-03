@@ -134,4 +134,4 @@ def get_comment_data_page(request):
     comment._id = str(comment._id)
     comment.likes = list(map(str, comment.likes))
     return JsonResponse({'_id': comment._id, 'post_id': comment.post_id, 'user_email': comment.user_email,
-                         'likes': comment.likes, 'content': comment.content, 'Timestamp': comment.Timestamp})
+                         'likes': comment.likes, 'content': comment.content, 'Timestamp': comment.Timestamp.strftime("%b %d, %Y %H:%M")})
