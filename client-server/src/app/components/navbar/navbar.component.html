@@ -84,28 +84,29 @@
           CART
         </a>
       </li>
+    </ul>
+    <ul class="navbar-nav">
       <li *ngIf="role == 'BU'" class="nav-item nav-link">
         <p class="nav-link address" *ngIf="this.userAddress">
-          {{ this.userAddress | titlecase }}
           <fa-icon class="address-icon icon" [icon]="faMapMarkerAlt"></fa-icon>
+          {{ this.userAddress | titlecase }}
         </p>
         <p class="nav-link address" *ngIf="!this.userAddress">
           No Address Provided
           <fa-icon class="address-icon icon" [icon]="faMapMarkerAlt"></fa-icon>
         </p>
       </li>
-    </ul>
-    <ul class="navbar-nav">
-      <button
-        type="button"
-        class="upgrade-button"
-        *ngIf="auth.loggedIn && role == 'BU'"
-        (click)="openModal(content)"
-      >
-        Upgrade to Restaurant Account
-      </button>
-
-      <li class="nav-item">
+      <li class="nav-item nav-link">
+        <button
+          type="button"
+          class="upgrade-button"
+          *ngIf="auth.loggedIn && role == 'BU'"
+          (click)="openModal(content)"
+        >
+          Upgrade to Restaurant Account
+        </button>
+      </li>
+      <li class="nav-item nav-link">
         <a (click)="auth.login()" *ngIf="!auth.loggedIn" class="nav-link">
           LOG IN
         </a>
