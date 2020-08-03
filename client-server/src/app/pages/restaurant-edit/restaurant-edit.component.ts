@@ -46,7 +46,6 @@ export class RestaurantEditComponent implements OnInit {
   }
 
   updateRestaurantInfo() {
-    // Extract form inputs from the user
     var restaurantInfo = {
       restaurant_id: this.restaurantId,
       name: (<HTMLInputElement>document.getElementById('restaurant-name'))

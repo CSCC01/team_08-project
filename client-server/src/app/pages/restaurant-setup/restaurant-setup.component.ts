@@ -52,9 +52,11 @@ export class RestaurantSetupComponent implements OnInit {
       bio: (<HTMLInputElement>document.getElementById('restaurant-bio')).value,
       twitter: (<HTMLInputElement>document.getElementById('twitter')).value,
       instagram: (<HTMLInputElement>document.getElementById('instagram')).value,
-      GEO_location: 'blank',
-      external_delivery_link: 'blank',
+      external_delivery_link: (<HTMLInputElement>(
+        document.getElementById('external-delivery')
+      )).value,
       rating: '0.00',
+      GEO_location: 'blank',
     };
 
     if (

@@ -120,6 +120,13 @@
           <div class="media-icons">
             <fa-icon class="media-icon" [icon]="faHeartLine"></fa-icon>
             <a
+              *ngIf="restaurantDetails.external_delivery_link != ''"
+              href="{{ restaurantDetails.external_delivery_link }}"
+              target="_blank"
+            >
+              <fa-icon class="media-icon" [icon]="faShippingFast"></fa-icon>
+            </a>
+            <a
               *ngIf="restaurantDetails.instagram != ''"
               href="{{ restaurantDetails.instagram }}"
               target="_blank"
