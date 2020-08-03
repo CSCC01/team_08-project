@@ -4,7 +4,12 @@
 
 export const environment = {
   production: false,
+  site_url: 'https://localhost:4200',
   endpoint_url: 'http://localhost:8000/api',
+  mapbox: {
+    accessToken:
+      'pk.eyJ1Ijoic2NkaW5pbmciLCJhIjoiY2tkN2dxOHF1MWpheDM2a2Nlb3k1OThkbyJ9.TxgXofPlbE5PkSV4AG_vGw',
+  },
 };
 
 /*

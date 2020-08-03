@@ -41,9 +41,11 @@ import { TimelinePostComponent } from './components/timeline-post/timeline-post.
 import { TimelineComponent } from './pages/timeline/timeline.component';
 import { OwnerEditComponent } from './pages/owner-edit/owner-edit.component';
 import { RestaurantEditComponent } from './pages/restaurant-edit/restaurant-edit.component';
+import { MapComponent } from './components/map/map.component';
 import { CheckoutComponent } from './pages/checkout/checkout.component';
 import { PageErrorComponent } from './components/page-error/page-error.component';
 import { CartCardComponent } from './components/cart-card/cart-card.component';
+import { FavouritesComponent } from './pages/favourites/favourites.component';
 
 @NgModule({
   declarations: [
@@ -72,9 +74,11 @@ import { CartCardComponent } from './components/cart-card/cart-card.component';
     TimelineComponent,
     OwnerEditComponent,
     RestaurantEditComponent,
+    MapComponent,
     CheckoutComponent,
     CartCardComponent,
     PageErrorComponent,
+    FavouritesComponent,
   ],
   imports: [
     BrowserModule,
