@@ -50,6 +50,11 @@
           TIMELINE
         </a>
       </li>
+      <li class="nav-item nav-link" *ngIf="role != 'RO'">
+        <a routerLinkActive="active" class="nav-link" (click)="owners()">
+          CHEFS
+        </a>
+      </li>
       <li *ngIf="role == 'BU'" class="nav-item nav-link">
         <a routerLink="checkout" routerLinkActive="active" class="nav-link">
           CART

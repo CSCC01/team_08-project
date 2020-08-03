@@ -75,6 +75,14 @@ export class NavbarComponent implements OnInit, AfterViewInit {
     });
   }
 
+  owners() {
+    this.router.navigate(['/all-owners']).then(() => {
+      setTimeout(function () {
+        window.location.reload();
+      }, 100);
+    });
+  }
+
   favourites() {
     this.router.navigate(['/favourites']).then(() => {
       setTimeout(function () {
