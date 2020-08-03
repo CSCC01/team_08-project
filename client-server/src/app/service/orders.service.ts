@@ -16,7 +16,7 @@ export class OrdersService {
   @Output: 
   */
   insertCart(restaurantId, email): Observable<any> {
-    const endpoint = `${OrdersService.ORDER_ENDPOINT}/signup/`;
+    const endpoint = `${OrdersService.ORDER_ENDPOINT}/cart/insert/`;
     const obj = {
       restaurant_id: restaurantId,
       user_email: email,
@@ -29,11 +29,23 @@ export class OrdersService {
   @Output: 
   */
   insertItem(cartId, foodId, count): Observable<any> {
-    const endpoint = `${OrdersService.ORDER_ENDPOINT}/signup/`;
+    const endpoint = `${OrdersService.ORDER_ENDPOINT}/item/insert/`;
     const obj = {
       cart_id: cartId,
       food_id: foodId,
       count: count,
+    };
+    return this.http.post<any>(endpoint, obj);
+  }
+
+  /*
+  @Input: 
+  @Output: 
+  */
+  removeItem(itemId): Observable<any> {
+    const endpoint = `${OrdersService.ORDER_ENDPOINT}/item/remove/`;
+    const obj = {
+      item_id: itemId,
     };
     return this.http.post<any>(endpoint, obj);
   }
