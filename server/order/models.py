@@ -67,10 +67,18 @@ class Cart(models.Model):
             return cart
         raise ValueError('Could not accept order')
 
-    # updates the accept_decline_timestamp of the given cart to now
-    # declines the given cart, indicating that the given cart has been declined by the RO
+    # updates the complete_timestamp of the given cart to now
+    # cancels the given cart, indicating that the given cart has been declined by the RO
     def decline_cart(self, cart_id):
-        pass
+        cart = Cart.objects.get(_id = cart_id)
+        if cart.accept_tstmp is None and cart.complete_tstmp is None and cart.send_tstmp is not None:
+            cart.complete_tstmp = timezone.now()
+            cart.is_cancelled = True
+            cart.clean_fields()
+            cart.clean()
+            cart.save(update_fields=['accept_tstmp', 'is_cancelled'])
+            return cart
+        raise ValueError('Could not decline order')
 
     # updates the complete_timestamp of the given cart
     # note that when this timestamp is non-null it indicates the cart is CLOSED

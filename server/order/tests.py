@@ -8,10 +8,10 @@ from django.forms import model_to_dict
 from order import models
 from datetime import datetime
 import pytz
-from utils.test_helper import MockModule
+from utils.stubs.test_helper import MockModule
 from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
-
+from utils.stubs.datetime_stub import mockdatetime
 
 class CartTestCases(TestCase):
 
@@ -79,6 +79,16 @@ class CartStatusCases(TestCase):
             "price": "0.00", "is_cancelled": False, "send_tstmp": self.time,
             "accept_tstmp": self.time, "complete_tstmp": None}
                                          )
+        self.cart4 = Cart.objects.create(**{
+            "restaurant_id": "111111111111111111111112", "user_email": "tester@mail.com",
+            "price":"0.00", "is_cancelled": False, "send_tstmp": self.time,
+            "accept_tstmp": None, "complete_tstmp": None
+        })
+        self.cart5 = Cart.objects.create(**{
+            "restaurant_id": "111111111111111111111113", "user_email": "tester@mail.com",
+            "price":"0.00", "is_cancelled": False, "send_tstmp": None,
+            "accept_tstmp": None, "complete_tstmp": None
+        })
         self.factory = RequestFactory()
 
     def test_send(self):
@@ -90,13 +100,8 @@ class CartStatusCases(TestCase):
 
         time = self.time
 
-        # mock class for datetime
-        class mockdate:  # mock datetime
-            def now(self):
-                return time
-
         # setup mock
-        mock = MockModule(models.timezone, mockdate())
+        mock = MockModule(models.timezone, mockdatetime(time))
         models.timezone = mock.mock()
 
         # setup actual, expected with mocked views
@@ -119,13 +124,8 @@ class CartStatusCases(TestCase):
 
         time = self.time
 
-        # mock class for datetime
-        class mockdate:  # mock datetime
-            def now(self):
-                return time
-
         # setup mock
-        mock = MockModule(models.timezone, mockdate())
+        mock = MockModule(models.timezone, mockdatetime(time))
         models.timezone = mock.mock()
 
         # setup actual, expected with mocked views
@@ -149,13 +149,8 @@ class CartStatusCases(TestCase):
 
         time = self.time
 
-        # mock class for datetime
-        class mockdate:  # mock datetime
-            def now(self):
-                return time
-
         # setup mock
-        mock = MockModule(models.timezone, mockdate())
+        mock = MockModule(models.timezone, mockdatetime(time))
         models.timezone = mock.mock()
 
         # setup actual, expected with mocked views
@@ -169,6 +164,48 @@ class CartStatusCases(TestCase):
 
         self.assertDictEqual(expected, actual)
 
+    def test_decline(self):
+        """Test if declining a cart works"""
+        request = self.factory.post('api/order/cart/decline/', {
+            '_id': str(self.cart4._id),
+        }, content_type='application/json')
+
+        time = self.time
+
+        #mock timezone
+        mock = MockModule(models.timezone, mockdatetime(time))
+        models.timezone = mock.mock()
+
+        response = view_response.decline_cart_page(request)
+        actual = json.loads(response.content)
+        expected = json.loads(json.dumps(model_to_dict(self.cart4), cls=BSONEncoder))
+        expected['complete_tstmp'] = self.time_str
+        expected['is_cancelled'] = True
+
+        models.timezone = mock.undo()
+
+        self.assertDictEqual(expected, actual)
+
+    def test_decline_fail(self):
+        """Test if invalid carts are fail to decline properly"""
+        request = self.factory.post('api/order/cart/decline/', {
+            '_id': str(self.cart5._id),
+        }, content_type='application/json')
+
+        time = self.time
+
+        #mock timezone
+        mock = MockModule(models.timezone, mockdatetime(time))
+        models.timezone = mock.mock()
+
+        response = view_response.decline_cart_page(request)
+        actual = response.content.decode('utf-8')
+        expected = 'Could not decline order'
+
+
+        models.timezone = mock.undo()
+
+        self.assertEqual(expected, str(actual))
 
     def test_order_fail(self):
         """Test is appropriate error response is sent upon invalid order"""
@@ -188,7 +225,7 @@ class CartStatusCases(TestCase):
         }, content_type='application/json')
 
         actual = view_response.update_status_page(request).content.decode("utf-8")
-        self.assertEqual(str(actual), 'Invalid request, please use check your request')
+        self.assertEqual(str(actual), 'Invalid request, please check your request')
 
 class CartRemoveTestCases(TestCase):
 

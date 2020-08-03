@@ -62,8 +62,18 @@ def update_status_page(request):
                 return JsonResponse(json.loads(json.dumps(model_to_dict(cart), cls=BSONEncoder)))
             except ValueError as error:
                 return HttpResponseBadRequest(str(error))
-    return HttpResponseBadRequest('Invalid request, please use check your request')
+    return HttpResponseBadRequest('Invalid request, please check your request')
 
+def decline_cart_page(request):
+    """Decline a cart which has been sent by a user"""
+    validate(instance=request.body, schema=cart_schema)
+    body = json.loads(request.body)
+    try:
+        cart = Cart.decline_cart(Cart, cart_id= body['_id'])
+        return JsonResponse(json.loads(json.dumps(model_to_dict(cart), cls=BSONEncoder)))
+    except ValueError as error:
+        return HttpResponseBadRequest(str(error))
+    return HttpResponseBadRequest('Invalid request, please check your request')
 
 
 def insert_item_page(request):
