@@ -25,7 +25,7 @@ export class AllOwnersComponent implements OnInit {
           profile_pic: data.Restaurants[i].owner_picture_url,
           bio: data.Restaurants[i].bio,
           restaurant: data.Restaurants[i].name,
-          url: '/',
+          _id: data.Restaurants[i]._id,
         };
       }
     });

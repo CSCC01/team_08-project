@@ -1,14 +1,17 @@
 <div class="owner-page">
   <div class="owner-listings-box">
     <h2>Scarborough Dining Owners</h2>
+    <p>Meet the faces of Scarborough Dining and their culinary story</p>
     <div class="row">
-      <div class="col-md-2"></div>
-      <div class="col-md-8">
+      <div class="col-md-1"></div>
+      <div class="col-md-10">
         <div class="row equal">
-          <app-owner-card [story]="this.story"></app-owner-card>
+          <div *ngFor="let story of this.allStories" class="col-sm-6 d-flex">
+            <app-owner-card [story]="story"></app-owner-card>
+          </div>
         </div>
       </div>
-      <div class="col-md-2"></div>
+      <div class="col-md-1"></div>
     </div>
   </div>
 </div>
