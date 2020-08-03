@@ -1,6 +1,9 @@
 import { Component, OnInit, HostListener, AfterViewInit } from '@angular/core';
 import { AuthService } from '../../auth/auth.service';
-import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
+import {
+  faUserCircle,
+  faMapMarkerAlt,
+} from '@fortawesome/free-solid-svg-icons';
 import { LoginService } from '../../service/login.service';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -21,6 +24,7 @@ export class NavbarComponent implements OnInit, AfterViewInit {
   modalRef: any;
 
   faUserCircle = faUserCircle;
+  faMapMarkerAlt = faMapMarkerAlt;
   userRole: any;
 
   constructor(

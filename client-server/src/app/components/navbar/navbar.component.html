@@ -45,25 +45,21 @@
           RESTAURANT PAGE
         </a>
       </li>
-      <li class="nav-item nav-link" *ngIf="auth.loggedIn">
+      <li class="nav-item nav-link" *ngIf="auth.loggedIn && role == 'BU'">
         <div ngbDropdown class="d-inline-block">
           <button class="btn dropdown" id="dropdownBasic1" ngbDropdownToggle>
             BROWSE
           </button>
           <div ngbDropdownMenu aria-labelledby="dropdownBrowse">
-            <div *ngIf="role != 'RO'">
-              <button ngbDropdownItem (click)="browse()">
-                Restaurants
-              </button>
-            </div>
+            <button ngbDropdownItem (click)="browse()">
+              Restaurants
+            </button>
             <button ngbDropdownItem (click)="timeline()">
               Timeline
             </button>
-            <div *ngIf="role != 'RO'">
-              <button ngbDropdownItem (click)="owners()">
-                Chefs
-              </button>
-            </div>
+            <button ngbDropdownItem (click)="owners()">
+              Chefs
+            </button>
           </div>
         </div>
       </li>
@@ -73,7 +69,7 @@
           BROWSE
         </a>
       </li>
-      <li class="nav-item nav-link" *ngIf="!auth.loggedIn">
+      <li class="nav-item nav-link" *ngIf="!auth.loggedIn || role == 'RO'">
         <a routerLinkActive="active" class="nav-link" (click)="timeline()">
           TIMELINE
         </a>
@@ -89,8 +85,13 @@
         </a>
       </li>
       <li *ngIf="role == 'BU'" class="nav-item nav-link">
-        <p class="nav-link address">
+        <p class="nav-link address" *ngIf="this.userAddress">
           {{ this.userAddress | titlecase }}
+          <fa-icon class="address-icon icon" [icon]="faMapMarkerAlt"></fa-icon>
+        </p>
+        <p class="nav-link address" *ngIf="!this.userAddress">
+          No Address Provided
+          <fa-icon class="address-icon icon" [icon]="faMapMarkerAlt"></fa-icon>
         </p>
       </li>
     </ul>
