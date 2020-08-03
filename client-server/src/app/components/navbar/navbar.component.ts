@@ -47,7 +47,6 @@ export class NavbarComponent implements OnInit, AfterViewInit {
     this.role = sessionStorage.getItem('role');
     this.userId = sessionStorage.getItem('userId');
     this.userAddress = sessionStorage.getItem('userAddress');
-    console.log(this.userAddress);
   }
 
   ngAfterViewInit(): void {
