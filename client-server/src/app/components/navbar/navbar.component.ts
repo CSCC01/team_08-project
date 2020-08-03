@@ -16,6 +16,7 @@ export class NavbarComponent implements OnInit, AfterViewInit {
   restaurantId: string = '';
   role: string = '';
   userId: string = '';
+  userAddress: string = '';
 
   modalRef: any;
 
@@ -41,6 +42,8 @@ export class NavbarComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.role = sessionStorage.getItem('role');
     this.userId = sessionStorage.getItem('userId');
+    this.userAddress = sessionStorage.getItem('userAddress');
+    console.log(this.userAddress);
   }
 
   ngAfterViewInit(): void {

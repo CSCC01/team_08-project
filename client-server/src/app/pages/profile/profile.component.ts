@@ -51,6 +51,7 @@ export class ProfileComponent implements OnInit {
       birthday: (<HTMLInputElement>document.getElementById('dateOfBirth'))
         .value,
     };
+    sessionStorage.setItem('userAddress', userInfo.address);
 
     if (userInfo.birthday == '') {
       userInfo.birthday = null;

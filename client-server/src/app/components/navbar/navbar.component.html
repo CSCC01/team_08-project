@@ -45,17 +45,40 @@
           RESTAURANT PAGE
         </a>
       </li>
-      <li class="nav-item nav-link" *ngIf="role != 'RO'">
+      <li class="nav-item nav-link" *ngIf="auth.loggedIn">
+        <div ngbDropdown class="d-inline-block">
+          <button class="btn dropdown" id="dropdownBasic1" ngbDropdownToggle>
+            BROWSE
+          </button>
+          <div ngbDropdownMenu aria-labelledby="dropdownBrowse">
+            <div *ngIf="role != 'RO'">
+              <button ngbDropdownItem (click)="browse()">
+                Restaurants
+              </button>
+            </div>
+            <button ngbDropdownItem (click)="timeline()">
+              Timeline
+            </button>
+            <div *ngIf="role != 'RO'">
+              <button ngbDropdownItem (click)="owners()">
+                Chefs
+              </button>
+            </div>
+          </div>
+        </div>
+      </li>
+
+      <li class="nav-item nav-link" *ngIf="!auth.loggedIn">
         <a routerLinkActive="active" class="nav-link" (click)="browse()">
           BROWSE
         </a>
       </li>
-      <li class="nav-item nav-link">
+      <li class="nav-item nav-link" *ngIf="!auth.loggedIn">
         <a routerLinkActive="active" class="nav-link" (click)="timeline()">
           TIMELINE
         </a>
       </li>
-      <li class="nav-item nav-link" *ngIf="role != 'RO'">
+      <li class="nav-item nav-link" *ngIf="!auth.loggedIn">
         <a routerLinkActive="active" class="nav-link" (click)="owners()">
           CHEFS
         </a>
@@ -64,6 +87,11 @@
         <a routerLink="checkout" routerLinkActive="active" class="nav-link">
           CART
         </a>
+      </li>
+      <li *ngIf="role == 'BU'" class="nav-item nav-link">
+        <p class="nav-link address">
+          {{ this.userAddress | titlecase }}
+        </p>
       </li>
     </ul>
     <ul class="navbar-nav">

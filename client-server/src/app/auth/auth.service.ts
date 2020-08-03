@@ -130,6 +130,7 @@ export class AuthService {
               sessionStorage.setItem('role', this.role);
               sessionStorage.setItem('restaurantId', this.restaurantId);
               sessionStorage.setItem('userId', this.userId);
+              sessionStorage.setItem('userAddress', data.address);
             });
           } else {
             user.role = 'BU';

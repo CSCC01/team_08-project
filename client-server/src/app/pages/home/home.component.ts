@@ -103,6 +103,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     if (this.userId.length > 0 && this.role == 'BU') {
       this.loginService.getUser({ email: this.userId }).subscribe((data) => {
         this.userData = data;
+
         if (!data.birthday || !data.address || !data.phone) {
           this.modalRef = this.modalService.open(this.content);
         }
@@ -184,6 +185,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
       birthday: (<HTMLInputElement>document.getElementById('dateOfBirth'))
         .value,
     };
+
+    sessionStorage.setItem('userAddress', userInfo.address);
 
     if (userInfo.birthday == '') {
       userInfo.birthday = null;
