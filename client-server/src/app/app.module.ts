@@ -44,6 +44,7 @@ import { RestaurantEditComponent } from './pages/restaurant-edit/restaurant-edit
 import { CheckoutComponent } from './pages/checkout/checkout.component';
 import { PageErrorComponent } from './components/page-error/page-error.component';
 import { CartCardComponent } from './components/cart-card/cart-card.component';
+import { FavouritesComponent } from './pages/favourites/favourites.component';
 
 @NgModule({
   declarations: [
@@ -75,6 +76,7 @@ import { CartCardComponent } from './components/cart-card/cart-card.component';
     CheckoutComponent,
     CartCardComponent,
     PageErrorComponent,
+    FavouritesComponent,
   ],
   imports: [
     BrowserModule,
