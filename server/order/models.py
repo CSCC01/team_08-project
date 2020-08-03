@@ -1,6 +1,7 @@
 from bson import ObjectId
 from djongo import models
 from django.utils import timezone
+from django.core.exceptions import ObjectDoesNotExist
 from restaurant.models import Food
 
 
@@ -85,8 +86,8 @@ class Cart(models.Model):
             raise ValueError('Could not complete order')
 
     # gets the user's current active cart
-    def users_active_cart(self, cart_id):
-        pass
+    def users_active_cart(self, user_email):
+        return Cart.objects.get(user_email= user_email, complete_tstmp= None, is_cancelled= False)
 
 
 class Item(models.Model):

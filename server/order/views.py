@@ -7,6 +7,7 @@ from utils.encoder import BSONEncoder
 from request_form import upload_form
 from utils.encoder import BSONEncoder
 from .order_state import OrderStates
+from django.core.exceptions import ObjectDoesNotExist
 
 # jsonschema validation schemes
 cart_schema = {
@@ -42,6 +43,17 @@ item_schema_remove = {
     }
 }
 
+def get_users_cart_page(request):
+    """
+    Gets the user's current cart based on the given user_id
+    """
+    try:
+        user_id = request.GET.get('user_email')
+        cart = Cart.users_active_cart(Cart,user_id)
+        return JsonResponse(json.loads(json.dumps(model_to_dict(cart), cls=BSONEncoder)))
+    except ObjectDoesNotExist as error:
+        return JsonResponse({'NoCart': 'Closed'})
+    
 
 def insert_cart_page(request):
     """ Insert cart to database """
