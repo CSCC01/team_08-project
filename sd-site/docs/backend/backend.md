@@ -155,9 +155,9 @@ This section will go over all the backends components of the Scarborough Dining 
 |      /timeline/comment/get/         | \_id                                                                                                                                                                               |                                                                                    | GET  | Retrieves comment data                                       |
 |      /order/cart/insert/            | restaurant_id, user_email                                                                                                                                                          |                                                                                    | POST | Add cart to database                                         |
 |      /order/item/insert/            | cart_id, food_id, count                                                                                                                                                            |                                                                                    | POST | Add item to database and change cart price accordingly       |
-|      /order/update_status/          | _id, status (snd, cmt, acc)                                                                                                                                                        |                                                                                    | POST | Update status of given cart                                  |                                                                                                                         |      
-|      /order/item/remove/            | item_id                                                                                                                                                                            |                                                                                    | POST | Remove item from db and update cart price (remove cart if last)|                            
-
+|      /order/update_status/          | _id, status (snd, cmt, acc)                                                                                                                                                        |                                                                                    | POST | Update status of given cart                                  |
+|      /order/item/remove/            | item_id                                                                                                                                                                            |                                                                                    | POST | Remove item from db and update cart price (remove cart if last)|
+|      /order/item/edit_amount/       | item_id, count                                                                                                                                               |                                                                                    | POST | Change given item's count to count, if count is 0, delete item|
 
 All requests should be sent in a JSON format. Optional parameters can be left blank Ex: {"Role" : ""}. Bolded Fields can be omitted entirely.
 
@@ -262,6 +262,6 @@ All media uploads use the same endpoint. However the input form decides where th
 | restaurant_RestaurantMedia    | file, save_location, _id   | api/cloud_storage/upload/ | cover_photo_url, logo_url, owner_picture_url |
 | restaurant_FoodMedia          | file, save_location, _id   | api/cloud_storage/upload/ | picture                                      |
   user_SDUserMedia              | file, save_location, email | api/cloud_storage/upload/ | picture                                      |
-  
+
 ![image info](./examples/example1.PNG)
  

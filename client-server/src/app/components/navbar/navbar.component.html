@@ -40,6 +40,11 @@
           BROWSE
         </a>
       </li>
+      <li class="nav-item nav-link" *ngIf="role == 'BU'">
+        <a routerLinkActive="active" class="nav-link" (click)="favourites()">
+          FAVOURITES
+        </a>
+      </li>
       <li class="nav-item nav-link">
         <a routerLinkActive="active" class="nav-link" (click)="timeline()">
           TIMELINE

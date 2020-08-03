@@ -80,3 +80,13 @@ def remove_item_page(request):
     body = json.loads(request.body)
     Item.remove_item(body['item_id'])
     return HttpResponse('success')
+
+def edit_item_amount_page(request):
+    """Edit food item"""
+    validate(instance= request.body, schema=item_schema)
+    body = json.loads(request.body)
+    responsemessage = Item.edit_item_amount(body['item_id'], body['count'])
+    for entry in responsemessage:
+        if not type(responsemessage[entry]) == dict:
+            responsemessage[entry] = model_to_dict(responsemessage[entry])
+    return JsonResponse(json.loads(json.dumps(responsemessage, cls=BSONEncoder)))
