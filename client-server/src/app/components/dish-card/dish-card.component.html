@@ -39,7 +39,11 @@
             <div *ngIf="role == 'BU'" class="picker-wrapper">
               <ng-number-picker [(value)]="value"></ng-number-picker>
             </div>
-            <button *ngIf="role == 'BU'" class="btn order-btn">
+            <button
+              *ngIf="role == 'BU'"
+              class="btn order-btn"
+              (click)="addOrder()"
+            >
               ADD ORDER
             </button>
           </div>

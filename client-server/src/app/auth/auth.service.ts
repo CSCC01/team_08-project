@@ -140,6 +140,8 @@ export class AuthService {
             sessionStorage.setItem('role', this.role);
             sessionStorage.setItem('userId', user.email);
           }
+
+          sessionStorage.setItem('cartId', '');
           // Redirect to target route after callback processing
           this.router.navigate([targetRoute]).then(() => {
             setTimeout(function () {

@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, HostListener } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { OrdersService } from 'src/app/service/orders.service';
 
 @Component({
   selector: 'app-dish-card',
@@ -9,11 +10,16 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class DishCardComponent implements OnInit {
   role: string = '';
+  userId: string = '';
   value: number = 0;
+  modalRef: any;
 
   @Input() dish: any;
 
-  constructor(private modalService: NgbModal) {}
+  constructor(
+    private orderService: OrdersService,
+    private modalService: NgbModal
+  ) {}
 
   @HostListener('window:resize', ['$event'])
   onResize() {
@@ -34,9 +40,29 @@ export class DishCardComponent implements OnInit {
 
   ngOnInit(): void {
     this.role = sessionStorage.getItem('role');
+    this.userId = sessionStorage.getItem('userId');
   }
 
   openDish(content) {
-    this.modalService.open(content, { size: 'xl' });
+    this.modalRef = this.modalService.open(content, { size: 'xl' });
+  }
+
+  addOrder() {
+    var cardId = sessionStorage.getItem('cartId');
+
+    if (cardId == '') {
+      this.orderService
+        .insertCart(this.dish.restaurant_id, this.userId)
+        .subscribe((data) => {
+          sessionStorage.setItem('cartId', data._id);
+        });
+    }
+
+    if (this.value != 0) {
+      this.orderService.insertItem(cardId, this.dish._id, this.value);
+    } else {
+      alert('Please have a non-zero amount for the dish!');
+    }
+    this.modalRef.close();
   }
 }
