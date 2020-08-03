@@ -56,7 +56,7 @@ restaurant_schema = {
     }
 }
 
-dish_editable = ["name", "description", "picture", "price", "specials"]
+dish_editable = ["name", "description", "picture", "price", "specials", "category"]
 
 restaurant_editable = ["name", "address", "phone", "updated_at", "email", "city", "cuisine", "pricepoint", "twitter",
                        "instagram", "bio", "GEO_location", "external_delivery_link", "cover_photo_url", "logo_url",

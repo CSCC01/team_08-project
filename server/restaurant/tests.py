@@ -165,20 +165,42 @@ class FoodTestCases(TestCase):
                                          price='10.99')
         self.foodB = Food.objects.create(name="foodB", restaurant_id="restB", description="descripB", picture="picB",
                                          price='20.99')
+        self.expected = {
+            '_id': '111111111111111111111111',
+            'name': 'kfc',
+            'address': '211 oakland',
+            'phone': 6475040680,
+            'city': 'markham',
+            'email': 'alac@gmail.com',
+            'cuisine': 'american',
+            'pricepoint': 'High',
+            'twitter': 'http://link',
+            'instagram': 'http://link',
+            'bio': 'Finger licking good chicken',
+            'GEO_location': '{\'longitude\': 44.068203, \'latitude\':-114.742043}',
+            'external_delivery_link': 'http://link',
+            'cover_photo_url': 'http://link',
+            'logo_url': 'http://link',
+            'rating': '3.00',
+            'owner_name': 'Colonel Sanders',
+            'owner_story': 'i made chicken',
+            'owner_picture_url': 'http://link',
+            'categories': []
+        }
+        Restaurant.objects.create(**self.expected)
         self.factory = RequestFactory()
 
     @mock.patch('requests.get', side_effect=mocked_requests_get)
     def test_insert_food_valid(self, mock_get):
         """ Test if food is properly inserted into the database """
-        request = self.factory.post('/api/restaurant/dish/insert/', {"name": 'foodC', 'restaurant_id': "restC",
+        request = self.factory.post('/api/restaurant/dish/insert/', {"name": 'foodC', 'restaurant_id': "111111111111111111111111",
                                                                      'description': "descripC",
                                                                      'picture': "http://link",
-                                                                     "price": '10.99', 'specials': ""
-                                                                     }, content_type="application/json")
+                                                                     "price": '10.99', 'specials': "",
+                                                                     'category':''}, content_type="application/json")
         actual = json.loads(view_response.insert_dish_page(request).content)
         expected = Food(_id=actual['_id'], name="foodC", restaurant_id="restC", description="descripC",
-                        picture="http://link",
-                        price='10.99')
+                        picture="http://link", price='10.99', category='')
         self.assertDictEqual(model_to_dict(expected), actual)
 
     @mock.patch('requests.get', side_effect=mocked_requests_get)
@@ -267,7 +289,8 @@ class RestaurantTestCases(TestCase):
             'rating': '3.00',
             'owner_name': 'Colonel Sanders',
             'owner_story': 'i made chicken',
-            'owner_picture_url': 'http://link'
+            'owner_picture_url': 'http://link',
+            'categories': []
         }
 
         self.expected2 = {
@@ -289,7 +312,8 @@ class RestaurantTestCases(TestCase):
             'rating': '3.00',
             'owner_name': 'Colonel Calvino',
             'owner_story': 'i made it boys',
-            'owner_picture_url': 'http://link'
+            'owner_picture_url': 'http://link',
+            'categories': []
         }
 
         self.expected3 = {
@@ -311,7 +335,8 @@ class RestaurantTestCases(TestCase):
             'rating': '3.00',
             'owner_name': 'Colonel Lam',
             'owner_story': 'lambs are a thing',
-            'owner_picture_url': ''  # test for blank image url validity
+            'owner_picture_url': '',  # test for blank image url validity
+            'categories': []
         }
 
         self.expected4 = {
