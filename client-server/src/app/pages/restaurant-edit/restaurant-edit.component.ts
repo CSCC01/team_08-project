@@ -63,6 +63,9 @@ export class RestaurantEditComponent implements OnInit {
       bio: (<HTMLInputElement>document.getElementById('restaurant-bio')).value,
       twitter: (<HTMLInputElement>document.getElementById('twitter')).value,
       instagram: (<HTMLInputElement>document.getElementById('instagram')).value,
+      external_delivery_link: (<HTMLInputElement>(
+        document.getElementById('external-delivery')
+      )).value,
     };
 
     if (
