@@ -76,9 +76,11 @@ export class LoginService {
   uploadUserMedia(formData, id): Observable<any> {
     const endpoint = `${LoginService.UPLOAD_ENDPOINT}`;
 
+    console.log(id);
+
     formData.append('save_location', 'picture');
     formData.append('app', 'user_SDUserMedia');
-    formData.append('_id', id);
+    formData.append('email', id);
 
     return this.http.post<any>(endpoint, formData);
   }
