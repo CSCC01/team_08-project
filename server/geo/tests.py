@@ -5,7 +5,7 @@ from . import geo_controller
 class GeoControllerTest(TestCase):
 
     def setUp(self):
-        self.query1 = '116 Memon Place'
+        self.query1 = '224 Helen Avenue'
         self.query2 = 'iwegowengowneog'
 
     def test_happy(self):
