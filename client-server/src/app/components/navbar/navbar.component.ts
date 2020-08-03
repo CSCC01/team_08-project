@@ -91,6 +91,14 @@ export class NavbarComponent implements OnInit, AfterViewInit {
     });
   }
 
+  profile() {
+    this.router.navigate(['/profile']).then(() => {
+      setTimeout(function () {
+        window.location.reload();
+      }, 100);
+    });
+  }
+
   openModal(content) {
     this.modalRef = this.modalService.open(content, { size: 's' });
   }

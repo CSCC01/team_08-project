@@ -71,3 +71,23 @@
   background-color: $secondary-color;
   color: white;
 }
+
+.dropdown {
+  font-size: 15px;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-weight: 700;
+  background-color: $primary-color;
+  margin: 0;
+  padding: 0;
+}
+
+.dropdown:hover {
+  font-size: 15px;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-weight: 700;
+  background-color: $primary-color;
+  border-color: $primary-color;
+  color: white;
+  margin: 0;
+  padding: 0;
+}
