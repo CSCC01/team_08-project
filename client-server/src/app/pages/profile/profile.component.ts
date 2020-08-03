@@ -69,15 +69,14 @@ export class ProfileComponent implements OnInit {
         'Please ensure formats are proper. Name should not empty, phone numbers should be 10 digits with no dashes and birthday should be YYYY-MM-DD'
       );
     } else {
-      this.loginService.editUser(userInfo);
-      if (this.newImage) {
-        this.onSubmit();
-      }
-      this.modalRef.close();
-      this.getUserInfo();
-      setTimeout(function () {
-        window.location.reload();
+      this.loginService.editUser(userInfo).subscribe((data) => {
+        if (this.newImage) {
+          this.onSubmit();
+        }
+        this.getUserInfo();
       });
+
+      this.modalRef.close();
     }
   }
 
@@ -100,7 +99,11 @@ export class ProfileComponent implements OnInit {
     formData.append('file', this.uploadForm.get('file').value);
     this.loginService
       .uploadUserMedia(formData, this.userId)
-      .subscribe((data) => {});
-    this.newImage = false;
+      .subscribe((data) => {
+        this.newImage = false;
+        setTimeout(function () {
+          window.location.reload();
+        });
+      });
   }
 }
