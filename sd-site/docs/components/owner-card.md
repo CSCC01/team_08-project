@@ -32,7 +32,7 @@ Currently, the story object should contain:
   "profile_pic": "{{ path to image }}",
   "bio": "{{ brief biography of the owner }}",
   "restaurant": "{{ restaurant name }}",
-  "url": "{{ link to the restaurant page }}"
+  "_id": "{{ the mongoDB ID of the restaurant}}"
 }
 ```
 
@@ -45,7 +45,7 @@ Example:
   "profile_pic": "assets/images/undraw_chef.png",
   "bio": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   "restaurant": "Rob's Ribs",
-  "url": "/"
+  "_id": "5f1e064bff72a43a3a626273"
 }
 ```
 
