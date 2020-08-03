@@ -76,7 +76,7 @@ class Cart(models.Model):
             cart.is_cancelled = True
             cart.clean_fields()
             cart.clean()
-            cart.save(update_fields=['accept_tstmp', 'is_cancelled'])
+            cart.save(update_fields=['complete_tstmp', 'is_cancelled'])
             return cart
         raise ValueError('Could not decline order')
 
