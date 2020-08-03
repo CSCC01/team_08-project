@@ -78,6 +78,9 @@ export class ProfileComponent implements OnInit {
       });
 
       this.modalRef.close();
+      setTimeout(function () {
+        window.location.reload();
+      }, 100);
     }
   }
 

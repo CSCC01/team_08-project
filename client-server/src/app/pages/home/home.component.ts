@@ -207,6 +207,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
     } else {
       this.loginService.editUser(userInfo).subscribe((data) => {});
       this.modalRef.close();
+      setTimeout(function () {
+        window.location.reload();
+      }, 100);
     }
   }
 }
