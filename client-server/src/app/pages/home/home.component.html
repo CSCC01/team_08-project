@@ -97,9 +97,10 @@
 </carousel>
 
 <div class="bg1">
-  <div class="cuisine-carousel" data-aos="fade-right">
+  <div class="cuisine-carousel" data-aos="fade-left">
     <h2 class="heading">Stories</h2>
     <ivy-carousel
+      *ngIf="stories.length >= 5"
       [images]="stories"
       [margin]="30"
       [arrowsOutside]="arrowsOutside"
@@ -112,9 +113,10 @@
 </div>
 
 <div class="bg2">
-  <div class="cuisine-carousel" data-aos="fade-left">
+  <div class="cuisine-carousel" data-aos="fade-right">
     <h2 class="heading">Specials</h2>
     <ivy-carousel
+      *ngIf="dishes.length >= 5"
       [images]="dishes"
       [margin]="30"
       [arrowsOutside]="arrowsOutside"
