@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faTshirt } from '@fortawesome/free-solid-svg-icons';
 import { RestaurantsService } from '../../service/restaurants.service';
 
 @Component({
@@ -42,11 +42,93 @@ export class AllRestaurantsComponent implements OnInit {
     });
   }
 
-  filterList(list, filter) {}
+  filterRating(list) {
+    this.restaurants = [];
+    const isFalse = (currentValue) => !currentValue;
+
+    if (list.every(isFalse)) {
+      this.loadRestaurants();
+    } else {
+      for (var i = 0; i < this.allRestaurants.length; i++) {
+        var query = this.allRestaurants[i];
+        if (list[0] == true && query.rating <= 1) {
+          this.restaurants.push(query);
+        }
+
+        if (list[1] == true && query.rating > 1 && query.rating <= 2) {
+          this.restaurants.push(query);
+        }
+
+        if (list[2] == true && query.rating > 2 && query.rating <= 3) {
+          this.restaurants.push(query);
+        }
+
+        if (list[3] == true && query.rating > 3 && query.rating <= 4) {
+          this.restaurants.push(query);
+        }
+
+        if (list[4] == true && query.rating > 4) {
+          this.restaurants.push(query);
+        }
+      }
+    }
+  }
+
+  filterPricepoint(list) {
+    this.restaurants = [];
+    const isFalse = (currentValue) => !currentValue;
+
+    if (list.every(isFalse)) {
+      this.loadRestaurants();
+    } else {
+      for (var i = 0; i < this.allRestaurants.length; i++) {
+        var query = this.allRestaurants[i];
+        if (list[0] == true && query.pricepoint == 'Low') {
+          this.restaurants.push(query);
+        }
+
+        if (list[1] == true && query.pricepoint == 'Medium') {
+          this.restaurants.push(query);
+        }
+
+        if (list[2] == true && query.pricepoint == 'High') {
+          this.restaurants.push(query);
+        }
+      }
+    }
+  }
+
+  filterPrice(list) {
+    this.dishes = [];
+    const isFalse = (currentValue) => !currentValue;
+
+    if (list.every(isFalse)) {
+      this.loadDishes();
+    } else {
+      for (var i = 0; i < this.allDishes.length; i++) {
+        var query = this.allDishes[i];
+        if (list[0] == true && query.price <= 20) {
+          this.dishes.push(query);
+        }
+
+        if (list[1] == true && query.price > 20 && query.price <= 40) {
+          this.dishes.push(query);
+        }
+
+        if (list[2] == true && query.price > 40 && query.price <= 60) {
+          this.dishes.push(query);
+        }
+
+        if (list[3] == true && query.price > 60) {
+          this.dishes.push(query);
+        }
+      }
+    }
+  }
 
   searchRestaurants() {
     if (this.inputRestaurant == '') {
-      this.restaurants = this.allRestaurants;
+      this.loadRestaurants();
     } else {
       this.restaurants = [];
       for (var i = 0; i < this.allRestaurants.length; i++) {
@@ -73,7 +155,7 @@ export class AllRestaurantsComponent implements OnInit {
 
   searchDishes() {
     if (this.inputDishes == '') {
-      this.dishes = this.allDishes;
+      this.loadDishes();
     } else {
       this.dishes = [];
       for (var i = 0; i < this.allDishes.length; i++) {
