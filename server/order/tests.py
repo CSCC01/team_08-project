@@ -21,7 +21,10 @@ class CartTestCases(TestCase):
         self.f1 = Food.objects.create(name="foodA", restaurant_id='mock',
                                       description="chicken", picture="picA",
                                       price='10.99')
-        self.i = Item.objects.create(cart_id=self.c1._id, food_id=self.f1._id, count=2)
+        self.f2 = Food.objects.create(name="foodB", restaurant_id='mock',
+                                      description="chicken", picture="picA",
+                                      price='10.99')
+        self.i = Item.objects.create(cart_id=self.c1._id, food_id=self.f2._id, count=2)
 
     def test_insert_cart(self):
         """ Test if cart document is inserted into the database """
@@ -53,12 +56,15 @@ class CartTestCases(TestCase):
                                                             'count': 2},
                                 content_type='application/json')
         actual = json.loads(view_response.insert_item_page(req).content)
-        expected = {"_id": str(Item.objects.get(cart_id=str(self.c1._id))._id),
+        expected = {"_id": str(Item.objects.get(cart_id=str(self.c1._id), food_id= str(self.f1._id))._id),
                     "cart_id": str(self.c1._id), "food_id": str(self.f1._id), "count": 2}
         self.assertDictEqual(actual, expected)
 
     def test_get_items_by_cart(self):
-        
+        req = self.factory.get('api/order/item/get_by_cart/', {'cart_id': str(self.c1._id)}, content_type='application/json')
+        actual = json.loads(view_response.get_items_by_cart_page(req).content)
+        expected = {'items': [json.loads(json.dumps(model_to_dict(self.i), cls=BSONEncoder))]}
+        self.assertDictEqual(actual, expected)
 
 class CartStatusCases(TestCase):
 
