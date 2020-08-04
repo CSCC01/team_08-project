@@ -25,10 +25,8 @@ def insert_review_page(request):
                          'rating': review.rating})
 
 
-def get_review_page(request):
-    """ Get comment from database """
-    review = Review.objects.get(_id=request.GET.get('_id'))
-    return JsonResponse({'_id': str(review._id), 'restaurant_id': review.restaurant_id, 'user_email': review.user_email,
-                         'title': review.title, 'content': review.content,
-                         'Timestamp': review.Timestamp.strftime("%b %d, %Y %H:%M"),
-                         'rating': review.rating})
+def get_restaurant_reviews_page(request):
+    """ Get list of reviews from a restaurant from the database """
+    return JsonResponse(Review.get_by_restaurant(request.GET.get('restaurant_id')))
+
+

@@ -1,3 +1,4 @@
+from django.forms import model_to_dict
 from djongo import models
 
 
@@ -22,3 +23,14 @@ class Review(models.Model):
         review.clean()
         review.save()
         return review
+
+    @classmethod
+    def get_by_restaurant(cls, rest_id):
+        response = {'Reviews': []}
+        for review in list(Review.objects.filter(restaurant_id=rest_id)):
+            review._id = str(review._id)
+            response['Reviews'].append({'_id': str(review._id), 'restaurant_id': review.restaurant_id, 'user_email': review.user_email,
+                                        'title': review.title, 'content': review.content,
+                                        'Timestamp': review.Timestamp.strftime("%b %d, %Y %H:%M"),
+                                        'rating': review.rating})
+        return response
