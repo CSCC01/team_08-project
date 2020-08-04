@@ -49,8 +49,6 @@ class Command(BaseCommand):
                 'twitter' : " ",
                 'instagram' : " ",
                 'external_delivery_link' : " ",
-                'cover_photo_url' : 'https://www.nautilusplus.com/content/uploads/2016/08/Pexel_junk-food.jpeg',
-                'logo_url' : 'https://d1csarkz8obe9u.cloudfront.net/posterpreviews/diner-restaurant-logo-design-template-0899ae0c7e72cded1c0abc4fe2d76ae4_screen.jpg?ts=1561476509',
                 'rating' : "0.00"
             }
             rand_Document = seed.gen_rand_dict(gen_dict)
