@@ -123,6 +123,19 @@ This section will go over all the backends components of the Scarborough Dining 
     Timestamp = models.DateTimeField(auto_now=True)
 ```
 
+#### Review
+
+###### Restaurant Review
+
+```python
+    _id = models.ObjectIdField()
+    restaurant_id = models.CharField(max_length=24)
+    user_email = models.EmailField()
+    title = models.CharField(max_length=256)
+    content = models.TextField(max_length=4096)
+    Timestamp = models.DateTimeField(auto_now=True)
+    rating = models.IntegerField(blank=True)
+```
 
 ## URLs
 
@@ -157,7 +170,9 @@ This section will go over all the backends components of the Scarborough Dining 
 |      /order/item/insert/            | cart_id, food_id, count                                                                                                                                                            |                                                                                    | POST | Add item to database and change cart price accordingly       |
 |      /order/update_status/          | _id, status (snd, cmt, acc)                                                                                                                                                        |                                                                                    | POST | Update status of given cart                                  |
 |      /order/item/remove/            | item_id                                                                                                                                                                            |                                                                                    | POST | Remove item from db and update cart price (remove cart if last)|
-|      /order/item/edit_amount/       | item_id, count                                                                                                                                               |                                                                                    | POST | Change given item's count to count, if count is 0, delete item|
+|      /order/item/edit_amount/       | item_id, count                                                                                                                                                                     |                                                                                    | POST | Change given item's count to count, if count is 0, delete item|
+|      /review/insert/                | restaurant_id, user_email, title, content, rating                                                                                                                                  |                                                                                    | POST | Add a review to the database                                 |
+|      /review/get/                   | \_id                                                                                                                                                                               |                                                                                    | GET  | Get a review document from the database                      |
 
 All requests should be sent in a JSON format. Optional parameters can be left blank Ex: {"Role" : ""}. Bolded Fields can be omitted entirely.
 
