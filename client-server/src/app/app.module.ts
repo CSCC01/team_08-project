@@ -46,6 +46,7 @@ import { CheckoutComponent } from './pages/checkout/checkout.component';
 import { PageErrorComponent } from './components/page-error/page-error.component';
 import { CartCardComponent } from './components/cart-card/cart-card.component';
 import { FavouritesComponent } from './pages/favourites/favourites.component';
+import { AllOwnersComponent } from './pages/all-owners/all-owners.component';
 
 @NgModule({
   declarations: [
@@ -79,6 +80,7 @@ import { FavouritesComponent } from './pages/favourites/favourites.component';
     CartCardComponent,
     PageErrorComponent,
     FavouritesComponent,
+    AllOwnersComponent,
   ],
   imports: [
     BrowserModule,

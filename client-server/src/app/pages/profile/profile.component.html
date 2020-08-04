@@ -44,7 +44,7 @@
     </button>
   </div>
   <div class="modal-body">
-    <form>
+    <form [formGroup]="uploadForm" (ngSubmit)="updateProfile()">
       <div class="form-group">
         <label for="name">Name</label>
         <div class="input-group">
@@ -102,7 +102,13 @@
           </div>
         </div>
       </div>
-      <button class="btn upload-pic">Upload Profile Picture</button>
+      <label for="owner">Add owner image:</label>
+      <input
+        type="file"
+        name="owner"
+        id="owner"
+        (change)="onFileSelect($event)"
+      />
     </form>
   </div>
   <div class="modal-footer">
