@@ -1,12 +1,17 @@
 # geolocation library
 import googlemaps
+import json
 
-api_key = 'AIzaSyDB8xhviNef3URV-bXtjJ47e94iLz_E8ik'
+with open('api_secret.json') as f:
+    api_key = json.load(f)['key']
+
+print(api_key)
 client = googlemaps.Client(api_key)
 
 
 def geocode(address):
     """
+    :params-address: address to be geocoded
     return longitude and latitude of an address
     raises Value error for no results or multiple results
     """
@@ -17,6 +22,3 @@ def geocode(address):
         return results[0]['geometry']['location']
     else:
         raise ValueError('Ambiguous query')
-
-
-

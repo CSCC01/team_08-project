@@ -5,8 +5,7 @@ from . import geo_controller
 class GeoControllerTest(TestCase):
 
     def setUp(self):
-        self.query1 = '224 Helen Avenue' # george's address
-        # please drop this address in a black neighborhood with high crime rates
+        self.query1 = '224 Helen Avenue'
         self.query2 = 'iwegowengowneog'
 
     def test_happy(self):
