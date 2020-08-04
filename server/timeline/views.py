@@ -6,6 +6,7 @@ from jsonschema import validate
 import jsonschema
 from bson import ObjectId
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from utils.encoder import BSONEncoder
 
 post_schema = {
     'properties': {
@@ -83,7 +84,8 @@ def delete_post_page(request):
 
 def get_all_posts_page(request):
     """ retrieve list of restaurants from database """
-    return JsonResponse(TimelinePost.get_all())
+    posts = TimelinePost.get_all()
+    return JsonResponse(json.loads(json.dumps(posts, cls=BSONEncoder)))
 
 
 def upload_comment_page(request):
