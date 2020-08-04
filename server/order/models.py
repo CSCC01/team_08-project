@@ -85,10 +85,19 @@ class Cart(models.Model):
         else:
             raise ValueError('Could not complete order')
 
-    # gets the user's current active cart
+    # gets the user's current active cart (non-sent, non-completed, non-cancelled, non-accepted)
     def users_active_cart(self, user_email):
-        return Cart.objects.get(user_email= user_email, complete_tstmp= None, is_cancelled= False)
+        return Cart.objects.get(user_email= user_email, complete_tstmp= None, accept_tstmp= None, send_tstmp= None,is_cancelled= False)
 
+    # gets the user's current sent but non-closed carts
+    def users_sent_carts(self, user_email):
+        carts = list(Cart.objects.filter(user_email= user_email, complete_tstmp= None).exclude(send_tstmp= None))
+        return carts
+
+    #gets the restaurants current sent but non-closed carts
+    def restaurants_carts(self, restaurant_id):
+        carts = list(Cart.objects.filter(restaurant_id= restaurant_id, complete_tstmp= None).exclude(send_tstmp= None))
+        return carts
 
 class Item(models.Model):
     """ Model for one type of Item in the cart """

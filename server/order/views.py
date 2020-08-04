@@ -43,14 +43,41 @@ item_schema_remove = {
     }
 }
 
+def get_restaurant_carts_page(request):
+    """
+    Gets the list of carts which have been sent, and are not completed, with this restaurant_id
+    """
+    restaurant_id = request.GET.get('restaurant_id')
+    carts = Cart.restaurants_carts(Cart, restaurant_id)
+    carts_dict = {'carts':[]}
+    for cart in carts:
+        carts_dict['carts'].append(json.loads(json.dumps(model_to_dict(cart), cls=BSONEncoder)))
+    return JsonResponse(carts_dict)
+    
 def get_users_cart_page(request):
     """
-    Gets the user's current cart based on the given user_id
+    Gets the user's active cart based on the given user_id,
+    if 'is_sent' is 'true', give all sent carts
+    otherwise give the only existing active cart
     """
     try:
         user_id = request.GET.get('user_email')
-        cart = Cart.users_active_cart(Cart,user_id)
-        return JsonResponse(json.loads(json.dumps(model_to_dict(cart), cls=BSONEncoder)))
+        is_sent = request.GET.get('is_sent').lower()
+        #annoying workaround since the request param is a string
+        #if is_sent.lower() == the string 'true' then it is true otherwise false
+        if (True if is_sent == 'true' else False):
+            #list of cart objects
+            carts = Cart.users_sent_carts(Cart, user_id)
+            carts_dict = {'carts':[]}
+            #converting the objects to json dicts for the response list
+            for cart in carts:
+                carts_dict['carts'].append(json.loads(json.dumps(model_to_dict(cart), cls=BSONEncoder)))
+            return JsonResponse(carts_dict)
+        else:
+            cart = Cart.users_active_cart(Cart, user_id)
+            return JsonResponse({'carts': [json.loads(json.dumps(model_to_dict(cart), cls=BSONEncoder))] } )
+
+        
     except ObjectDoesNotExist as error:
         return JsonResponse({'NoCart': 'Closed'})
     
