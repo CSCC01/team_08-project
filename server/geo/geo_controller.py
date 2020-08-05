@@ -5,7 +5,6 @@ import json
 with open('api_secret.json') as f:
     api_key = json.load(f)['key']
 
-print(api_key)
 client = googlemaps.Client(api_key)
 
 
