@@ -30,6 +30,12 @@ class Cart(models.Model):
         cart.save()
         return cart
 
+    def cancel_cart(self):
+        """  Deletes the cart and all related items """
+        cart_id = str(self._id)
+        Item.objects.filter(cart_id=cart_id).delete()
+        self.delete()
+
     def add_to_total(self, price, count):
         """
         Calculates and changes the new total price for a cart
@@ -168,4 +174,3 @@ class Item(models.Model):
         else:
             cls.remove_item(item_id)
             return {'item': {}}
-        

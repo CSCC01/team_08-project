@@ -5,6 +5,7 @@ import {
   faMapMarkerAlt,
   faPhone,
   faEdit,
+  faShippingFast,
 } from '@fortawesome/free-solid-svg-icons';
 import { faHeart, faEnvelope } from '@fortawesome/free-regular-svg-icons';
 import { faTwitter, faInstagram } from '@fortawesome/free-brands-svg-icons';
@@ -53,6 +54,7 @@ export class RestaurantPageComponent implements OnInit {
   faTwitter = faTwitter;
   faInstagram = faInstagram;
   faEdit = faEdit;
+  faShippingFast = faShippingFast;
 
   constructor(
     private route: ActivatedRoute,
@@ -148,9 +150,10 @@ export class RestaurantPageComponent implements OnInit {
     formData.append('file', this.uploadForm.get('file').value);
     this.restaurantsService
       .uploadRestaurantMedia(formData, this.restaurantId, 'cover')
-      .subscribe((data) => {});
-    this.newImage = false;
+      .subscribe((data) => {
+        this.newImage = false;
+        window.location.reload();
+      });
     this.headerModalRef.close();
-    window.location.reload();
   }
 }

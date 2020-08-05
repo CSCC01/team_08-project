@@ -1,19 +1,41 @@
 <div class="card cardBox">
   <div class="row">
     <div class="col">
-      <img
-        src="{{ story.profile_pic }}"
-        class="card-img-top"
-        alt="{{ story.name }}"
-      />
+      <div *ngIf="story.profile_pic">
+        <img
+          src="{{ story.profile_pic }}"
+          class="card-img-top"
+          alt=" {{ story.name | titlecase }}"
+        />
+      </div>
+      <div *ngIf="!story.profile_pic">
+        <img
+          src="../../../assets/images/undraw_chef.png"
+          class="card-img-top"
+          alt="Image Placeholder"
+        />
+      </div>
     </div>
     <div class="col">
       <div class="card-body">
-        <h5 class="card-title">{{ story.name }}</h5>
+        <div *ngIf="story.name">
+          <h3 class="card-title">{{ story.name | titlecase }}</h3>
+        </div>
+        <div *ngIf="!story.name">
+          <h3 class="card-title">Owner Name</h3>
+        </div>
         <p class="card-text">
           {{ story.bio }}
         </p>
-        <a href="{{ story.url }}" class="btn"> Visit {{ story.restaurant }} </a>
+        <a
+          [routerLink]="['/restaurant']"
+          [queryParams]="{
+            restaurantId: story._id
+          }"
+          class="btn"
+        >
+          Visit {{ story.restaurant | titlecase }}
+        </a>
       </div>
     </div>
   </div>

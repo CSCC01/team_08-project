@@ -21,9 +21,19 @@
       </li>
 
       <li class="nav-item nav-link" *ngIf="auth.loggedIn && role == 'BU'">
-        <a routerLink="profile" routerLinkActive="active" class="nav-link">
-          PROFILE
-        </a>
+        <div ngbDropdown class="d-inline-block">
+          <button class="btn dropdown" id="dropdownBasic1" ngbDropdownToggle>
+            USER INFO
+          </button>
+          <div ngbDropdownMenu aria-labelledby="dropdownProfile">
+            <button ngbDropdownItem (click)="profile()">
+              Profile
+            </button>
+            <button ngbDropdownItem (click)="favourites()">
+              Favourites
+            </button>
+          </div>
+        </div>
       </li>
       <li class="nav-item nav-link" *ngIf="role == 'RO'">
         <a routerLink="dashboard" routerLinkActive="active" class="nav-link">
@@ -35,19 +45,38 @@
           RESTAURANT PAGE
         </a>
       </li>
-      <li class="nav-item nav-link" *ngIf="role != 'RO'">
+      <li class="nav-item nav-link" *ngIf="auth.loggedIn && role == 'BU'">
+        <div ngbDropdown class="d-inline-block">
+          <button class="btn dropdown" id="dropdownBasic1" ngbDropdownToggle>
+            BROWSE
+          </button>
+          <div ngbDropdownMenu aria-labelledby="dropdownBrowse">
+            <button ngbDropdownItem (click)="browse()">
+              Restaurants
+            </button>
+            <button ngbDropdownItem (click)="timeline()">
+              Timeline
+            </button>
+            <button ngbDropdownItem (click)="owners()">
+              Chefs
+            </button>
+          </div>
+        </div>
+      </li>
+
+      <li class="nav-item nav-link" *ngIf="!auth.loggedIn">
         <a routerLinkActive="active" class="nav-link" (click)="browse()">
           BROWSE
         </a>
       </li>
-      <li class="nav-item nav-link" *ngIf="role == 'BU'">
-        <a routerLinkActive="active" class="nav-link" (click)="favourites()">
-          FAVOURITES
-        </a>
-      </li>
-      <li class="nav-item nav-link">
+      <li class="nav-item nav-link" *ngIf="!auth.loggedIn || role == 'RO'">
         <a routerLinkActive="active" class="nav-link" (click)="timeline()">
           TIMELINE
+        </a>
+      </li>
+      <li class="nav-item nav-link" *ngIf="!auth.loggedIn">
+        <a routerLinkActive="active" class="nav-link" (click)="owners()">
+          CHEFS
         </a>
       </li>
       <li *ngIf="role == 'BU'" class="nav-item nav-link">
@@ -57,16 +86,27 @@
       </li>
     </ul>
     <ul class="navbar-nav">
-      <button
-        type="button"
-        class="upgrade-button"
-        *ngIf="auth.loggedIn && role == 'BU'"
-        (click)="openModal(content)"
-      >
-        Upgrade to Restaurant Account
-      </button>
-
-      <li class="nav-item">
+      <li *ngIf="role == 'BU'" class="nav-item nav-link">
+        <p class="nav-link address" *ngIf="this.userAddress">
+          <fa-icon class="address-icon icon" [icon]="faMapMarkerAlt"></fa-icon>
+          {{ this.userAddress | titlecase }}
+        </p>
+        <p class="nav-link address" *ngIf="!this.userAddress">
+          No Address Provided
+          <fa-icon class="address-icon icon" [icon]="faMapMarkerAlt"></fa-icon>
+        </p>
+      </li>
+      <li class="nav-item nav-link">
+        <button
+          type="button"
+          class="upgrade-button"
+          *ngIf="auth.loggedIn && role == 'BU'"
+          (click)="openModal(content)"
+        >
+          Upgrade to Restaurant Account
+        </button>
+      </li>
+      <li class="nav-item nav-link">
         <a (click)="auth.login()" *ngIf="!auth.loggedIn" class="nav-link">
           LOG IN
         </a>

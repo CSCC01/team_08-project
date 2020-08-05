@@ -1,3 +1,4 @@
+from bson import ObjectId
 from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
 from order.models import Cart, Item
 from django.forms.models import model_to_dict
@@ -18,7 +19,6 @@ cart_schema = {
         "is_cancelled": {"type": "boolean"},
     }
 }
-
 
 status_schema = {
     'properties': {
@@ -52,7 +52,7 @@ def insert_cart_page(request):
 
 
 def update_status_page(request):
-    """Update cart status in database"""
+    """ Update cart status in database """
     validate(instance=request.body, schema=status_schema)
     body = json.loads(request.body)
     for status in OrderStates:
@@ -74,7 +74,6 @@ def decline_cart_page(request):
     except ValueError as error:
         return HttpResponseBadRequest(str(error))
 
-
 def insert_item_page(request):
     """ Insert item to database """
     validate(instance=request.body, schema=item_schema)
@@ -83,19 +82,29 @@ def insert_item_page(request):
     item._id = str(item._id)
     return JsonResponse(model_to_dict(item))
 
+
 def remove_item_page(request):
-    """Insert Item to database"""
+    """ Remove Item from database """
     validate(instance=request.body, schema=item_schema_remove)
     body = json.loads(request.body)
     Item.remove_item(body['item_id'])
     return HttpResponse('success')
 
+
 def edit_item_amount_page(request):
-    """Edit food item"""
-    validate(instance= request.body, schema=item_schema)
+    """ Edit food item """
+    validate(instance=request.body, schema=item_schema)
     body = json.loads(request.body)
     responsemessage = Item.edit_item_amount(body['item_id'], body['count'])
     for entry in responsemessage:
         if not type(responsemessage[entry]) == dict:
             responsemessage[entry] = model_to_dict(responsemessage[entry])
     return JsonResponse(json.loads(json.dumps(responsemessage, cls=BSONEncoder)))
+
+
+def cancel_cart_page(request):
+    """ Deletes cart and all items in cart """
+    validate(instance=request.body, schema=cart_schema)
+    body = json.loads(request.body)
+    Cart.objects.get(_id=ObjectId(body['_id'])).cancel_cart()
+    return HttpResponse('success')

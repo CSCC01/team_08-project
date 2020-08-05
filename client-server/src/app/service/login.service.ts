@@ -55,9 +55,9 @@ export class LoginService {
   @Output: Return True if user is in database, False otherwise
   Check if user exists in the database
   */
-  editUser(userData): void {
+  editUser(userData): Observable<any> {
     const endpoint = `${LoginService.AUTH_ENDPOINT}/edit/`;
-    this.http.post<any>(endpoint, userData).subscribe((data) => {});
+    return this.http.post<any>(endpoint, userData);
   }
 
   /*
@@ -78,7 +78,7 @@ export class LoginService {
 
     formData.append('save_location', 'picture');
     formData.append('app', 'user_SDUserMedia');
-    formData.append('_id', id);
+    formData.append('email', id);
 
     return this.http.post<any>(endpoint, formData);
   }

@@ -56,6 +56,7 @@ class CartTestCases(TestCase):
                     "cart_id": str(self.c1._id), "food_id": str(self.f1._id), "count": 2}
         self.assertDictEqual(actual, expected)
 
+
 class CartStatusCases(TestCase):
 
     def setUp(self):
@@ -138,7 +139,6 @@ class CartStatusCases(TestCase):
         models.timezone = mock.undo()
 
         self.assertDictEqual(expected, actual)
-
 
     def test_complete(self):
         """Test is complete timestamp is updated"""
@@ -227,18 +227,19 @@ class CartStatusCases(TestCase):
         actual = view_response.update_status_page(request).content.decode("utf-8")
         self.assertEqual(str(actual), 'Invalid request, please check your request')
 
+
 class CartRemoveTestCases(TestCase):
 
     def setUp(self):
         self.factory = RequestFactory()
         self.f1 = Food.objects.create(name="foodA", restaurant_id='mock',
-                                description="chicken", picture="picA",
-                                price='10.00')
+                                      description="chicken", picture="picA",
+                                      price='10.00')
         self.c1 = Cart.objects.create(restaurant_id='222222222222222222222222', user_email='test2@mail.com',
                                       price="100.00", num_items=1)
         self.c2 = Cart.objects.create(restaurant_id='222222222422222222222222', user_email='tes42@mail.com',
                                       price="100.00", num_items=2)
-        self.c3 = Cart.objects.create(restaurant_id='222222222322222222222222', user_email= 'test3@mail.com',
+        self.c3 = Cart.objects.create(restaurant_id='222222222322222222222222', user_email='test3@mail.com',
                                       price="30.00", num_items=1)
 
         self.o = Item.objects.create(cart_id=self.c1._id, food_id=self.f1._id, count=2)
@@ -268,12 +269,12 @@ class CartRemoveTestCases(TestCase):
         expected, actual = model_to_dict(self.c2), model_to_dict(self.c2)
         expected['price'] = '80.00'
         expected['num_items'] = 1
-        self.assertDictEqual(expected,actual)
+        self.assertDictEqual(expected, actual)
 
     def test_item_count_change(self):
         """Test if an item has its count modified properly"""
         request = self.factory.post('/api/order/item/edit_amount/',
-                                    {'item_id' : str(self.o3._id), 'count' : 2},  content_type='application/json')
+                                    {'item_id': str(self.o3._id), 'count': 2}, content_type='application/json')
         view_response.edit_item_amount_page(request)
         self.o3.refresh_from_db()
         expected, actual = model_to_dict(self.o3), model_to_dict(self.o3)
@@ -283,7 +284,7 @@ class CartRemoveTestCases(TestCase):
     def test_count_change_cart_price(self):
         """test if editing the count of an item properly modifies cart price"""
         request = self.factory.post('/api/order/item/edit_amount/',
-                                    {'item_id' : str(self.o3._id), 'count' : 1},  content_type='application/json')
+                                    {'item_id': str(self.o3._id), 'count': 1}, content_type='application/json')
         view_response.edit_item_amount_page(request)
         self.c3.refresh_from_db()
         expected, actual = model_to_dict(self.c3), model_to_dict(self.c3)
@@ -293,6 +294,19 @@ class CartRemoveTestCases(TestCase):
     def test_zerocount_deletion(self):
         """Test if an item is deleted when its count is modified to 0"""
         request = self.factory.post('/api/order/item/edit_amount/',
-                                    {'item_id' : str(self.o3._id), 'count' : 0},  content_type='application/json')
+                                    {'item_id': str(self.o3._id), 'count': 0}, content_type='application/json')
         view_response.edit_item_amount_page(request)
-        self.assertRaises(ObjectDoesNotExist, Item.objects.get, _id= self.o3._id)
+
+    def test_cancel_cart_cart(self):
+        """ Test if cart cancellation deletes the cart from the database """
+        request = self.factory.post('/api/order/cart/cancel/',
+                                    {'_id': str(self.c1._id)}, content_type='application/json')
+        view_response.cancel_cart_page(request)
+        self.assertRaises(ObjectDoesNotExist, Cart.objects.get, _id=self.c1._id)
+
+    def test_cancel_cart_item(self):
+        """ Test if cart cancellation deletes the cart's items from the database """
+        request = self.factory.post('/api/order/cart/cancel/',
+                                    {'_id': str(self.c1._id)}, content_type='application/json')
+        view_response.cancel_cart_page(request)
+        self.assertRaises(ObjectDoesNotExist, Item.objects.get, cart_id=str(self.c1._id))
