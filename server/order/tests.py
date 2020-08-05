@@ -61,6 +61,7 @@ class CartTestCases(TestCase):
         self.assertDictEqual(actual, expected)
 
     def test_get_items_by_cart(self):
+        """Test if all items from a cart are returned to the user"""
         req = self.factory.get('api/order/item/get_by_cart/', {'cart_id': str(self.c1._id)}, content_type='application/json')
         actual = json.loads(view_response.get_items_by_cart_page(req).content)
         expected = {'items': [json.loads(json.dumps(model_to_dict(self.i), cls=BSONEncoder))]}
