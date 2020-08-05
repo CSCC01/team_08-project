@@ -281,4 +281,19 @@ All media uploads use the same endpoint. However the input form decides where th
   user_SDUserMedia              | file, save_location, email | api/cloud_storage/upload/ | picture                                      |
 
 ![image info](./examples/example1.PNG)
+
+### Geocoding
  
+#### Functions
+
+##### `geocode(address)`
+Takes address and returns longitude and latitude dictionary representation of address
+
+#### Example Usage
+```python
+>>> from . import geo_controller
+>>> address = '225 Helen Avenue' 
+>>> location = geo_controller.geocode(address)
+>>> location
+>>> {'lat': 43.9068502, 'lng': -79.7828746} 
+```
