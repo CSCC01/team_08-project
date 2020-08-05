@@ -18,7 +18,7 @@
           class="no-orders-image"
           src="assets/images/undraw_receipt_ecdd.png"
         />
-        <p class="no-orders">Currently no orders!</p>
+        <p class="no-orders">Currently no new orders!</p>
       </div>
     </mat-tab>
     <mat-tab label="In-Progress">
@@ -32,7 +32,21 @@
           class="no-orders-image"
           src="assets/images/undraw_booking_33fn.png"
         />
-        <p class="no-orders">Currently no orders!</p>
+        <p class="no-orders">Currently no in-progress orders!</p>
+      </div>
+    </mat-tab>
+    <mat-tab label="Completed">
+      <div class="completed" *ngFor="let order of complete">
+        <div *ngIf="complete.length > 0">
+          <app-order-card [order]="order"></app-order-card>
+        </div>
+      </div>
+      <div *ngIf="complete.length === 0">
+        <img
+          class="no-orders-image"
+          src="assets/images/undraw_booking_33fn.png"
+        />
+        <p class="no-orders">Currently no completed orders!</p>
       </div>
     </mat-tab>
   </mat-tab-group>
