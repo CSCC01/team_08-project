@@ -31,6 +31,12 @@ class Cart(models.Model):
         cart.save()
         return cart
 
+    def cancel_cart(self):
+        """  Deletes the cart and all related items """
+        cart_id = str(self._id)
+        Item.objects.filter(cart_id=cart_id).delete()
+        self.delete()
+
     def add_to_total(self, price, count):
         """
         Calculates and changes the new total price for a cart
@@ -72,10 +78,18 @@ class Cart(models.Model):
             return cart
         raise ValueError('Could not accept order')
 
-    # updates the accept_decline_timestamp of the given cart to now
-    # declines the given cart, indicating that the given cart has been declined by the RO
+    # updates the complete_timestamp of the given cart to now
+    # cancels the given cart, indicating that the given cart has been declined by the RO
     def decline_cart(self, cart_id):
-        pass
+        cart = Cart.objects.get(_id = cart_id)
+        if cart.accept_tstmp is None and cart.complete_tstmp is None and cart.send_tstmp is not None:
+            cart.complete_tstmp = timezone.now()
+            cart.is_cancelled = True
+            cart.clean_fields()
+            cart.clean()
+            cart.save(update_fields=['complete_tstmp', 'is_cancelled'])
+            return cart
+        raise ValueError('Could not decline order')
 
     def complete_cart(self, cart_id):
         """
@@ -182,4 +196,3 @@ class Item(models.Model):
         else:
             cls.remove_item(item_id)
             return {'item': {}}
-        

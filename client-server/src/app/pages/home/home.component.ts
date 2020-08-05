@@ -13,12 +13,11 @@ import {
   faArrowCircleDown,
   faCalendar,
 } from '@fortawesome/free-solid-svg-icons';
-import dishes from '../../../assets/data/dishes.json';
-import stories from '../../../assets/data/stories.json';
 import { AuthService } from 'src/app/auth/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LoginService } from '../../service/login.service';
+import { RestaurantsService } from 'src/app/service/restaurants.service';
 
 @Component({
   selector: 'app-home',
@@ -41,8 +40,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
   modalRef: any;
 
   totalStars: number = 5;
-  dishes: any[];
-  stories: any[];
+  dishes: any[] = [];
+  stories: any[] = [];
 
   cuisines = [
     {
@@ -83,11 +82,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private route: ActivatedRoute,
     private modalService: NgbModal,
     private router: Router,
-    private loginService: LoginService
-  ) {
-    this.dishes = dishes;
-    this.stories = stories;
-  }
+    private loginService: LoginService,
+    private restaurantsService: RestaurantsService
+  ) {}
 
   ngOnInit(): void {
     AOS.init({
@@ -95,6 +92,28 @@ export class HomeComponent implements OnInit, AfterViewInit {
       duration: 1500,
       once: false,
       anchorPlacement: 'top-bottom',
+    });
+
+    this.restaurantsService.getDishes().subscribe((data) => {
+      const len = data.Dishes.length < 5 ? data.Dishes.length : 5;
+      for (let i = 0; i < len; i++) {
+        data.Dishes[i].type = 'dish';
+        this.dishes[i] = data.Dishes[i];
+      }
+    });
+
+    this.restaurantsService.listRestaurants().subscribe((data) => {
+      const len = data.Restaurants.length < 5 ? data.Restaurants.length : 5;
+      for (let i = 0; i < len; i++) {
+        this.stories[i] = {
+          type: 'story',
+          name: data.Restaurants[i].owner_name,
+          profile_pic: data.Restaurants[i].owner_picture_url,
+          bio: data.Restaurants[i].bio,
+          restaurant: data.Restaurants[i].name,
+          _id: data.Restaurants[i]._id,
+        };
+      }
     });
 
     this.userId = sessionStorage.getItem('userId');

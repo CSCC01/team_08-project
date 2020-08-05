@@ -46,7 +46,6 @@ export class RestaurantEditComponent implements OnInit {
   }
 
   updateRestaurantInfo() {
-    // Extract form inputs from the user
     var restaurantInfo = {
       restaurant_id: this.restaurantId,
       name: (<HTMLInputElement>document.getElementById('restaurant-name'))
@@ -63,6 +62,9 @@ export class RestaurantEditComponent implements OnInit {
       bio: (<HTMLInputElement>document.getElementById('restaurant-bio')).value,
       twitter: (<HTMLInputElement>document.getElementById('twitter')).value,
       instagram: (<HTMLInputElement>document.getElementById('instagram')).value,
+      external_delivery_link: (<HTMLInputElement>(
+        document.getElementById('external-delivery')
+      )).value,
     };
 
     if (

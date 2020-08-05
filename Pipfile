@@ -8,6 +8,21 @@ verify_ssl = true
 [packages]
 beautifulsoup4 = "*"
 requests = "*"
+pipenv = "*"
+dnspython = "*"
+djongo = "==1.2.38"
+django-cors-headers = "*"
+sqlparse = "==0.2.4"
+django-reset-migrations = "*"
+google-cloud-storage = "*"
+jsonschema = "*"
+Django = "<3"
+uWSGI = "*"
+Pillow = "*"
+Faker = "*"
+utils = "*"
+restaurant = "*"
+googlemaps = "*"
 
 [requires]
 python_version = "3.8"

@@ -13,14 +13,17 @@ import json
 from django.core.files.uploadedfile import SimpleUploadedFile
 from .AppType import AppCollection
 from django.forms import model_to_dict
-from utils.test_helper import TestHelper
+from utils.stubs.test_helper import TestHelper
+from utils.stubs.cloud_controller_stub import Mock_Controller
 from utils.encoder import BSONEncoder
+
+test_images_path = "utils/test_images/image.jpg"
 
 class Upload(TestCase):
 
     def setUp(self):
         """setup image path, bucket client and delete function"""
-        self.path = 'cloud_storage/test_images/image.jpg'
+        self.path = test_images_path
         self.client = storage.Client.from_service_account_json('scdining.json')
         self.delete = lambda path, client: client.bucket('test-storage-nog'). \
             delete_blob(path.replace('https://storage.googleapis.com/test-storage-nog/', ''))
@@ -41,7 +44,7 @@ class Delete(TestCase):
         """Upload image to bucket"""
         self.name = 'test'
         blob = storage.Client.from_service_account_json('scdining.json').bucket('test-storage-nog').blob(self.name)
-        blob.upload_from_filename('cloud_storage/test_images/image.jpg')
+        blob.upload_from_filename(test_images_path)
         self.path = 'https://storage.googleapis.com/test-storage-nog/test'
 
     def test_delete(self):
@@ -58,7 +61,7 @@ class DeleteDefault(TestCase):
         """upload image to asset"""
         client = storage.Client.from_service_account_json('scdining.json')
         blob = client.bucket('default-assets').blob('test')
-        blob.upload_from_filename('cloud_storage/test_images/image.jpg')
+        blob.upload_from_filename(test_images_path)
         self.path = 'https://storage.googleapis.com/default-assets/test'
         self.bucket = client.bucket('default-assets')
 
@@ -79,17 +82,7 @@ class CloudEndPoints(TestCase):
         Setup image for testing
         Setup utility function to refactor test case code
         """
-
-        class Mock: # Class for mocking behaviour found in cloud_controller
-            TEST_BUCKET = 'test'
-            PRODUCTION_BUCKET = 'test'
-            IMAGE= 'test'
-            def upload(self, file, bucket_path, content_type=None):
-                return "test_path"
-
-            def delete(self, file_path):
-                return('delete')
-        mock = Mock()
+        mock = Mock_Controller()
         for app in factory: # replace all cloud_controller in imageuploaders with mocks
             factory[app].cloud = mock
 
@@ -150,7 +143,7 @@ class CloudEndPoints(TestCase):
             }
         )
 
-        self.image = SimpleUploadedFile(name='test_image.jpg', content=open('cloud_storage/test_images/image.jpg', 'rb').read()
+        self.image = SimpleUploadedFile(name='test_image.jpg', content=open(test_images_path, 'rb').read()
                                         , content_type='image/jpeg')
         self.helper = TestHelper()
 
