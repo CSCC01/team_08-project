@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import orders from '../../../assets/data/orders.json';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RestaurantsService } from '../../service/restaurants.service';
+import { OrdersService } from '../../service/orders.service';
 
 @Component({
   selector: 'app-restuarant-dashboard',
@@ -22,24 +22,10 @@ export class RestuarantDashboardComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private restaurantsService: RestaurantsService
+    private restaurantsService: RestaurantsService,
+    private ordersService: OrdersService
   ) {
-    // this.orders = orders;
-    // this.new_orders = [];
-    // this.in_progress = [];
-    // this.complete = [];
-    // for (let i = 0; i < this.orders.length; i++) {
-    //   if (this.orders[i].AccDec_Timestamp === '') {
-    //     this.new_orders.push(this.orders[i]);
-    //   } else if (
-    //     this.orders[i].AccDec_Timestamp !== '' &&
-    //     this.orders[i].Complete_Timestamp === ''
-    //   ) {
-    //     this.in_progress.push(this.orders[i]);
-    //   } else {
-    //     this.complete.push(this.orders[i]);
-    //   }
-    // }
+    this.getOrders();
   }
 
   ngOnInit(): void {
@@ -55,5 +41,22 @@ export class RestuarantDashboardComponent implements OnInit {
       });
   }
 
-  getOrders(): void {}
+  getOrders(): void {
+    this.ordersService
+      .getOrdersbyRestaurant(this.restaurantId)
+      .subscribe((data) => {
+        for (let i = 0; i < data.length; i++) {
+          if (data[i].AccDec_Timestamp === '') {
+            this.new_orders.push(this.orders[i]);
+          } else if (
+            data[i].AccDec_Timestamp !== '' &&
+            data[i].Complete_Timestamp === ''
+          ) {
+            this.in_progress.push(this.orders[i]);
+          } else {
+            this.complete.push(this.orders[i]);
+          }
+        }
+      });
+  }
 }
