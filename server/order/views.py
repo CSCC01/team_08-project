@@ -73,7 +73,6 @@ def decline_cart_page(request):
         return JsonResponse(json.loads(json.dumps(model_to_dict(cart), cls=BSONEncoder)))
     except ValueError as error:
         return HttpResponseBadRequest(str(error))
-    return HttpResponseBadRequest('Invalid request, please check your request')
 
 
 def insert_item_page(request):
