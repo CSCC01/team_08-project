@@ -109,7 +109,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
           type: 'story',
           name: data.Restaurants[i].owner_name,
           profile_pic: data.Restaurants[i].owner_picture_url,
-          bio: data.Restaurants[i].bio,
+          bio: data.Restaurants[i].owner_story,
           restaurant: data.Restaurants[i].name,
           _id: data.Restaurants[i]._id,
         };
