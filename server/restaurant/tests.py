@@ -4,23 +4,21 @@ from django.test import TestCase, RequestFactory
 from restaurant.models import Food, ManualTag
 from django.forms.models import model_to_dict
 from restaurant.models import Restaurant
+from utils.stubs.test_helper import MockResponse
 import restaurant.views as view_response
 import json
 import requests
 
 
+MOCK_VALID_LINK = 'http://link'
+
 def mocked_requests_get(*args, **kwargs):
-    """ Load Mock Reponses"""
+    """ 
+    Mock a get request to some arbitrary link
+    assume that 
+    """
 
-    class MockResponse:
-        def __init__(self, json_data, status_code):
-            self.json_data = json_data
-            self.status_code = status_code
-
-        def json(self):
-            return self.json_data
-
-    if args[0] == 'http://link':
+    if args[0] == MOCK_VALID_LINK or ('link' in kwargs and kwargs['link'] == MOCK_VALID_LINK) :
         return MockResponse({"key1": "value1"}, 200)
     raise requests.ConnectionError
 
@@ -172,12 +170,12 @@ class FoodTestCases(TestCase):
         """ Test if food is properly inserted into the database """
         request = self.factory.post('/api/restaurant/dish/insert/', {"name": 'foodC', 'restaurant_id': "restC",
                                                                      'description': "descripC",
-                                                                     'picture': "http://link",
+                                                                     'picture': MOCK_VALID_LINK,
                                                                      "price": '10.99', 'specials': ""
                                                                      }, content_type="application/json")
         actual = json.loads(view_response.insert_dish_page(request).content)
         expected = Food(_id=actual['_id'], name="foodC", restaurant_id="restC", description="descripC",
-                        picture="http://link",
+                        picture=MOCK_VALID_LINK,
                         price='10.99')
         self.assertDictEqual(model_to_dict(expected), actual)
 
@@ -216,10 +214,10 @@ class FoodTestCases(TestCase):
         id = Food.objects.get(name="foodB")._id
         request = self.factory.post('/api/restaurant/dish/edit/',
                                     {"_id": str(id), "name": "foodB2", "description": "nutter butter",
-                                     "picture": "http://link", "price": "10.99"}, content_type='application/json')
+                                     "picture": MOCK_VALID_LINK, "price": "10.99"}, content_type='application/json')
         actual = json.loads(view_response.edit_dish_page(request).content)
         expected = Food(_id=str(id), name="foodB2", restaurant_id="restB", description="nutter butter",
-                        picture="http://link", price='10.99')
+                        picture=MOCK_VALID_LINK, price='10.99')
         self.assertDictEqual(actual, model_to_dict(expected))
 
     @mock.patch('requests.get', side_effect=mocked_requests_get)
@@ -257,17 +255,17 @@ class RestaurantTestCases(TestCase):
             'email': 'alac@gmail.com',
             'cuisine': 'american',
             'pricepoint': 'High',
-            'twitter': 'http://link',
-            'instagram': 'http://link',
+            'twitter': MOCK_VALID_LINK,
+            'instagram': MOCK_VALID_LINK,
             'bio': 'Finger licking good chicken',
             'GEO_location': '{\'longitude\': 44.068203, \'latitude\':-114.742043}',
-            'external_delivery_link': 'http://link',
-            'cover_photo_url': 'http://link',
-            'logo_url': 'http://link',
+            'external_delivery_link': MOCK_VALID_LINK,
+            'cover_photo_url': MOCK_VALID_LINK,
+            'logo_url': MOCK_VALID_LINK,
             'rating': '3.00',
             'owner_name': 'Colonel Sanders',
             'owner_story': 'i made chicken',
-            'owner_picture_url': 'http://link'
+            'owner_picture_url': MOCK_VALID_LINK
         }
 
         self.expected2 = {
@@ -279,17 +277,17 @@ class RestaurantTestCases(TestCase):
             'email': 'calvin@gmail.com',
             'cuisine': 'african',
             'pricepoint': 'Medium',
-            'twitter': 'http://link',
-            'instagram': 'http://link',
+            'twitter': MOCK_VALID_LINK,
+            'instagram': MOCK_VALID_LINK,
             'bio': 'Finger licking good chicken',
             'GEO_location': '{\'longitude\': 44.068203, \'latitude\':-114.742043}',
-            'external_delivery_link': 'http://link',
-            'cover_photo_url': 'http://link',
-            'logo_url': 'http://link',
+            'external_delivery_link': MOCK_VALID_LINK,
+            'cover_photo_url': MOCK_VALID_LINK,
+            'logo_url': MOCK_VALID_LINK,
             'rating': '3.00',
             'owner_name': 'Colonel Calvino',
             'owner_story': 'i made it boys',
-            'owner_picture_url': 'http://link'
+            'owner_picture_url': MOCK_VALID_LINK
         }
 
         self.expected3 = {
@@ -301,13 +299,13 @@ class RestaurantTestCases(TestCase):
             'email': 'winnie@gmail.com',
             'cuisine': 'asina fusion',
             'pricepoint': 'High',
-            'twitter': 'http://link',
-            'instagram': 'http://link',
+            'twitter': MOCK_VALID_LINK,
+            'instagram': MOCK_VALID_LINK,
             'bio': 'Finger licking good chicken',
             'GEO_location': '{\'longitude\': 44.068203, \'latitude\':-114.742043}',
-            'external_delivery_link': 'http://link',
-            'cover_photo_url': 'http://link',
-            'logo_url': 'http://link',
+            'external_delivery_link': MOCK_VALID_LINK,
+            'cover_photo_url': MOCK_VALID_LINK,
+            'logo_url': MOCK_VALID_LINK,
             'rating': '3.00',
             'owner_name': 'Colonel Lam',
             'owner_story': 'lambs are a thing',
@@ -323,11 +321,11 @@ class RestaurantTestCases(TestCase):
             'email': 'winnie2@gmail.com',
             'cuisine': 'asina fusion',
             'pricepoint': 'High',
-            'twitter': 'http://link',
-            'instagram': 'http://link',
+            'twitter': MOCK_VALID_LINK,
+            'instagram': MOCK_VALID_LINK,
             'bio': 'Finger licking good chicken',
             'GEO_location': '{\'longitude\': 44.068203, \'latitude\':-114.742043}',
-            'external_delivery_link': 'http://link',
+            'external_delivery_link': MOCK_VALID_LINK,
             'cover_photo_url': 'http://invalid',
             'logo_url': 'invalid',
             'rating': '3.00',
@@ -382,9 +380,9 @@ class RestaurantTestCases(TestCase):
                               cuisine='american', pricepoint='High', twitter='', instagram='',
                               bio='Finger licking good chicken',
                               GEO_location='{\'longitude\': 44.068203, \'latitude\':-114.742043}',
-                              external_delivery_link='http://link', cover_photo_url='http://link',
-                              logo_url='http://link', rating='3.00', owner_name='Colonel Sanders',
-                              owner_story='i made chicken', owner_picture_url='http://link')
+                              external_delivery_link=MOCK_VALID_LINK, cover_photo_url=MOCK_VALID_LINK,
+                              logo_url=MOCK_VALID_LINK, rating='3.00', owner_name='Colonel Sanders',
+                              owner_story='i made chicken', owner_picture_url=MOCK_VALID_LINK)
         self.assertDictEqual(model_to_dict(actual), model_to_dict(expected))
 
     def test_edit_restaurant_invalid(self):

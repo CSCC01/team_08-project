@@ -10,3 +10,4 @@ Pillow
 google-cloud-storage
 jsonschema
 faker
+googlemaps

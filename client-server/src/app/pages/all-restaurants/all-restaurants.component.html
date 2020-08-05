@@ -31,13 +31,13 @@
             [category]="'Rating'"
             [subcategories]="['1 star', '2 star', '3 star', '4 star', '5 star']"
             [length]="5"
-            (events)="filterList($event, 'rating')"
+            (events)="filterRating($event)"
           ></app-filterlist-card>
           <app-filterlist-card
             [category]="'Price Range'"
-            [subcategories]="['$', '$$', '$$$']"
+            [subcategories]="['Low', 'Medium', 'High']"
             [length]="3"
-            (events)="filterList($event, 'pricepoint')"
+            (events)="filterPricepoint($event)"
           ></app-filterlist-card>
         </div>
         <div class="col-md-8">
@@ -70,9 +70,9 @@
         <div class="col-md-3">
           <app-filterlist-card
             [category]="'Price Range'"
-            [subcategories]="['$', '$$', '$$$']"
-            [length]="3"
-            (events)="filterList($event, 'price')"
+            [subcategories]="['$0 - $20', '$21 - $40', '$41 - $60', '$60+']"
+            [length]="4"
+            (events)="filterPrice($event)"
           ></app-filterlist-card>
         </div>
         <div class="col-md-9">

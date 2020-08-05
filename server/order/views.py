@@ -1,3 +1,4 @@
+from bson import ObjectId
 from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
 from order.models import Cart, Item
 from django.forms.models import model_to_dict
@@ -7,6 +8,7 @@ from utils.encoder import BSONEncoder
 from request_form import upload_form
 from utils.encoder import BSONEncoder
 from .order_state import OrderStates
+from django.core.exceptions import ObjectDoesNotExist
 
 # jsonschema validation schemes
 cart_schema = {
@@ -18,7 +20,6 @@ cart_schema = {
         "is_cancelled": {"type": "boolean"},
     }
 }
-
 
 status_schema = {
     'properties': {
@@ -42,6 +43,44 @@ item_schema_remove = {
     }
 }
 
+def get_restaurant_carts_page(request):
+    """
+    Gets the list of carts which have been sent, and are not completed, with this restaurant_id
+    """
+    restaurant_id = request.GET.get('restaurant_id')
+    carts = Cart.restaurants_carts(Cart, restaurant_id)
+    carts_dict = {'carts':[]}
+    for cart in carts:
+        carts_dict['carts'].append(json.loads(json.dumps(model_to_dict(cart), cls=BSONEncoder)))
+    return JsonResponse(carts_dict)
+    
+def get_users_cart_page(request):
+    """
+    Gets the user's active cart based on the given user_id,
+    if 'is_sent' is 'true', give all sent carts
+    otherwise give the only existing active cart
+    """
+    try:
+        user_id = request.GET.get('user_email')
+        is_sent = request.GET.get('is_sent').lower()
+        #annoying workaround since the request param is a string
+        #if is_sent.lower() == the string 'true' then it is true otherwise false
+        if (True if is_sent == 'true' else False):
+            #list of cart objects
+            carts = Cart.users_sent_carts(Cart, user_id)
+            carts_dict = {'carts':[]}
+            #converting the objects to json dicts for the response list
+            for cart in carts:
+                carts_dict['carts'].append(json.loads(json.dumps(model_to_dict(cart), cls=BSONEncoder)))
+            return JsonResponse(carts_dict)
+        else:
+            cart = Cart.users_active_cart(Cart, user_id)
+            return JsonResponse({'carts': [json.loads(json.dumps(model_to_dict(cart), cls=BSONEncoder))] } )
+
+        
+    except ObjectDoesNotExist as error:
+        return JsonResponse({'NoCart': 'Closed'})
+    
 
 def insert_cart_page(request):
     """ Insert cart to database """
@@ -52,7 +91,7 @@ def insert_cart_page(request):
 
 
 def update_status_page(request):
-    """Update cart status in database"""
+    """ Update cart status in database """
     validate(instance=request.body, schema=status_schema)
     body = json.loads(request.body)
     for status in OrderStates:
@@ -62,9 +101,17 @@ def update_status_page(request):
                 return JsonResponse(json.loads(json.dumps(model_to_dict(cart), cls=BSONEncoder)))
             except ValueError as error:
                 return HttpResponseBadRequest(str(error))
-    return HttpResponseBadRequest('Invalid request, please use check your request')
+    return HttpResponseBadRequest('Invalid request, please check your request')
 
-
+def decline_cart_page(request):
+    """Decline a cart which has been sent by a user"""
+    validate(instance=request.body, schema=cart_schema)
+    body = json.loads(request.body)
+    try:
+        cart = Cart.decline_cart(Cart, cart_id= body['_id'])
+        return JsonResponse(json.loads(json.dumps(model_to_dict(cart), cls=BSONEncoder)))
+    except ValueError as error:
+        return HttpResponseBadRequest(str(error))
 
 def insert_item_page(request):
     """ Insert item to database """
@@ -74,16 +121,18 @@ def insert_item_page(request):
     item._id = str(item._id)
     return JsonResponse(model_to_dict(item))
 
+
 def remove_item_page(request):
-    """Insert Item to database"""
+    """ Remove Item from database """
     validate(instance=request.body, schema=item_schema_remove)
     body = json.loads(request.body)
     Item.remove_item(body['item_id'])
     return HttpResponse('success')
 
+
 def edit_item_amount_page(request):
-    """Edit food item"""
-    validate(instance= request.body, schema=item_schema)
+    """ Edit food item """
+    validate(instance=request.body, schema=item_schema)
     body = json.loads(request.body)
     responsemessage = Item.edit_item_amount(body['item_id'], body['count'])
     for entry in responsemessage:
@@ -96,3 +145,12 @@ def get_items_by_cart_page(request):
     items = Item.get_items_by_cart(request.GET['cart_id'])
     items = [model_to_dict(item) for item in items]
     return JsonResponse(json.loads(json.dumps({'items': items}, cls=BSONEncoder)))
+
+
+def cancel_cart_page(request):
+    """ Deletes cart and all items in cart """
+    validate(instance=request.body, schema=cart_schema)
+    body = json.loads(request.body)
+    Cart.objects.get(_id=ObjectId(body['_id'])).cancel_cart()
+    return HttpResponse('success')
+
