@@ -46,15 +46,12 @@ export class RestuarantDashboardComponent implements OnInit {
       .getOrdersbyRestaurant(this.restaurantId)
       .subscribe((data) => {
         for (let i = 0; i < data.length; i++) {
-          if (data[i].AccDec_Timestamp === '') {
-            this.new_orders.push(this.orders[i]);
-          } else if (
-            data[i].AccDec_Timestamp !== '' &&
-            data[i].Complete_Timestamp === ''
-          ) {
-            this.in_progress.push(this.orders[i]);
+          if (data[i].complete_tstmp) {
+            this.complete.push(data[i]);
+          } else if (data[i].accept_tstmp) {
+            this.in_progress.push(data[i]);
           } else {
-            this.complete.push(this.orders[i]);
+            this.new_orders.push(data[i]);
           }
         }
       });
