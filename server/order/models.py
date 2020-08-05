@@ -1,6 +1,7 @@
 from bson import ObjectId
 from djongo import models
 from django.utils import timezone
+from django.core.exceptions import ObjectDoesNotExist
 from restaurant.models import Food
 
 
@@ -53,9 +54,11 @@ class Cart(models.Model):
         self.num_items += amount
         self.save(update_fields=['num_items'])
 
-    # updates the send_timestamp of the given cart to now,
-    # indicating that the cart has reached the RO
     def send_cart(self, cart_id):
+        """
+        updates the send_timestamp of the given cart to now,
+        indicating that the cart has reached the RO
+        """
         cart = Cart.objects.get(_id=cart_id)
         if cart.accept_tstmp is None and cart.complete_tstmp is None and cart.send_tstmp is None:
             cart.send_tstmp = timezone.now()
@@ -63,9 +66,11 @@ class Cart(models.Model):
             return cart
         raise ValueError('Could not send order')
 
-    # updates the accept_timestamp of the given cart to now,
-    # indicating that the orders are being prepared by the RO
     def accept_cart(self, cart_id):
+        """
+        updates the accept_timestamp of the given cart to now,
+        indicating that the orders are being prepared by the RO
+        """
         cart = Cart.objects.get(_id=cart_id)
         if cart.accept_tstmp is None and cart.complete_tstmp is None and cart.send_tstmp is not None:
             cart.accept_tstmp = timezone.now()
@@ -73,15 +78,25 @@ class Cart(models.Model):
             return cart
         raise ValueError('Could not accept order')
 
-    # updates the accept_decline_timestamp of the given cart to now
-    # declines the given cart, indicating that the given cart has been declined by the RO
+    # updates the complete_timestamp of the given cart to now
+    # cancels the given cart, indicating that the given cart has been declined by the RO
     def decline_cart(self, cart_id):
-        pass
+        cart = Cart.objects.get(_id = cart_id)
+        if cart.accept_tstmp is None and cart.complete_tstmp is None and cart.send_tstmp is not None:
+            cart.complete_tstmp = timezone.now()
+            cart.is_cancelled = True
+            cart.clean_fields()
+            cart.clean()
+            cart.save(update_fields=['complete_tstmp', 'is_cancelled'])
+            return cart
+        raise ValueError('Could not decline order')
 
-    # updates the complete_timestamp of the given cart
-    # note that when this timestamp is non-null it indicates the cart is CLOSED
-    #   and can no longer be edited by the user
     def complete_cart(self, cart_id):
+        """
+        updates the complete_timestamp of the given cart
+        note that when this timestamp is non-null it indicates the cart is CLOSED
+        and can no longer be edited by the user
+        """
         cart = Cart.objects.get(_id=cart_id)
         if cart.accept_tstmp is not None and cart.complete_tstmp is None and cart.send_tstmp is not None:
             cart.complete_tstmp = timezone.now()
@@ -89,11 +104,26 @@ class Cart(models.Model):
             return cart
         else:
             raise ValueError('Could not complete order')
+ 
+    def users_active_cart(self, user_email):
+        """
+        gets the user's current active cart (non-sent, non-completed, non-cancelled, non-accepted)
+        """
+        return Cart.objects.get(user_email= user_email, complete_tstmp= None, accept_tstmp= None, send_tstmp= None,is_cancelled= False)
 
-    # gets the user's current active cart
-    def users_active_cart(self, cart_id):
-        pass
+    def users_sent_carts(self, user_email):
+        """
+        gets the user's current sent but non-closed carts
+        """
+        carts = list(Cart.objects.filter(user_email= user_email, complete_tstmp= None).exclude(send_tstmp= None))
+        return carts
 
+    def restaurants_carts(self, restaurant_id):
+        """
+        gets the restaurants current sent carts
+        """
+        carts = list(Cart.objects.filter(restaurant_id= restaurant_id).exclude(send_tstmp= None))
+        return carts
 
 class Item(models.Model):
     """ Model for one type of Item in the cart """
@@ -166,3 +196,9 @@ class Item(models.Model):
         else:
             cls.remove_item(item_id)
             return {'item': {}}
+
+
+    @classmethod
+    def get_items_by_cart(cls, cart_id):
+        return list(Item.objects.filter(cart_id=cart_id))
+

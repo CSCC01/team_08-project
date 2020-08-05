@@ -56,7 +56,7 @@ restaurant_schema = {
     }
 }
 
-dish_editable = ["name", "description", "picture", "price", "specials"]
+dish_editable = ["name", "description", "picture", "price", "specials", "category"]
 
 restaurant_editable = ["name", "address", "phone", "updated_at", "email", "city", "cuisine", "pricepoint", "twitter",
                        "instagram", "bio", "GEO_location", "external_delivery_link", "cover_photo_url", "logo_url",
@@ -103,11 +103,16 @@ def insert_dish_page(request):
 
 
 def delete_dish_page(request):
-    """Deletes dish from database"""
+    """ Deletes dish from database """
     validate(instance=request.body, schema=tag_schema)
     body = json.loads(request.body)
     ManualTag.clear_food_tags(body["food_name"], body["restaurant_id"])
-    Food.objects.filter(name=body["food_name"], restaurant_id=body["restaurant_id"]).delete()
+    food = Food.objects.get(name=body["food_name"], restaurant_id=body["restaurant_id"])
+    food.delete()
+    if not Food.objects.filter(restaurant_id=body["restaurant_id"], category=food.category).exists():
+        restaurant = Restaurant.objects.get(_id=body['restaurant_id'])
+        restaurant.categories.remove(food.category)
+        restaurant.save(update_fields=['categories'])
     return HttpResponse(status=200)
 
 

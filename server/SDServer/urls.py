@@ -22,7 +22,8 @@ urlpatterns = [
     path('restaurant/', include('restaurant.urls')),
     path('timeline/', include('timeline.urls')),
     path('order/', include('order.urls')),
-    path('cloud_storage/', include('cloud_storage.urls'))
+    path('cloud_storage/', include('cloud_storage.urls')),
+    path('review/', include('review.urls'))
 ]
 
 # prefix all URLpatterns with api/ i.e. api/urlpattern
