@@ -73,6 +73,7 @@ class PostSuite(TestCase):
         request = RequestFactory().post('api/timeline/post/upload/', self.data, content_type='application/json')
         response = server.upload_post_page(request)
         actual = json.loads(response.content)
+        del actual['Timestamp']
         expected = {
             '_id': '222222222222222222222222',
             'restaurant_id': '000000000000000000000000',
@@ -124,9 +125,9 @@ class PostSuite(TestCase):
         """ Test if all post documents are returned """
         request = RequestFactory().get('/api/timeline/post/get_all/')
         actual = json.loads(server.get_all_posts_page(request).content)['Posts']
+        expected = [self.data2, self.data3]
         for post in actual:
             del post['Timestamp']
-        expected = [self.data2, self.data3]
         self.assertListEqual(expected, actual)
 
     def test_get_post_by_restaurant(self):
