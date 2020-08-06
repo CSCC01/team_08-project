@@ -6,9 +6,15 @@
         <a class="footer-links" href="#" target="_blank">FAQ</a>
       </div>
       <div class="col">
-        <a class="footer-links" href="#" target="_blank">Restaurant Owners</a>
+        <a
+          class="footer-links"
+          routerLink="all-owners"
+          routerLinkActive="active"
+          target="_blank"
+          >Restaurant Owners</a
+        >
         <br />
-        <a class="footer-links" href="#" target="_blank">Become a Partner</a>
+        <a class="footer-links" (click)="auth.login()">Become a Partner</a>
       </div>
       <div class="col">
         <a class="footer-links" href="#" target="_blank">
