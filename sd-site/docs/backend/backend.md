@@ -65,20 +65,20 @@ This section will go over all the backends components of the Scarborough Dining 
     email = models.EmailField(unique=True)
     city = models.CharField(max_length=40)
     cuisine = models.CharField(max_length=30)
-    pricepoint = models.CharField(max_length=5, choices=Prices.choices()) 
+    pricepoint = models.CharField(max_length=10, choices=Prices.choices())
     twitter = models.CharField(max_length=200, blank=True)
     instagram = models.CharField(max_length=200, blank=True)
     bio = models.TextField(null=True)
     GEO_location = models.CharField(max_length=200)
-    external_delivery_link = models.CharField(max_length=200)
+    external_delivery_link = models.CharField(max_length=200, blank=True)
     cover_photo_url = models.CharField(max_length=200,
                                        default='https://www.nautilusplus.com/content/uploads/2016/08/Pexel_junk-food.jpeg')
     logo_url = models.CharField(max_length=200,
                                 default='https://d1csarkz8obe9u.cloudfront.net/posterpreviews/diner-restaurant-logo-design-template-0899ae0c7e72cded1c0abc4fe2d76ae4_screen.jpg?ts=1561476509')
     rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.00)
-    owner_name = models.CharField(max_length = 50, blank = True)
-    owner_story = models.CharField(max_length = 3000, blank = True)
-    owner_picture_url = models.CharField(max_length = 200, blank=True)
+    owner_name = models.CharField(max_length=50, blank=True)
+    owner_story = models.CharField(max_length=3000, blank=True)
+    owner_picture_url = models.CharField(max_length=200, blank=True)
 ```
 
 ###### Prices (Enum)
@@ -123,11 +123,24 @@ This section will go over all the backends components of the Scarborough Dining 
     Timestamp = models.DateTimeField(auto_now=True)
 ```
 
+#### Review
+
+###### Restaurant Review
+
+```python
+    _id = models.ObjectIdField()
+    restaurant_id = models.CharField(max_length=24)
+    user_email = models.EmailField()
+    title = models.CharField(max_length=256)
+    content = models.TextField(max_length=4096)
+    Timestamp = models.DateTimeField(auto_now=True)
+    rating = models.IntegerField(blank=True)
+```
 
 ## URLs
 
-|               Address               | Required Fields (Field Type)                                                                                                                                                       | Optional Fields                                                                    | Type | Functionality                                                |
-| :---------------------------------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------- | :--: | ------------------------------------------------------------ |
+|               Address               | Required Fields (Field Type)                                                                                                                                                       | Optional Fields                                                                    | Type  | Functionality                                                |
+| :---------------------------------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------: | :---: | :----------------------------------------------------------: |
 |            /user/signup/            | nickname, name, picture, updated_at, email, email_verified                                                                                                                         | role (_Roles_ Name), restaurant_id                                                 | POST | Registers SDUser to DB                                       |
 |           /user/role_reassign/      | user\_email, role (_Roles_ Name)                                                                                                                                                   |                                                                                    | POST | Updates Role of SDUser (Not RO)                              |
 |           /user/role_reassign/      | user\_email, role (_Roles_ Name), (All Fields Needed for /restaurant/insert/)                                                                                                      |                                                                                    | POST | Updates Role of SDUSer to RO and adds his restaurant page    |
@@ -137,14 +150,14 @@ This section will go over all the backends components of the Scarborough Dining 
 |       /restaurant/tag/insert/       | food\_name, restaurant\_id, category (_Categories_ Name), value                                                                                                                    |                                                                                    | POST | Adds Tag to a Food Item                                      |
 |       /restaurant/tag/clear/        | food_name, restaurant_id                                                                                                                                                           |                                                                                    | POST | Clears All Tags on a Food Item                               |
 |        /restaurant/tag/auto/        | \_id                                                                                                                                                                               |                                                                                    | POST | Automatically tags food based on description                 |
-|      /restaurant/dish/insert/       | name, restaurant_id, description, picture, price, specials                                                                                                                         |                                                                                    | POST | Adds a dish to DB                                            |
+|      /restaurant/dish/insert/       | name, restaurant_id, description, picture, price, specials, category                                                                                                               |                                                                                    | POST | Adds a dish to DB                                            |
 |      /restaurant/dish/get_all/      |                                                                                                                                                                                    |                                                                                    | GET  | Retrieves all dishes                                         |
-|      /restaurant/dish/edit/         | \_id                                                                                                                                                                               | **name, description, picture, price, specials**                                    | POST | Updates the fields of the given Food with the new data       |
+|      /restaurant/dish/edit/         | \_id                                                                                                                                                                               | **name, description, picture, price, specials, category**                          | POST | Updates the fields of the given Food with the new data       |
 |      /restaurant/dish/delete/       | food_name, restaurant_id                                                                                                                                                           |                                                                                    | POST | Deletes dish from db                                         |
 | /restaurant/dish/get_by_restaurant/ | restaurant_id                                                                                                                                                                      |                                                                                    | GET  | Retrieves all dishes from restaurant                         |
 |          /restaurant/get/           | \_id                                                                                                                                                                               |                                                                                    | GET  | Retrieves Restaurant data                                    |
 |        /restaurant/get_all/         |                                                                                                                                                                                    |                                                                                    | GET  | Retrieves all Restaurants                                    |
-|         /restaurant/insert/         | name, address, phone, email (unique), city, cuisine, pricepoint (_Price_ Name), instagram, twitter, GEO_location, external_delivery_link, bio, cover_photo_url, logo_url, rating   | owner_name, owner_story, owner_picture_url                                         | POST | Registers a Restaurant to DB                                 |
+|         /restaurant/insert/         | name, address, phone, email (unique), city, cuisine, pricepoint (_Price_ Name), instagram, twitter, GEO_location, external_delivery_link, bio, cover_photo_url, logo_url, rating   | owner_name, owner_story, owner_picture_url, categories                             | POST | Registers a Restaurant to DB                                 |
 |          /restaurant/edit/          | restaurant_id                                                                                                                                                                      | **(All Fields Needed for /restaurant/insert/ except for rating and GEO_location)** | POST | Updates the fields of the given Restaurant with the new data |
 |        /timeline/post/upload/       | restaurant_id, user_email, content                                                                                                                                                 |                                                                                    | POST | Add post to timeline table                                   |
 | /timeline/post/get_by_restaurant/   | restaurant_id                                                                                                                                                                      |                                                                                    | GET  | Retrieves all posts from restaurant                          |
@@ -154,13 +167,21 @@ This section will go over all the backends components of the Scarborough Dining 
 |      /timeline/comment/delete/      | \_id                                                                                                                                                                               |                                                                                    | POST | Deletes a comment from the database                          |
 |      /timeline/comment/get/         | \_id                                                                                                                                                                               |                                                                                    | GET  | Retrieves comment data                                       |
 |      /order/cart/insert/            | restaurant_id, user_email                                                                                                                                                          |                                                                                    | POST | Add cart to database                                         |
+|      /order/cart/user_carts/        | user_email, is_sent                                                                                                                                                                |                                                                                   | GET  | Gets the user's current active cart(s)                       |
+|      /order/cart/restaurant_carts/        | user_email                                                                                                                                                                   |                                                                                   | GET  | Gets the restaurant's current sent carts   |
+|      /order/cart/cancel/            | \_id                                                                                                                                                                               |                                                                                    | POST | Deletes the cart and all items in the cart from the database |
 |      /order/item/insert/            | cart_id, food_id, count                                                                                                                                                            |                                                                                    | POST | Add item to database and change cart price accordingly       |
-|      /order/update_status/          | _id, status (snd, cmt, acc)                                                                                                                                                        |                                                                                    | POST | Update status of given cart                                  |
+|      /order/cart/update_status/          | _id, status (snd, cmt, acc)                                                                                                                                                        |                                                                                    | POST | Update status of given cart                                  |
+|      /order/cart/decline/          | _id                                                                                                                                                                                      |                                                                                    | POST | Decline a given sent cart                                    |
 |      /order/item/remove/            | item_id                                                                                                                                                                            |                                                                                    | POST | Remove item from db and update cart price (remove cart if last)|
-|      /order/item/edit_amount/       | item_id, count                                                                                                                                               |                                                                                    | POST | Change given item's count to count, if count is 0, delete item|
+|      /order/item/edit_amount/       | item_id, count                                                                                                                                                                     |                                                                                    | POST | Change given item's count to count, if count is 0, delete item|
+|       /order/item/get_by_cart/      | cart_id                                                                                                                                                                            |                                                                                    | GET  | Get all items associated with given cart                      |
+|      /review/insert/                | restaurant_id, user_email, title, content, rating                                                                                                                                  |                                                                                    | POST | Add a review to the database                                 |
+|      /review/get_by_restaurant/     | restaurant_id                                                                                                                                                                               |                                                                           | GET  | Get the restaurant review documents from the database        |
 
 All requests should be sent in a JSON format. Optional parameters can be left blank Ex: {"Role" : ""}. Bolded Fields can be omitted entirely.
 
+Field validation is done for the URLs: [/user/edit/, /restaurant/insert/, /restaurant/edit/, /restaurant/dish/insert/, /restaurant/dish/edit/] where invalid fields are returned in the format {'Invalid': [field1, field2]}
 ## Utilities
 
 ### Seeding framework: document_seed_generator.py
@@ -264,4 +285,19 @@ All media uploads use the same endpoint. However the input form decides where th
   user_SDUserMedia              | file, save_location, email | api/cloud_storage/upload/ | picture                                      |
 
 ![image info](./examples/example1.PNG)
+
+### Geocoding
  
+#### Functions
+
+##### `geocode(address)`
+Takes address and returns longitude and latitude dictionary representation of address
+
+#### Example Usage
+```python
+>>> from . import geo_controller
+>>> address = '225 Helen Avenue' 
+>>> location = geo_controller.geocode(address)
+>>> location
+>>> {'lat': 43.9068502, 'lng': -79.7828746} 
+```
