@@ -1,5 +1,7 @@
 from django.forms import model_to_dict
 from django.http import HttpResponse, JsonResponse
+
+from geo import geo_controller
 from user.models import SDUser
 from restaurant.models import Restaurant
 import json
@@ -23,7 +25,7 @@ signup_schema = {
     }
 }
 
-user_editable = ["nickname", "name", "picture", "updated_at", "birthday", "address", "phone", "GEO_location"]
+user_editable = ["nickname", "name", "picture", "updated_at", "birthday", "address", "phone"]
 
 
 def signup_page(request):
@@ -72,7 +74,7 @@ def exists_page(request):
 
 
 def edit_user_page(request):
-    """Update User data"""
+    """ Update User data """
     validate(instance=request.body, schema=signup_schema)
     body = json.loads(request.body)
     invalid = SDUser.field_validate(body)
@@ -83,6 +85,11 @@ def edit_user_page(request):
     for field in body:
         if field in user_editable:
             setattr(user, field, body[field])
+            if field == "address":
+                try:
+                    setattr(user, 'GEO_location', geo_controller.geocode(body[field]))
+                except ValueError:
+                    pass
     user.clean_fields()
     user.clean()
     user.save()

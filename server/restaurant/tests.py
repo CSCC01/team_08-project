@@ -160,8 +160,8 @@ class FoodTestCases(TestCase):
 
     def setUp(self):
         """ Load food document """
-        self.foodA = Food.objects.create(name="foodA", restaurant_id="restA", description="descripA", picture="picA",
-                                         price='10.99')
+        self.foodA = Food.objects.create(name="foodA", restaurant_id="111111111111111111111111", description="descripA", picture="picA",
+                                         price='10.99', category='Lunch')
         self.foodB = Food.objects.create(name="foodB", restaurant_id="restB", description="descripB", picture="picB",
                                          price='20.99')
         self.expected = {
@@ -184,7 +184,7 @@ class FoodTestCases(TestCase):
             'owner_name': 'Colonel Sanders',
             'owner_story': 'i made chicken',
             'owner_picture_url': 'http://link',
-            'categories': []
+            'categories': ['Lunch']
         }
         Restaurant.objects.create(**self.expected)
         self.factory = RequestFactory()
@@ -225,7 +225,7 @@ class FoodTestCases(TestCase):
 
     def test_get_by_restaurant(self):
         """ Test if all foods from a restaurant are retrieved """
-        req = self.factory.get('api/restaurant/dish/get_by_restaurant/', {'restaurant_id': 'restA'},
+        req = self.factory.get('api/restaurant/dish/get_by_restaurant/', {'restaurant_id': '111111111111111111111111'},
                                content_type="application/json")
         actual = json.loads(view_response.get_dish_by_restaurant_page(req).content)
         expected = {'Dishes': [model_to_dict(self.foodA)]}
@@ -257,7 +257,7 @@ class FoodTestCases(TestCase):
 
     def test_delete_food(self):
         """ Test if the food is deleted """
-        req = self.factory.post('api/restaurant/dish/delete', {'food_name': "foodA", "restaurant_id": "restA"},
+        req = self.factory.post('api/restaurant/dish/delete', {'food_name': "foodA", "restaurant_id": "111111111111111111111111"},
                                 content_type="application/json")
         view_response.delete_dish_page(req)
         actual = Food.objects.filter(name="foodA").first()
@@ -289,7 +289,7 @@ class RestaurantTestCases(TestCase):
             'rating': '3.00',
             'owner_name': 'Colonel Sanders',
             'owner_story': 'i made chicken',
-            'owner_picture_url': MOCK_VALID_LINK
+            'owner_picture_url': MOCK_VALID_LINK,
             'categories': []
         }
 
@@ -312,7 +312,7 @@ class RestaurantTestCases(TestCase):
             'rating': '3.00',
             'owner_name': 'Colonel Calvino',
             'owner_story': 'i made it boys',
-            'owner_picture_url': MOCK_VALID_LINK
+            'owner_picture_url': MOCK_VALID_LINK,
             'categories': []
         }
 
@@ -328,7 +328,6 @@ class RestaurantTestCases(TestCase):
             'twitter': MOCK_VALID_LINK,
             'instagram': MOCK_VALID_LINK,
             'bio': 'Finger licking good chicken',
-            'GEO_location': '{\'longitude\': 44.068203, \'latitude\':-114.742043}',
             'external_delivery_link': MOCK_VALID_LINK,
             'cover_photo_url': MOCK_VALID_LINK,
             'logo_url': MOCK_VALID_LINK,
@@ -410,6 +409,7 @@ class RestaurantTestCases(TestCase):
         """ Test if restaurant is properly inserted into the database """
         request = self.factory.post('/api/restaurant/insert/', self.expected3, content_type="application/json")
         actual = json.loads(view_response.insert_restaurant_page(request).content)
+        self.expected3['GEO_location'] = "{'lat': 41.8787849, 'lng': -87.6302016}"
         self.assertDictEqual(self.expected3, actual)
 
     @mock.patch('requests.get', side_effect=mocked_requests_get)
@@ -433,7 +433,7 @@ class RestaurantTestCases(TestCase):
                               address='211 Cambodia', phone=6475040680, city='markham', email='alac@gmail.com',
                               cuisine='american', pricepoint='High', twitter='', instagram='',
                               bio='Finger licking good chicken',
-                              GEO_location='{\'longitude\': 44.068203, \'latitude\':-114.742043}',
+                              GEO_location="{'lat': 11.5395535, 'lng': 104.916782}",
                               external_delivery_link=MOCK_VALID_LINK, cover_photo_url=MOCK_VALID_LINK,
                               logo_url=MOCK_VALID_LINK, rating='3.00', owner_name='Colonel Sanders',
                               owner_story='i made chicken', owner_picture_url=MOCK_VALID_LINK)

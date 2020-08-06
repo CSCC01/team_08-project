@@ -73,6 +73,7 @@ class PostSuite(TestCase):
         request = RequestFactory().post('api/timeline/post/upload/', self.data, content_type='application/json')
         response = server.upload_post_page(request)
         actual = json.loads(response.content)
+        del actual['Timestamp']
         expected = {
             '_id': '222222222222222222222222',
             'restaurant_id': '000000000000000000000000',
@@ -80,6 +81,7 @@ class PostSuite(TestCase):
             'content': 'Post',
             'likes': [],
             'comments': [],
+
         }
         self.assertDictEqual(actual, expected)
 
