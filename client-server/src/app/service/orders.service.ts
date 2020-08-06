@@ -57,10 +57,24 @@ export class OrdersService {
   Get all orders by restaurant
   */
   getOrdersbyRestaurant(restaurantId): Observable<any> {
-    const endpoint = `${OrdersService.ORDER_ENDPOINT}/cart/restaurant_carts/`;
-    const obj = {
+    const endpoint = `${OrdersService.ORDER_ENDPOINT}/cart/restaurant_carts`;
+    var params = {
       restaurant_id: restaurantId,
     };
-    return this.http.post<any>(endpoint, obj);
+    return this.http.get(endpoint, { params: params });
+  }
+
+  /*
+  @Input: A cart ID
+  @Output: All items for a cart
+
+  Get all items in a cart
+  */
+  getItembyCart(cartId): Observable<any> {
+    const endpoint = `${OrdersService.ORDER_ENDPOINT}/item/get_by_cart/`;
+    var params = {
+      cart_id: cartId,
+    };
+    return this.http.get(endpoint, { params: params });
   }
 }

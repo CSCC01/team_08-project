@@ -24,9 +24,7 @@ export class RestuarantDashboardComponent implements OnInit {
     private router: Router,
     private restaurantsService: RestaurantsService,
     private ordersService: OrdersService
-  ) {
-    this.getOrders();
-  }
+  ) {}
 
   ngOnInit(): void {
     this.restaurantId = sessionStorage.getItem('restaurantId');
@@ -39,21 +37,44 @@ export class RestuarantDashboardComponent implements OnInit {
       .subscribe((data) => {
         this.restaurantName = data.name;
       });
+    this.getOrders();
   }
 
   getOrders(): void {
+    this.orders = [];
     this.ordersService
       .getOrdersbyRestaurant(this.restaurantId)
       .subscribe((data) => {
-        for (let i = 0; i < data.length; i++) {
-          if (data[i].complete_tstmp) {
-            this.complete.push(data[i]);
-          } else if (data[i].accept_tstmp) {
-            this.in_progress.push(data[i]);
-          } else {
-            this.new_orders.push(data[i]);
-          }
+        let order;
+        for (let i = 0; i < data.carts.length; i++) {
+          order = data.carts[0];
+          order.dishes = [];
+          this.ordersService.getItembyCart(order._id).subscribe((data) => {
+            for (let j = 0; j < data.items.length; j++) {
+              order.dishes[i] = {
+                count: data.items[j].count,
+                dish: data.items[j].food_id,
+              };
+            }
+          });
+          this.orders.push(order);
+          this.restaurantsService
+            .getRestaurantFood(this.restaurantId)
+            .subscribe((data) => {});
+          // for (let k = 0; k < this.orders.length; k++) {
+          //   console.log(this.orders[0]);
+          // }
         }
+
+        // for (let i = 0; i < data.length; i++) {
+        //   if (data[i].complete_tstmp) {
+        //     this.complete.push(data[i]);
+        //   } else if (data[i].accept_tstmp) {
+        //     this.in_progress.push(data[i]);
+        //   } else {
+        //     this.new_orders.push(data[i]);
+        //   }
+        // }
       });
   }
 }
