@@ -11,22 +11,7 @@ class TimelinePost(models.Model):
     Timestamp = models.DateTimeField(auto_now=True)
     comments = models.ListField(default=[], blank=True)
 
-    @classmethod
-    def get_by_restaurant(cls, rest_id):
-        """
-        Retrieve posts by restaurant id
-        :param rest_id: id of restaurant
-        :return: post data in json
-        """
-        return list(TimelinePost.objects.filter(restaurant_id=rest_id))
 
-    @classmethod
-    def get_all(cls):
-        """
-        retrieve list of posts from database
-        :return: return list of posts json data wrapped in
-        """
-        return list(TimelinePost.objects.all())
 
 
 # Model for a comment on a timeline post

@@ -33,7 +33,6 @@ def upload_post_page(request):
         return HttpResponseBadRequest('Invalid request')
 
     body = json.loads(request.body)
-
     post = TimelinePost(**body)
     post.full_clean()
     post.save()
@@ -59,8 +58,8 @@ def delete_post_page(request):
         post = TimelinePost.objects.get(_id=body['post_id'])
     except jsonschema.exceptions.ValidationError:
         return HttpResponseBadRequest('Invalid post_id')
-    comment_response_list = []
 
+    comment_response_list = []
     post_deleted = model_to_json(post)
 
     # for each comment
@@ -79,7 +78,7 @@ def delete_post_page(request):
 
 def get_all_posts_page(request):
     """ retrieve list of restaurants from database """
-    posts = TimelinePost.get_all()
+    posts = list(TimelinePost.objects.all())
     response = {'Posts': []}
     for post in posts:
         time_stamp = {'Timestamp': post.Timestamp.strftime("%b %d, %Y %H:%M")}
@@ -114,7 +113,7 @@ def upload_comment_page(request):
 def get_post_by_restaurant_page(request):
     """Retrieve all posts from a restaurant"""
     rest_id = request.GET.get('restaurant_id')
-    posts = TimelinePost.get_by_restaurant(rest_id)
+    posts = list(TimelinePost.objects.filter(restaurant_id=rest_id))
     response = {'Posts': []}
     for post in posts:
         time_stamp = {'Timestamp': post.Timestamp.strftime("%b %d, %Y %H:%M")}
@@ -128,10 +127,21 @@ def delete_comment_page(request):
     body = json.loads(request.body)
     comment = TimelineComment.objects.get(_id=body["_id"])
     post = TimelinePost.objects.get(_id=comment.post_id)
-    post.comments.remove(comment._id)
-    post.save(update_fields=["comments"])
+    remove_comment_from_post(post, comment._id)
     comment.delete()
     return HttpResponse(status=200)
+
+
+def remove_comment_from_post(post, comment_id):
+    """
+    Helper function to remove comment from post
+    :params-post: associated post
+    :params-comment: comment_id to be deleted
+    :return: updated post
+    """
+    post.comments.remove(comment_id)
+    post.save(update_fields=['comments'])
+    return post
 
 
 def get_comment_data_page(request):
