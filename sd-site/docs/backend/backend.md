@@ -93,7 +93,7 @@ This section will go over all the backends components of the Scarborough Dining 
     FR = "Food Restriction"
     CU = "Cuisine"
     DI = "Dish"
-    
+
 ###### Order States (Enum)
 
     acc = "accept_cart"
@@ -103,6 +103,7 @@ This section will go over all the backends components of the Scarborough Dining 
 #### Timeline
 
 ###### TimelinePost
+
 ```python
     _id = models.ObjectIdField()
     restaurant_id = models.CharField(max_length=24)
@@ -114,6 +115,7 @@ This section will go over all the backends components of the Scarborough Dining 
 ```
 
 ##### TimelineComment
+
 ```python
     _id = models.ObjectIdField()
     post_id = models.CharField(max_length=24)
@@ -139,49 +141,50 @@ This section will go over all the backends components of the Scarborough Dining 
 
 ## URLs
 
-|               Address               | Required Fields (Field Type)                                                                                                                                                       | Optional Fields                                                                    | Type  | Functionality                                                |
-| :---------------------------------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------: | :---: | :----------------------------------------------------------: |
-|            /user/signup/            | nickname, name, picture, updated_at, email, email_verified                                                                                                                         | role (_Roles_ Name), restaurant_id                                                 | POST | Registers SDUser to DB                                       |
-|           /user/role_reassign/      | user\_email, role (_Roles_ Name)                                                                                                                                                   |                                                                                    | POST | Updates Role of SDUser (Not RO)                              |
-|           /user/role_reassign/      | user\_email, role (_Roles_ Name), (All Fields Needed for /restaurant/insert/)                                                                                                      |                                                                                    | POST | Updates Role of SDUSer to RO and adds his restaurant page    |
-|             /user/data/             | email                                                                                                                                                                              |                                                                                    | GET  | Returns All Fields of the SDUser                             |
-|            /user/exists/            | email                                                                                                                                                                              |                                                                                    | GET  | Returns if the SDUser exists in the DB                       |
-|            /user/edit/              | email                                                                                                                                                                              | **nickname, name, picture, updated_at, birthday, address, phone**                  | POST | Updates the fields of the given User with the new data       |
-|       /restaurant/tag/insert/       | food\_name, restaurant\_id, category (_Categories_ Name), value                                                                                                                    |                                                                                    | POST | Adds Tag to a Food Item                                      |
-|       /restaurant/tag/clear/        | food_name, restaurant_id                                                                                                                                                           |                                                                                    | POST | Clears All Tags on a Food Item                               |
-|        /restaurant/tag/auto/        | \_id                                                                                                                                                                               |                                                                                    | POST | Automatically tags food based on description                 |
-|      /restaurant/dish/insert/       | name, restaurant_id, description, picture, price, specials, category                                                                                                               |                                                                                    | POST | Adds a dish to DB                                            |
-|      /restaurant/dish/get_all/      |                                                                                                                                                                                    |                                                                                    | GET  | Retrieves all dishes                                         |
-|      /restaurant/dish/edit/         | \_id                                                                                                                                                                               | **name, description, picture, price, specials, category**                          | POST | Updates the fields of the given Food with the new data       |
-|      /restaurant/dish/delete/       | food_name, restaurant_id                                                                                                                                                           |                                                                                    | POST | Deletes dish from db                                         |
-| /restaurant/dish/get_by_restaurant/ | restaurant_id                                                                                                                                                                      |                                                                                    | GET  | Retrieves all dishes from restaurant                         |
-|          /restaurant/get/           | \_id                                                                                                                                                                               |                                                                                    | GET  | Retrieves Restaurant data                                    |
-|        /restaurant/get_all/         |                                                                                                                                                                                    |                                                                                    | GET  | Retrieves all Restaurants                                    |
-|         /restaurant/insert/         | name, address, phone, email (unique), city, cuisine, pricepoint (_Price_ Name), instagram, twitter, GEO_location, external_delivery_link, bio, cover_photo_url, logo_url, rating   | owner_name, owner_story, owner_picture_url, categories                             | POST | Registers a Restaurant to DB                                 |
-|          /restaurant/edit/          | restaurant_id                                                                                                                                                                      | **(All Fields Needed for /restaurant/insert/ except for rating and GEO_location)** | POST | Updates the fields of the given Restaurant with the new data |
-|        /timeline/post/upload/       | restaurant_id, user_email, content                                                                                                                                                 |                                                                                    | POST | Add post to timeline table                                   |
-| /timeline/post/get_by_restaurant/   | restaurant_id                                                                                                                                                                      |                                                                                    | GET  | Retrieves all posts from restaurant                          |
-|        /timeline/post/delete/       | post_id                                                                                                                                                                            |                                                                                    | POST | deletes a post and all linked comments from the timeline table |
-|        /timeline/post/get_all/      |                                                                                                                                                                                    |                                                                                    | GET  | Retrieves all posts                                          |
-|      /timeline/comment/upload/      | post_id, user_email, content                                                                                                                                                       |                                                                                    | POST | Add comment to database and to post                          |
-|      /timeline/comment/delete/      | \_id                                                                                                                                                                               |                                                                                    | POST | Deletes a comment from the database                          |
-|      /timeline/comment/get/         | \_id                                                                                                                                                                               |                                                                                    | GET  | Retrieves comment data                                       |
-|      /order/cart/insert/            | restaurant_id, user_email                                                                                                                                                          |                                                                                    | POST | Add cart to database                                         |
-|      /order/cart/user_carts/        | user_email, is_sent                                                                                                                                                                |                                                                                   | GET  | Gets the user's current active cart(s)                       |
-|      /order/cart/restaurant_carts/        | user_email                                                                                                                                                                   |                                                                                   | GET  | Gets the restaurant's current sent carts   |
-|      /order/cart/cancel/            | \_id                                                                                                                                                                               |                                                                                    | POST | Deletes the cart and all items in the cart from the database |
-|      /order/item/insert/            | cart_id, food_id, count                                                                                                                                                            |                                                                                    | POST | Add item to database and change cart price accordingly       |
-|      /order/cart/update_status/          | _id, status (snd, cmt, acc)                                                                                                                                                        |                                                                                    | POST | Update status of given cart                                  |
-|      /order/cart/decline/          | _id                                                                                                                                                                                      |                                                                                    | POST | Decline a given sent cart                                    |
-|      /order/item/remove/            | item_id                                                                                                                                                                            |                                                                                    | POST | Remove item from db and update cart price (remove cart if last)|
-|      /order/item/edit_amount/       | item_id, count                                                                                                                                                                     |                                                                                    | POST | Change given item's count to count, if count is 0, delete item|
-|       /order/item/get_by_cart/      | cart_id                                                                                                                                                                            |                                                                                    | GET  | Get all items associated with given cart                      |
-|      /review/insert/                | restaurant_id, user_email, title, content, rating                                                                                                                                  |                                                                                    | POST | Add a review to the database                                 |
-|      /review/get_by_restaurant/     | restaurant_id                                                                                                                                                                               |                                                                           | GET  | Get the restaurant review documents from the database        |
+|               Address               |                                                                           Required Fields (Field Type)                                                                           |                                  Optional Fields                                   | Type |                          Functionality                          |
+| :---------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------: | :--: | :-------------------------------------------------------------: |
+|            /user/signup/            |                                                            nickname, name, picture, updated_at, email, email_verified                                                            |                         role (_Roles_ Name), restaurant_id                         | POST |                     Registers SDUser to DB                      |
+|        /user/role_reassign/         |                                                                         user_email, role (_Roles_ Name)                                                                          |                                                                                    | POST |                 Updates Role of SDUser (Not RO)                 |
+|        /user/role_reassign/         |                                                   user_email, role (_Roles_ Name), (All Fields Needed for /restaurant/insert/)                                                   |                                                                                    | POST |    Updates Role of SDUSer to RO and adds his restaurant page    |
+|             /user/data/             |                                                                                      email                                                                                       |                                                                                    | GET  |                Returns All Fields of the SDUser                 |
+|            /user/exists/            |                                                                                      email                                                                                       |                                                                                    | GET  |             Returns if the SDUser exists in the DB              |
+|             /user/edit/             |                                                                                      email                                                                                       |         **nickname, name, picture, updated_at, birthday, address, phone**          | POST |     Updates the fields of the given User with the new data      |
+|       /restaurant/tag/insert/       |                                                          food_name, restaurant_id, category (_Categories_ Name), value                                                           |                                                                                    | POST |                     Adds Tag to a Food Item                     |
+|       /restaurant/tag/clear/        |                                                                             food_name, restaurant_id                                                                             |                                                                                    | POST |                 Clears All Tags on a Food Item                  |
+|        /restaurant/tag/auto/        |                                                                                       \_id                                                                                       |                                                                                    | POST |          Automatically tags food based on description           |
+|      /restaurant/dish/insert/       |                                                       name, restaurant_id, description, picture, price, specials, category                                                       |                                                                                    | POST |                        Adds a dish to DB                        |
+|      /restaurant/dish/get_all/      |                                                                                                                                                                                  |                                                                                    | GET  |                      Retrieves all dishes                       |
+|       /restaurant/dish/edit/        |                                                                                       \_id                                                                                       |             **name, description, picture, price, specials, category**              | POST |     Updates the fields of the given Food with the new data      |
+|      /restaurant/dish/delete/       |                                                                             food_name, restaurant_id                                                                             |                                                                                    | POST |                      Deletes dish from db                       |
+| /restaurant/dish/get_by_restaurant/ |                                                                                  restaurant_id                                                                                   |                                                                                    | GET  |              Retrieves all dishes from restaurant               |
+|          /restaurant/get/           |                                                                                       \_id                                                                                       |                                                                                    | GET  |                    Retrieves Restaurant data                    |
+|        /restaurant/get_all/         |                                                                                                                                                                                  |                                                                                    | GET  |                    Retrieves all Restaurants                    |
+|         /restaurant/insert/         | name, address, phone, email (unique), city, cuisine, pricepoint (_Price_ Name), instagram, twitter, GEO_location, external_delivery_link, bio, cover_photo_url, logo_url, rating |               owner_name, owner_story, owner_picture_url, categories               | POST |                  Registers a Restaurant to DB                   |
+|          /restaurant/edit/          |                                                                                  restaurant_id                                                                                   | **(All Fields Needed for /restaurant/insert/ except for rating and GEO_location)** | POST |  Updates the fields of the given Restaurant with the new data   |
+|       /timeline/post/upload/        |                                                                        restaurant_id, user_email, content                                                                        |                                                                                    | POST |                   Add post to timeline table                    |
+|  /timeline/post/get_by_restaurant/  |                                                                                  restaurant_id                                                                                   |                                                                                    | GET  |               Retrieves all posts from restaurant               |
+|       /timeline/post/delete/        |                                                                                     post_id                                                                                      |                                                                                    | POST | deletes a post and all linked comments from the timeline table  |
+|       /timeline/post/get_all/       |                                                                                                                                                                                  |                                                                                    | GET  |                       Retrieves all posts                       |
+|      /timeline/comment/upload/      |                                                                           post_id, user_email, content                                                                           |                                                                                    | POST |               Add comment to database and to post               |
+|      /timeline/comment/delete/      |                                                                                       \_id                                                                                       |                                                                                    | POST |               Deletes a comment from the database               |
+|       /timeline/comment/get/        |                                                                                       \_id                                                                                       |                                                                                    | GET  |                     Retrieves comment data                      |
+|         /order/cart/insert/         |                                                                            restaurant_id, user_email                                                                             |                                                                                    | POST |                      Add cart to database                       |
+|       /order/cart/user_carts/       |                                                                               user_email, is_sent                                                                                |                                                                                    | GET  |             Gets the user's current active cart(s)              |
+|    /order/cart/restaurant_carts/    |                                                                                  restaurant_id                                                                                   |                                                                                    | GET  |            Gets the restaurant's current sent carts             |
+|         /order/cart/cancel/         |                                                                                       \_id                                                                                       |                                                                                    | POST |  Deletes the cart and all items in the cart from the database   |
+|         /order/item/insert/         |                                                                             cart_id, food_id, count                                                                              |                                                                                    | POST |     Add item to database and change cart price accordingly      |
+|     /order/cart/update_status/      |                                                                           \_id, status (snd, cmt, acc)                                                                           |                                                                                    | POST |                   Update status of given cart                   |
+|        /order/cart/decline/         |                                                                                       \_id                                                                                       |                                                                                    | POST |                    Decline a given sent cart                    |
+|         /order/item/remove/         |                                                                                     item_id                                                                                      |                                                                                    | POST | Remove item from db and update cart price (remove cart if last) |
+|      /order/item/edit_amount/       |                                                                                  item_id, count                                                                                  |                                                                                    | POST | Change given item's count to count, if count is 0, delete item  |
+|      /order/item/get_by_cart/       |                                                                                     cart_id                                                                                      |                                                                                    | GET  |            Get all items associated with given cart             |
+|           /review/insert/           |                                                                restaurant_id, user_email, title, content, rating                                                                 |                                                                                    | POST |                  Add a review to the database                   |
+|     /review/get_by_restaurant/      |                                                                                  restaurant_id                                                                                   |                                                                                    | GET  |      Get the restaurant review documents from the database      |
 
 All requests should be sent in a JSON format. Optional parameters can be left blank Ex: {"Role" : ""}. Bolded Fields can be omitted entirely.
 
 Field validation is done for the URLs: [/user/edit/, /restaurant/insert/, /restaurant/edit/, /restaurant/dish/insert/, /restaurant/dish/edit/] where invalid fields are returned in the format {'Invalid': [field1, field2]}
+
 ## Utilities
 
 ### Seeding framework: document_seed_generator.py
@@ -236,19 +239,22 @@ Field validation is done for the URLs: [/user/edit/, /restaurant/insert/, /resta
 
 ### Cloud-storage
 
-Available constants 
+Available constants
 
-| Constant          | Description                     |
-| :---------------: | :-----------------------------: |
-| TEST_BUCKET       | Path to testing bucket          |
-| PRODUCTION_BUCKET | Path to deploy/production bucket|
-| IMAGE             | content type for images
+|     Constant      |           Description            |
+| :---------------: | :------------------------------: |
+|    TEST_BUCKET    |      Path to testing bucket      |
+| PRODUCTION_BUCKET | Path to deploy/production bucket |
+|       IMAGE       |     content type for images      |
+
 #### Functions
 
 #### `upload(file, bucket_path)`
+
 Upload file (binary data) into bucket path of our google cloud and return link to uploaded file
 
 #### `delete(file_path)`
+
 Check if pointed file from the file_path is a default object and if not, delete file from its bucket
 
 #### Example
@@ -263,12 +269,12 @@ def test(file):
     """
     # upload file to test bucket
     path = cloud_controller.upload(file, cloud_controller.TEST_BUCKET)
-    
+
     # optional parameter content_type, by setting it image this allows you to
     # view image in the google console instead of downloading
-    #  path = cloud_controller.upload(file, cloud_controller.TEST_BUCKET, 
+    #  path = cloud_controller.upload(file, cloud_controller.TEST_BUCKET,
             #  content_type=cloud_controller.IMAGE)
-    
+
     # delete file
     cloud_controller.delete(path)
 ```
@@ -278,26 +284,28 @@ def test(file):
 All media uploads use the same endpoint. However the input form decides where the image is saved
 (save locations are fields in mongodb model, however are listed here for convenience)
 
-|        APP String             |     Extra parameters       |           URL             | save_locations                               |
-| :---------------------------: | :------------------------: | :-----------------------: | :------------------------------------------: |
-| restaurant_RestaurantMedia    | file, save_location, _id   | api/cloud_storage/upload/ | cover_photo_url, logo_url, owner_picture_url |
-| restaurant_FoodMedia          | file, save_location, _id   | api/cloud_storage/upload/ | picture                                      |
-  user_SDUserMedia              | file, save_location, email | api/cloud_storage/upload/ | picture                                      |
+|         APP String         |      Extra parameters      |            URL            |                save_locations                |
+| :------------------------: | :------------------------: | :-----------------------: | :------------------------------------------: |
+| restaurant_RestaurantMedia | file, save_location, \_id  | api/cloud_storage/upload/ | cover_photo_url, logo_url, owner_picture_url |
+|    restaurant_FoodMedia    | file, save_location, \_id  | api/cloud_storage/upload/ |                   picture                    |
+|      user_SDUserMedia      | file, save_location, email | api/cloud_storage/upload/ |                   picture                    |
 
 ![image info](./examples/example1.PNG)
 
 ### Geocoding
- 
+
 #### Functions
 
 ##### `geocode(address)`
+
 Takes address and returns longitude and latitude dictionary representation of address
 
 #### Example Usage
+
 ```python
 >>> from . import geo_controller
->>> address = '225 Helen Avenue' 
+>>> address = '225 Helen Avenue'
 >>> location = geo_controller.geocode(address)
 >>> location
->>> {'lat': 43.9068502, 'lng': -79.7828746} 
+>>> {'lat': 43.9068502, 'lng': -79.7828746}
 ```
