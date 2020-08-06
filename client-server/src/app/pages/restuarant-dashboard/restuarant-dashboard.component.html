@@ -2,7 +2,9 @@
   <h2 class="header-title">Welcome {{ this.restaurantName | titlecase }}</h2>
 
   <div class="all-orders">
-    <button class="btn all-orders">View All Orders</button>
+    <button class="btn all-orders" (click)="viewAllOrders()">
+      View All Orders
+    </button>
   </div>
 
   <mat-tab-group mat-align-tabs="center">

@@ -88,4 +88,8 @@ export class RestuarantDashboardComponent implements OnInit {
         this.dishes = data.Dishes;
       });
   }
+
+  viewAllOrders(): void {
+    this.router.navigate(['/all-orders']);
+  }
 }
