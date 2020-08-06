@@ -27,7 +27,7 @@ class TimelinePost(models.Model):
             post.comments = list(map(str, post.comments))
             response['Posts'].append(({'_id': post._id, 'restaurant_id': post.restaurant_id, 'user_email': post.user_email,
                                        'content': post.content, 'likes': post.likes, 'comments': post.comments,
-                                       'Timestamp': str(post.Timestamp)}))
+                                       'Timestamp': post.Timestamp.strftime("%b %d, %Y %H:%M")}))
         return response
 
     @classmethod
@@ -42,7 +42,7 @@ class TimelinePost(models.Model):
         for post in posts:
             response['Posts'].append(({'_id': post._id, 'restaurant_id': post.restaurant_id, 'user_email': post.user_email,
                                        'content': post.content, 'likes': post.likes, 'comments': post.comments,
-                                       'Timestamp': post.Timestamp}))
+                                       'Timestamp': post.Timestamp.strftime("%b %d, %Y %H:%M")}))
         return response
 
 

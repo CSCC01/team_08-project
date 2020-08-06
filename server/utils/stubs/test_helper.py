@@ -31,3 +31,16 @@ class MockModule:
     # replace mock value with mock
     def undo(self):
         return self.var
+
+#used for mocking responses
+class MockResponse:
+    """
+    params:
+    
+    """
+    def __init__(self, json_data, status_code):
+        self.json_data = json_data
+        self.status_code = status_code
+
+    def json(self):
+        return self.json_data
