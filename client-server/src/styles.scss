@@ -9,8 +9,10 @@ $client-theme-theme: mat-light-theme(
 );
 @include angular-material-theme($client-theme-theme);
 
-$primary-color: rgb(155, 50, 50);
-$secondary-color: rgb(189, 96, 96);
+// $primary-color: rgb(155, 50, 50);
+$primary-color: rgb(22, 87, 136);
+$secondary-color: rgb(25, 118, 210);
+// $secondary-color: rgb(189, 96, 96);
 $dark-color: rgb(7, 27, 48);
 $grey-color: #dddddd;
 
