@@ -106,7 +106,7 @@ export class NavbarComponent implements OnInit, AfterViewInit {
   }
 
   openModal(content) {
-    this.modalRef = this.modalService.open(content, { size: 's' });
+    this.modalRef = this.modalService.open(content);
   }
 
   goToSetup() {
