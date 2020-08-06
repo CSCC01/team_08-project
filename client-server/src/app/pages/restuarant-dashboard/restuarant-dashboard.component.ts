@@ -18,6 +18,7 @@ export class RestuarantDashboardComponent implements OnInit {
   in_progress: any[];
   complete: any[];
   orders: any[];
+  dishes: any[];
 
   constructor(
     private route: ActivatedRoute,
@@ -37,6 +38,7 @@ export class RestuarantDashboardComponent implements OnInit {
       .subscribe((data) => {
         this.restaurantName = data.name;
       });
+    this.getRestaurantFood();
     this.getOrders();
   }
 
@@ -55,16 +57,17 @@ export class RestuarantDashboardComponent implements OnInit {
                 count: data.items[j].count,
                 dish: data.items[j].food_id,
               };
+
+              this.dishes.forEach((element) => {
+                if (element._id == data.items[j].food_id) {
+                  order.dishes[i].dish_name = element.name;
+                }
+              });
             }
           });
           this.orders.push(order);
-          this.restaurantsService
-            .getRestaurantFood(this.restaurantId)
-            .subscribe((data) => {});
-          // for (let k = 0; k < this.orders.length; k++) {
-          //   console.log(this.orders[0]);
-          // }
         }
+        console.log(this.orders);
 
         // for (let i = 0; i < data.length; i++) {
         //   if (data[i].complete_tstmp) {
@@ -75,6 +78,14 @@ export class RestuarantDashboardComponent implements OnInit {
         //     this.new_orders.push(data[i]);
         //   }
         // }
+      });
+  }
+
+  getRestaurantFood(): void {
+    this.restaurantsService
+      .getRestaurantFood(this.restaurantId)
+      .subscribe((data) => {
+        this.dishes = data.Dishes;
       });
   }
 }
