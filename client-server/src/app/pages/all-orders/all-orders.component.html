@@ -1,17 +1,8 @@
 <div class="order-page">
   <div class="order-listings-box">
-    <!-- <h2>All Orders for</h2>
-    <p>Meet the faces of Scarborough Dining and their culinary story</p> -->
-    <!-- <div class="row">
-      <div class="col-md-1"></div>
-      <div class="col-md-10">
-        <div class="row equal">
-          <div *ngFor="let story of this.allStories" class="col-sm-6 d-flex">
-            <app-owner-card [story]="story"></app-owner-card>
-          </div>
-        </div>
-      </div> -->
-    <!-- <div class="col-md-1"></div> -->
-    <!-- </div> -->
+    <h2>All Orders for {{ this.restaurantName }}</h2>
+    <div *ngFor="let order of orders">
+      <app-order-card [order]="order"></app-order-card>
+    </div>
   </div>
 </div>
