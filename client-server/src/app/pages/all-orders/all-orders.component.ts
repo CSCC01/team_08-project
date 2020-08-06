@@ -50,6 +50,7 @@ export class AllOrdersComponent implements OnInit {
     this.ordersService
       .getOrdersbyRestaurant(this.restaurantId)
       .subscribe((data) => {
+        console.log(data);
         let order;
         for (let i = 0; i < data.carts.length; i++) {
           order = data.carts[0];
@@ -75,7 +76,7 @@ export class AllOrdersComponent implements OnInit {
               });
             }
           });
-          order._id = order._id.slice(-5, -1);
+          order._id = order._id.slice(-5);
           this.orders.push(order);
         }
         console.log(this.orders);
