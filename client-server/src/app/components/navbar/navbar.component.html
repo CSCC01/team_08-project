@@ -58,7 +58,7 @@
               Timeline
             </button>
             <button ngbDropdownItem (click)="owners()">
-              Chefs
+              Owner Stories
             </button>
           </div>
         </div>
@@ -76,7 +76,7 @@
       </li>
       <li class="nav-item nav-link" *ngIf="!auth.loggedIn">
         <a routerLinkActive="active" class="nav-link" (click)="owners()">
-          CHEFS
+          OWNER STORIES
         </a>
       </li>
       <li *ngIf="role == 'BU'" class="nav-item nav-link">
