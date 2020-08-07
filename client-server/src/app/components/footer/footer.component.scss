@@ -12,7 +12,7 @@ footer {
   color: $footer-text-color;
 
   @media screen and (max-width: 700px) {
-    margin: 30px;
+    margin: 20px;
   }
 }
 
@@ -37,4 +37,13 @@ footer {
 
 .footer-icons:hover {
   color: white;
+}
+
+.footer-logo {
+  width: 200px;
+  height: auto;
+
+  @media screen and (max-width: 700px) {
+    width: 100px;
+  }
 }
