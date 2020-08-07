@@ -80,7 +80,7 @@ export class OrdersService {
   @Output: 
   */
   editAmount(itemId, count): Observable<any> {
-    const endpoint = `${OrdersService.ORDER_ENDPOINT}/item/remove/`;
+    const endpoint = `${OrdersService.ORDER_ENDPOINT}/item/edit_amount/`;
     const obj = {
       item_id: itemId,
       count: count,

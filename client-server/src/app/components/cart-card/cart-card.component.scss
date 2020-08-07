@@ -16,7 +16,7 @@
 
 .dish-photo {
   width: 185px;
-  height: 130px;
+  height: 175px;
   display: block;
   left: 0%;
   top: 0%;
@@ -47,6 +47,11 @@
 
   @media screen and (max-width: 1000px) {
   }
+}
+
+.btn {
+  font-size: 10px;
+  margin: 1px;
 }
 
 .info {

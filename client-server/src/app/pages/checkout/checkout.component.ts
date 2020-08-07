@@ -74,6 +74,9 @@ export class CheckoutComponent implements OnInit {
                   dishes.Dishes[j].quantity = this.foodIds.get(
                     dishes.Dishes[j]._id
                   )[0];
+                  dishes.Dishes[j].itemId = this.foodIds.get(
+                    dishes.Dishes[j]._id
+                  )[1];
                   this.cartItems.push(dishes.Dishes[j]);
                 }
               }

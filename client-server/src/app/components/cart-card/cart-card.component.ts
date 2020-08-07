@@ -15,10 +15,21 @@ export class CartCardComponent implements OnInit {
 
   ngOnInit(): void {
     this.value = this.dish.quantity;
-    this.total = this.dish.price * this.value;
+    this.total = Number((this.dish.price * this.value).toFixed(2));
   }
 
   changeQuantity() {
-    this.total = this.dish.price * this.value;
+    this.total = Number((this.dish.price * this.value).toFixed(2));
+  }
+
+  saveNewAmount() {
+    this.orderService.editAmount(this.dish.itemId, this.value).subscribe(
+      (data) => {
+        window.location.reload();
+      },
+      (error) => {
+        window.location.reload();
+      }
+    );
   }
 }
