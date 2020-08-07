@@ -166,11 +166,11 @@ def edit_restaurant_page(request):
     for field in body:
         if field in restaurant_editable:
             setattr(restaurant, field, body[field])
-            if field == "address":
-                try:
-                    setattr(restaurant, 'GEO_location', geo_controller.geocode(body[field]))
-                except ValueError:
-                    pass
+    if field == "address":
+        try:
+            setattr(restaurant, 'GEO_location', geo_controller.geocode(body[field]))
+        except ValueError:
+            pass
     restaurant.clean_fields()
     restaurant.clean()
     restaurant.save()

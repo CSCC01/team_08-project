@@ -85,11 +85,11 @@ def edit_user_page(request):
     for field in body:
         if field in user_editable:
             setattr(user, field, body[field])
-            if field == "address":
-                try:
-                    setattr(user, 'GEO_location', geo_controller.geocode(body[field]))
-                except ValueError:
-                    pass
+    if "address" in body:
+        try:
+            setattr(user, 'GEO_location', geo_controller.geocode(body['address']))
+        except ValueError:
+            pass
     user.clean_fields()
     user.clean()
     user.save()
