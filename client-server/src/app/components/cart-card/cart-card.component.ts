@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { OrdersService } from 'src/app/service/orders.service';
 
 @Component({
   selector: 'app-cart-card',
@@ -8,8 +9,16 @@ import { Component, OnInit, Input } from '@angular/core';
 export class CartCardComponent implements OnInit {
   @Input() dish: any;
   value: number = 0;
+  total: number = 0;
 
-  constructor() {}
+  constructor(private orderService: OrdersService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.value = this.dish.quantity;
+    this.total = this.dish.price * this.value;
+  }
+
+  changeQuantity() {
+    this.total = this.dish.price * this.value;
+  }
 }

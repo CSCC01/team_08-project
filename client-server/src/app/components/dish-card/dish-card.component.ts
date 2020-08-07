@@ -11,10 +11,12 @@ import { OrdersService } from 'src/app/service/orders.service';
 export class DishCardComponent implements OnInit {
   role: string = '';
   userId: string = '';
+  cartId: string = '';
   value: number = 0;
   modalRef: any;
 
   @Input() dish: any;
+  @Input() restaurantId: string;
 
   constructor(
     private orderService: OrdersService,
@@ -48,21 +50,37 @@ export class DishCardComponent implements OnInit {
   }
 
   addOrder() {
-    var cardId = sessionStorage.getItem('cartId');
+    this.orderService.getCarts(this.userId, false).subscribe((status) => {
+      if (status.carts) {
+        this.cartId = status.carts[0]._id;
+        sessionStorage.setItem('cartId', this.cartId);
 
-    if (cardId == '') {
-      this.orderService
-        .insertCart(this.dish.restaurant_id, this.userId)
-        .subscribe((data) => {
-          sessionStorage.setItem('cartId', data._id);
-        });
-    }
+        if (this.value != 0) {
+          this.orderService
+            .insertItem(this.cartId, this.dish._id, this.value)
+            .subscribe((data) => {});
+        } else {
+          alert('Please have a non-zero amount for the dish!');
+        }
+      } else {
+        this.orderService
+          .insertCart(this.restaurantId, this.userId)
+          .subscribe((data) => {
+            this.cartId = data._id;
+            sessionStorage.setItem('cartId', data._id);
+            sessionStorage.setItem('restOrder', this.restaurantId);
 
-    if (this.value != 0) {
-      this.orderService.insertItem(cardId, this.dish._id, this.value);
-    } else {
-      alert('Please have a non-zero amount for the dish!');
-    }
+            if (this.value != 0) {
+              this.orderService
+                .insertItem(this.cartId, this.dish._id, this.value)
+                .subscribe((data) => {});
+            } else {
+              alert('Please have a non-zero amount for the dish!');
+            }
+          });
+      }
+    });
+
     this.modalRef.close();
   }
 }

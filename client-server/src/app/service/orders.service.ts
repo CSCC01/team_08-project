@@ -28,6 +28,31 @@ export class OrdersService {
   @Input: 
   @Output: 
   */
+  getCartItems(cartId): Observable<any> {
+    const endpoint = `${OrdersService.ORDER_ENDPOINT}/item/get_by_cart/`;
+    const params = {
+      cart_id: cartId,
+    };
+    return this.http.get<any>(endpoint, { params: params });
+  }
+
+  /*
+  @Input: 
+  @Output: 
+  */
+  getCarts(userId, sent): Observable<any> {
+    const endpoint = `${OrdersService.ORDER_ENDPOINT}/cart/user_carts/`;
+    const params = {
+      user_email: userId,
+      is_sent: sent,
+    };
+    return this.http.get<any>(endpoint, { params: params });
+  }
+
+  /*
+  @Input: 
+  @Output: 
+  */
   insertItem(cartId, foodId, count): Observable<any> {
     const endpoint = `${OrdersService.ORDER_ENDPOINT}/item/insert/`;
     const obj = {
@@ -46,6 +71,32 @@ export class OrdersService {
     const endpoint = `${OrdersService.ORDER_ENDPOINT}/item/remove/`;
     const obj = {
       item_id: itemId,
+    };
+    return this.http.post<any>(endpoint, obj);
+  }
+
+  /*
+  @Input: 
+  @Output: 
+  */
+  editAmount(itemId, count): Observable<any> {
+    const endpoint = `${OrdersService.ORDER_ENDPOINT}/item/remove/`;
+    const obj = {
+      item_id: itemId,
+      count: count,
+    };
+    return this.http.post<any>(endpoint, obj);
+  }
+
+  /*
+  @Input: 
+  @Output: 
+  */
+  updateStatus(cartId, status): Observable<any> {
+    const endpoint = `${OrdersService.ORDER_ENDPOINT}/cart/update_status/`;
+    const obj = {
+      _id: cartId,
+      status: status,
     };
     return this.http.post<any>(endpoint, obj);
   }
