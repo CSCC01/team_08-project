@@ -42,7 +42,6 @@ export class AllOrdersComponent implements OnInit {
       });
     this.getRestaurantFood();
     this.getOrders();
-    console.log(this.orders);
   }
 
   getOrders(): void {
@@ -50,37 +49,48 @@ export class AllOrdersComponent implements OnInit {
     this.ordersService
       .getOrdersbyRestaurant(this.restaurantId)
       .subscribe((data) => {
-        console.log(data);
-        let order;
+        let cart;
         for (let i = 0; i < data.carts.length; i++) {
-          order = data.carts[0];
-          console.log(order);
-          this.loginService
-            .getUser({ email: order.user_email })
-            .subscribe((data) => {
-              order.name = data.name;
-              order.phone = data.phone;
-            });
-          order.dishes = [];
-          this.ordersService.getItembyCart(order._id).subscribe((data) => {
-            for (let j = 0; j < data.items.length; j++) {
-              order.dishes[i] = {
-                count: data.items[j].count,
-                dish: data.items[j].food_id,
-              };
+          cart = data.carts[i];
+          cart.dishes = [];
+          this.orders.push(cart);
+        }
 
-              this.dishes.forEach((element) => {
-                if (element._id == data.items[j].food_id) {
-                  order.dishes[i].dish_name = element.name;
-                }
-              });
+        this.getOrderNames();
+        this.getOrderCartItems();
+        this.shortenOrderID();
+      });
+  }
+
+  getOrderNames(): void {
+    for (let i = 0; i < this.orders.length; i++) {
+      this.loginService
+        .getUser({ email: this.orders[i].user_email })
+        .subscribe((data) => {
+          this.orders[i].name = data.name;
+          this.orders[i].phone = data.phone;
+        });
+    }
+  }
+
+  getOrderCartItems(): void {
+    for (let i = 0; i < this.orders.length; i++) {
+      this.ordersService.getItembyCart(this.orders[i]._id).subscribe((data) => {
+        for (let k = 0; k < data.items.length; k++) {
+          let info = {
+            count: data.items[k].count,
+            dish: data.items[k].food_id,
+            dish_name: '',
+          };
+          this.dishes.forEach((element) => {
+            if (element._id == info.dish) {
+              info.dish_name = element.name;
             }
           });
-          order._id = order._id.slice(-5);
-          this.orders.push(order);
+          this.orders[i].dishes.push(info);
         }
-        console.log(this.orders);
       });
+    }
   }
 
   getRestaurantFood(): void {
@@ -89,5 +99,15 @@ export class AllOrdersComponent implements OnInit {
       .subscribe((data) => {
         this.dishes = data.Dishes;
       });
+  }
+
+  shortenOrderID(): void {
+    for (let i = 0; i < this.orders.length; i++) {
+      this.orders[i]._id = this.orders[i]._id.slice(-6);
+    }
+  }
+
+  back(): void {
+    this.router.navigate(['/dashboard']);
   }
 }

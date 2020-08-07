@@ -57,7 +57,7 @@ export class OrdersService {
   Get all orders by restaurant
   */
   getOrdersbyRestaurant(restaurantId): Observable<any> {
-    const endpoint = `${OrdersService.ORDER_ENDPOINT}/cart/restaurant_carts`;
+    const endpoint = `${OrdersService.ORDER_ENDPOINT}/cart/restaurant_carts/`;
     var params = {
       restaurant_id: restaurantId,
     };
