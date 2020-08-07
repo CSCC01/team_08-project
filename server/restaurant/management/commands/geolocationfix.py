@@ -25,7 +25,6 @@ class Command(BaseCommand):
         
         for restaurant in all_restaurants:
             try:
-                print("something")
                 geo_location = eval(restaurant['GEO_location'])
                 price = restaurant['pricepoint']
                 print("geo" + str(geo_location))
