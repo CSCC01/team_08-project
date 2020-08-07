@@ -44,14 +44,13 @@ class Review(models.Model):
     @classmethod
     def new_rating(cls, rest_id):
         """
-
-        :param rest_id:
-        :return:
+        calculates the rating of a restaurant based on restaurant reviews
+        :param rest_id: the id of the restaurant
+        :return: the average rating of the restaurant
         """
         total = 0
         reviews = list(Review.objects.filter(restaurant_id=rest_id))
         num_reviews = len(reviews)
-        print (num_reviews)
         for review in reviews:
             total = review.rating + total
         return round(total / num_reviews, 2)
