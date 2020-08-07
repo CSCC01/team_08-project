@@ -5,7 +5,7 @@ from . import geo_controller
 class GeoControllerTest(TestCase):
 
     def setUp(self):
-        self.query1 = '224 Helen Avenue'
+        self.query1 = '116 memon place'
         self.query2 = 'iwegowengowneog'
 
     def test_happy(self):
@@ -17,3 +17,4 @@ class GeoControllerTest(TestCase):
     def test_exception(self):
         """Test if exception is raised upon invalid query"""
         self.assertRaises(ValueError, geo_controller.geocode, self.query2)
+

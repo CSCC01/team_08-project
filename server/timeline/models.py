@@ -19,7 +19,9 @@ class TimelinePost(models.Model):
         :return: post data in json
         """
         response = {'Posts': []}
-        for post in list(TimelinePost.objects.filter(restaurant_id=rest_id)):
+        posts = list(TimelinePost.objects.filter(restaurant_id=rest_id))
+        posts.sort(key=lambda x: x.Timestamp, reverse=True)
+        for post in posts:
             post._id = str(post._id)
             post.likes = list(map(str, post.likes))
             post.comments = list(map(str, post.comments))
@@ -35,10 +37,9 @@ class TimelinePost(models.Model):
         :return: return list of posts json data wrapped in dictionary
         """
         response = {'Posts': []}
-        for post in list(TimelinePost.objects.all()):
-            post._id = str(post._id)
-            post.likes = list(map(str, post.likes))
-            post.comments = list(map(str, post.comments))
+        posts = list(TimelinePost.objects.all())
+        posts.sort(key=lambda x: x.Timestamp, reverse=True)
+        for post in posts:
             response['Posts'].append(({'_id': post._id, 'restaurant_id': post.restaurant_id, 'user_email': post.user_email,
                                        'content': post.content, 'likes': post.likes, 'comments': post.comments,
                                        'Timestamp': post.Timestamp.strftime("%b %d, %Y %H:%M")}))

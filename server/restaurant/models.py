@@ -6,7 +6,7 @@ from cloud_storage import cloud_controller
 from restaurant.enum import Prices, Categories
 from django.core.exceptions import ObjectDoesNotExist
 import requests
-
+from geo import geo_controller
 
 class Food(models.Model):
     """ Model for the Food Items on the Menu """
@@ -233,6 +233,10 @@ class Restaurant(models.Model):
             restaurant = cls(
                 **restaurant_data
             )
+            try:
+                restaurant.GEO_location = geo_controller.geocode(restaurant_data['address'])
+            except ValueError:
+                pass
             restaurant.clean_fields()
             restaurant.clean()
             restaurant.save()
