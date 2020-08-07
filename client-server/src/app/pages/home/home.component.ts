@@ -224,11 +224,13 @@ export class HomeComponent implements OnInit, AfterViewInit {
         'Please ensure formats are proper. Name should not empty, phone numbers should be 10 digits with no dashes and birthday should be YYYY-MM-DD'
       );
     } else {
-      this.loginService.editUser(userInfo).subscribe((data) => {});
-      this.modalRef.close();
-      setTimeout(function () {
-        window.location.reload();
-      }, 100);
+      this.loginService.editUser(userInfo).subscribe((data) => {
+        this.modalRef.close();
+        setTimeout(function () {
+          window.location.reload();
+        }, 100);
+      });
+
     }
   }
 }

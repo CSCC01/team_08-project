@@ -74,13 +74,15 @@ export class ProfileComponent implements OnInit {
         if (this.newImage) {
           this.onSubmit();
         }
+        else{
+            this.modalRef.close();
+            setTimeout(function () {
+              window.location.reload();
+            }, 100);
+        }
         this.getUserInfo();
       });
 
-      this.modalRef.close();
-      setTimeout(function () {
-        window.location.reload();
-      }, 100);
     }
   }
 
