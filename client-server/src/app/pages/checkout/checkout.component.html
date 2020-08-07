@@ -9,7 +9,10 @@
     </div>
 
     <div *ngIf="cartItems.length > 0">
-      <div *ngFor="let item of cartItems">
+      <div *ngFor="let item of cartItems" class="card-wrapper">
+        <button class="btn trashBtn" (click)="deleteOrder(item)">
+          <fa-icon [icon]="faTrash"></fa-icon>
+        </button>
         <app-cart-card [dish]="item"></app-cart-card>
       </div>
       <div class="total-info">

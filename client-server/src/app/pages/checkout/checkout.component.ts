@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { LoginService } from 'src/app/service/login.service';
 import cartItems from '../../../assets/data/cart.json';
 import { OrdersService } from 'src/app/service/orders.service';
@@ -20,6 +21,8 @@ export class CheckoutComponent implements OnInit {
   foodIds = new Map();
 
   total: number = 0;
+
+  faTrash = faTrash;
 
   constructor(
     private loginService: LoginService,
@@ -44,6 +47,11 @@ export class CheckoutComponent implements OnInit {
       }
     });
 
+    this.loadCart();
+  }
+
+  loadCart() {
+    this.cartItems = [];
     this.orderService.getCarts(this.userId, false).subscribe((status) => {
       if (status.carts) {
         this.restaurantId = status.carts[0].restaurant_id;
@@ -51,20 +59,21 @@ export class CheckoutComponent implements OnInit {
         this.total = status.carts[0].price;
 
         this.orderService.getCartItems(this.cartId).subscribe((data) => {
-          console.log(data);
           for (var i = 0; i < data.items.length; i++) {
-            this.foodIds.set(data.items[i].food_id, data.items[i].count);
+            this.foodIds.set(data.items[i].food_id, [
+              data.items[i].count,
+              data.items[i]._id,
+            ]);
           }
 
           this.restaurantsService
             .getRestaurantFood(this.restaurantId)
             .subscribe((dishes) => {
-              console.log(dishes);
               for (var j = 0; j < dishes.Dishes.length; j++) {
                 if (this.foodIds.has(dishes.Dishes[j]._id)) {
                   dishes.Dishes[j].quantity = this.foodIds.get(
                     dishes.Dishes[j]._id
-                  );
+                  )[0];
                   this.cartItems.push(dishes.Dishes[j]);
                 }
               }
@@ -72,13 +81,17 @@ export class CheckoutComponent implements OnInit {
         });
       }
     });
+  }
 
-    //this.cartId = sessionStorage.getItem('cartId');
-
-    // TO BE REPLACED WHEN CONNECTS TO DB
-    // this.total = 0.0;
-    // for (let i = 0; i < this.cartItems.length; i++) {
-    //   this.total = this.total + this.cartItems[i].total;
-    // }
+  deleteOrder(dish) {
+    var itemId = this.foodIds.get(dish._id)[1];
+    this.orderService.removeItem(itemId).subscribe(
+      (data) => {
+        this.loadCart();
+      },
+      (error) => {
+        window.location.reload();
+      }
+    );
   }
 }
