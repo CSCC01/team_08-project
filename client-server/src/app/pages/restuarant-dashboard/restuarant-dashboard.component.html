@@ -9,46 +9,46 @@
 
   <mat-tab-group mat-align-tabs="center">
     <mat-tab label="New Orders">
-      <!-- <div class="new-orders" *ngFor="let order of new_orders">
+      <div class="new-orders" *ngFor="let order of new_orders">
         <div *ngIf="new_orders.length > 0">
           <app-order-card [order]="order"></app-order-card>
         </div>
       </div>
-      <div *ngIf="new_orders.length === 0"> -->
-      <img
-        class="no-orders-image"
-        src="assets/images/undraw_receipt_ecdd.png"
-      />
-      <p class="no-orders">Currently no new orders!</p>
-      <!-- </div> -->
+      <div *ngIf="new_orders.length === 0">
+        <img
+          class="no-orders-image"
+          src="assets/images/undraw_receipt_ecdd.png"
+        />
+        <p class="no-orders">Currently no new orders!</p>
+      </div>
     </mat-tab>
     <mat-tab label="In-Progress">
-      <!-- <div class="in-progress" *ngFor="let order of in_progress">
+      <div class="in-progress" *ngFor="let order of in_progress">
         <div *ngIf="in_progress.length > 0">
           <app-order-card [order]="order"></app-order-card>
         </div>
-      </div> -->
-      <!-- <div *ngIf="in_progress.length === 0"> -->
-      <img
-        class="no-orders-image"
-        src="assets/images/undraw_booking_33fn.png"
-      />
-      <p class="no-orders">Currently no in-progress orders!</p>
-      <!-- </div> -->
+      </div>
+      <div *ngIf="in_progress.length === 0">
+        <img
+          class="no-orders-image"
+          src="assets/images/undraw_booking_33fn.png"
+        />
+        <p class="no-orders">Currently no in-progress orders!</p>
+      </div>
     </mat-tab>
     <mat-tab label="Completed">
-      <!-- <div class="completed" *ngFor="let order of complete">
+      <div class="completed" *ngFor="let order of complete">
         <div *ngIf="complete.length > 0">
           <app-order-card [order]="order"></app-order-card>
         </div>
-      </div> -->
-      <!-- <div *ngIf="complete.length === 0"> -->
-      <img
-        class="no-orders-image"
-        src="assets/images/undraw_booking_33fn.png"
-      />
-      <p class="no-orders">Currently no completed orders!</p>
-      <!-- </div> -->
+      </div>
+      <div *ngIf="complete.length === 0">
+        <img
+          class="no-orders-image"
+          src="assets/images/undraw_order_confirmed_aaw7.png"
+        />
+        <p class="no-orders">Currently no completed orders!</p>
+      </div>
     </mat-tab>
   </mat-tab-group>
 </div>

@@ -44,41 +44,9 @@ export class RestuarantDashboardComponent implements OnInit {
 
   getOrders(): void {
     this.orders = [];
-    this.ordersService
-      .getOrdersbyRestaurant(this.restaurantId)
-      .subscribe((data) => {
-        let order;
-        for (let i = 0; i < data.carts.length; i++) {
-          order = data.carts[0];
-          order.dishes = [];
-          this.ordersService.getItembyCart(order._id).subscribe((data) => {
-            for (let j = 0; j < data.items.length; j++) {
-              order.dishes[i] = {
-                count: data.items[j].count,
-                dish: data.items[j].food_id,
-              };
-
-              this.dishes.forEach((element) => {
-                if (element._id == data.items[j].food_id) {
-                  order.dishes[i].dish_name = element.name;
-                }
-              });
-            }
-          });
-          this.orders.push(order);
-        }
-        console.log(this.orders);
-
-        // for (let i = 0; i < data.length; i++) {
-        //   if (data[i].complete_tstmp) {
-        //     this.complete.push(data[i]);
-        //   } else if (data[i].accept_tstmp) {
-        //     this.in_progress.push(data[i]);
-        //   } else {
-        //     this.new_orders.push(data[i]);
-        //   }
-        // }
-      });
+    this.new_orders = [];
+    this.in_progress = [];
+    this.complete = [];
   }
 
   getRestaurantFood(): void {
