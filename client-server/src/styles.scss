@@ -1,16 +1,16 @@
 @import "~@angular/material/theming";
 @include mat-core();
 
-$client-theme-primary: mat-palette($mat-red);
-$client-theme-accent: mat-palette($mat-pink, A200, A100, A400);
+$client-theme-primary: mat-palette($mat-blue);
+$client-theme-accent: mat-palette($mat-blue, A200, A100, A400);
 $client-theme-theme: mat-light-theme(
   $client-theme-primary,
   $client-theme-accent
 );
 @include angular-material-theme($client-theme-theme);
 
-$primary-color: rgb(155, 50, 50);
-$secondary-color: rgb(189, 96, 96);
+$primary-color: rgb(22, 87, 136);
+$secondary-color: rgb(0, 153, 204);
 $dark-color: rgb(7, 27, 48);
 $grey-color: #dddddd;
 

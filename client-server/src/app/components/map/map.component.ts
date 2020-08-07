@@ -44,7 +44,7 @@ export class MapComponent implements OnInit {
         map.addControl(new mapboxgl.NavigationControl());
 
         // Add map markers
-        var marker = new mapboxgl.Marker({ color: '#FF0000' })
+        var marker = new mapboxgl.Marker({ color: '#0000FF' })
           .setLngLat([position.coords.longitude, position.coords.latitude])
           .setPopup(new mapboxgl.Popup().setHTML('<p>You are here!</p>'))
           .addTo(map);
@@ -54,7 +54,7 @@ export class MapComponent implements OnInit {
           var GEOJson = JSON.parse(index.GEO_location.replace(/\'/g, '"'));
 
           if (index.GEO_location != 'blank' && GEOJson.long != undefined) {
-            var marker = new mapboxgl.Marker({ color: '#CB1E21' })
+            var marker = new mapboxgl.Marker({ color: '#165788' })
               .setLngLat([GEOJson.long, GEOJson.lat])
               .setPopup(
                 new mapboxgl.Popup().setHTML(
