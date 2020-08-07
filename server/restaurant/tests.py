@@ -1,5 +1,6 @@
 from unittest import mock
 
+from bson import ObjectId
 from django.test import TestCase, RequestFactory
 from restaurant.models import Food, ManualTag
 from django.forms.models import model_to_dict
@@ -159,24 +160,47 @@ class FoodTestCases(TestCase):
 
     def setUp(self):
         """ Load food document """
-        self.foodA = Food.objects.create(name="foodA", restaurant_id="restA", description="descripA", picture="picA",
-                                         price='10.99')
+        self.foodA = Food.objects.create(name="foodA", restaurant_id="111111111111111111111111", description="descripA", picture="picA",
+                                         price='10.99', category='Lunch')
         self.foodB = Food.objects.create(name="foodB", restaurant_id="restB", description="descripB", picture="picB",
                                          price='20.99')
+        self.expected = {
+            '_id': '111111111111111111111111',
+            'name': 'kfc',
+            'address': '211 oakland',
+            'phone': 6475040680,
+            'city': 'markham',
+            'email': 'alac@gmail.com',
+            'cuisine': 'american',
+            'pricepoint': 'High',
+            'twitter': 'http://link',
+            'instagram': 'http://link',
+            'bio': 'Finger licking good chicken',
+            'GEO_location': '{\'longitude\': 44.068203, \'latitude\':-114.742043}',
+            'external_delivery_link': 'http://link',
+            'cover_photo_url': 'http://link',
+            'logo_url': 'http://link',
+            'rating': '3.00',
+            'owner_name': 'Colonel Sanders',
+            'owner_story': 'i made chicken',
+            'owner_picture_url': 'http://link',
+            'categories': ['Lunch']
+        }
+        Restaurant.objects.create(**self.expected)
         self.factory = RequestFactory()
 
     @mock.patch('requests.get', side_effect=mocked_requests_get)
     def test_insert_food_valid(self, mock_get):
         """ Test if food is properly inserted into the database """
-        request = self.factory.post('/api/restaurant/dish/insert/', {"name": 'foodC', 'restaurant_id': "restC",
+        request = self.factory.post('/api/restaurant/dish/insert/', {"name": 'foodC', 'restaurant_id': "111111111111111111111111",
                                                                      'description': "descripC",
                                                                      'picture': MOCK_VALID_LINK,
-                                                                     "price": '10.99', 'specials': ""
+                                                                     "price": '10.99', 'specials': "", 'category': ''
                                                                      }, content_type="application/json")
         actual = json.loads(view_response.insert_dish_page(request).content)
-        expected = Food(_id=actual['_id'], name="foodC", restaurant_id="restC", description="descripC",
+        expected = Food(_id=actual['_id'], name="foodC", restaurant_id="111111111111111111111111", description="descripC",
                         picture=MOCK_VALID_LINK,
-                        price='10.99')
+                        price='10.99', category='')
         self.assertDictEqual(model_to_dict(expected), actual)
 
     @mock.patch('requests.get', side_effect=mocked_requests_get)
@@ -201,7 +225,7 @@ class FoodTestCases(TestCase):
 
     def test_get_by_restaurant(self):
         """ Test if all foods from a restaurant are retrieved """
-        req = self.factory.get('api/restaurant/dish/get_by_restaurant/', {'restaurant_id': 'restA'},
+        req = self.factory.get('api/restaurant/dish/get_by_restaurant/', {'restaurant_id': '111111111111111111111111'},
                                content_type="application/json")
         actual = json.loads(view_response.get_dish_by_restaurant_page(req).content)
         expected = {'Dishes': [model_to_dict(self.foodA)]}
@@ -233,7 +257,7 @@ class FoodTestCases(TestCase):
 
     def test_delete_food(self):
         """ Test if the food is deleted """
-        req = self.factory.post('api/restaurant/dish/delete', {'food_name': "foodA", "restaurant_id": "restA"},
+        req = self.factory.post('api/restaurant/dish/delete', {'food_name': "foodA", "restaurant_id": "111111111111111111111111"},
                                 content_type="application/json")
         view_response.delete_dish_page(req)
         actual = Food.objects.filter(name="foodA").first()
@@ -265,7 +289,8 @@ class RestaurantTestCases(TestCase):
             'rating': '3.00',
             'owner_name': 'Colonel Sanders',
             'owner_story': 'i made chicken',
-            'owner_picture_url': MOCK_VALID_LINK
+            'owner_picture_url': MOCK_VALID_LINK,
+            'categories': []
         }
 
         self.expected2 = {
@@ -287,7 +312,8 @@ class RestaurantTestCases(TestCase):
             'rating': '3.00',
             'owner_name': 'Colonel Calvino',
             'owner_story': 'i made it boys',
-            'owner_picture_url': MOCK_VALID_LINK
+            'owner_picture_url': MOCK_VALID_LINK,
+            'categories': []
         }
 
         self.expected3 = {
@@ -302,14 +328,14 @@ class RestaurantTestCases(TestCase):
             'twitter': MOCK_VALID_LINK,
             'instagram': MOCK_VALID_LINK,
             'bio': 'Finger licking good chicken',
-            'GEO_location': '{\'longitude\': 44.068203, \'latitude\':-114.742043}',
             'external_delivery_link': MOCK_VALID_LINK,
             'cover_photo_url': MOCK_VALID_LINK,
             'logo_url': MOCK_VALID_LINK,
             'rating': '3.00',
             'owner_name': 'Colonel Lam',
             'owner_story': 'lambs are a thing',
-            'owner_picture_url': ''  # test for blank image url validity
+            'owner_picture_url': '',  # test for blank image url validity
+            'categories': []
         }
 
         self.expected4 = {
@@ -334,8 +360,35 @@ class RestaurantTestCases(TestCase):
             'owner_picture_url': ''  # test for blank image url validity
         }
 
+        self.expected5 = {
+            '_id': '555555555555555555555555',
+            'name': 'Calvins Caps',
+            'address': '211 No Cap',
+            'phone': 6475040680,
+            'city': 'Chicago',
+            'email': 'CC@gmail.com',
+            'cuisine': 'asina fusion',
+            'pricepoint': 'High',
+            'twitter': 'http://link',
+            'instagram': 'http://link',
+            'bio': 'Finger licking good chicken',
+            'GEO_location': '{\'longitude\': 44.068203, \'latitude\':-114.742043}',
+            'external_delivery_link': 'http://link',
+            'cover_photo_url': 'http://link',
+            'logo_url': 'http://link',
+            'rating': '3.00',
+            'owner_name': 'Colonel Lam',
+            'owner_story': 'lambs are a thing',
+            'owner_picture_url': '',  # test for blank image url validity
+            'categories': ['Lunch']
+        }
+        self.foodA = Food.objects.create(name="foodA", restaurant_id="555555555555555555555555", description="descripA",
+                                         picture="picA",
+                                         price='10.99', category='Lunch')
+
         Restaurant.objects.create(**self.expected)
         Restaurant.objects.create(**self.expected2)
+        Restaurant.objects.create(**self.expected5)
         self.factory = RequestFactory()
 
     def test_find_restaurant(self):
@@ -347,7 +400,7 @@ class RestaurantTestCases(TestCase):
     def test_find_all_restaurant(self):
         """ Test if all restaurant documents are returned """
         request = self.factory.get('/api/restaurant/get_all/')
-        expected = [self.expected, self.expected2]
+        expected = [self.expected, self.expected2, self.expected5]
         actual = json.loads(view_response.get_all_restaurants_page(request).content)['Restaurants']
         self.assertListEqual(expected, actual)
 
@@ -356,6 +409,7 @@ class RestaurantTestCases(TestCase):
         """ Test if restaurant is properly inserted into the database """
         request = self.factory.post('/api/restaurant/insert/', self.expected3, content_type="application/json")
         actual = json.loads(view_response.insert_restaurant_page(request).content)
+        self.expected3['GEO_location'] = "{'lat': 41.8787849, 'lng': -87.6302016}"
         self.assertDictEqual(self.expected3, actual)
 
     @mock.patch('requests.get', side_effect=mocked_requests_get)
@@ -379,7 +433,7 @@ class RestaurantTestCases(TestCase):
                               address='211 Cambodia', phone=6475040680, city='markham', email='alac@gmail.com',
                               cuisine='american', pricepoint='High', twitter='', instagram='',
                               bio='Finger licking good chicken',
-                              GEO_location='{\'longitude\': 44.068203, \'latitude\':-114.742043}',
+                              GEO_location="{'lat': 11.5395535, 'lng': 104.916782}",
                               external_delivery_link=MOCK_VALID_LINK, cover_photo_url=MOCK_VALID_LINK,
                               logo_url=MOCK_VALID_LINK, rating='3.00', owner_name='Colonel Sanders',
                               owner_story='i made chicken', owner_picture_url=MOCK_VALID_LINK)
@@ -395,3 +449,28 @@ class RestaurantTestCases(TestCase):
         actual = json.loads(view_response.edit_restaurant_page(request).content)
         expected = {'Invalid': ['twitter', 'instagram']}
         self.assertDictEqual(actual, expected)
+
+    @mock.patch('requests.get', side_effect=mocked_requests_get)
+    def test_add_menu_category_restaurant(self, mock_get):
+        """ Test if the menu category is added to the restaurant object when a dish is added """
+        request = self.factory.post('/api/restaurant/dish/insert/',
+                                    {"name": 'foodC', 'restaurant_id': "111111111111111111111111",
+                                     'description': "descripC",
+                                     'picture': "http://link",
+                                     "price": '10.99', 'specials': "",
+                                     'category': 'Dinner'}, content_type="application/json")
+        view_response.insert_dish_page(request)
+        actual = Restaurant.objects.get(_id='111111111111111111111111').categories
+        expected = ['Dinner']
+        self.assertListEqual(actual, expected)
+
+    @mock.patch('requests.get', side_effect=mocked_requests_get)
+    def test_empty_menu_category_restaurant(self, mock_get):
+        """ Test if there the menu is deleted from the restaurant object if there are no more food items with the category """
+        request = self.factory.post('/api/restaurant/dish/delete/',
+                                    {"food_name": 'foodA', 'restaurant_id': "555555555555555555555555",
+                                     }, content_type="application/json")
+        view_response.delete_dish_page(request)
+        actual = Restaurant.objects.get(_id='555555555555555555555555').categories
+        expected = []
+        self.assertListEqual(actual, expected)

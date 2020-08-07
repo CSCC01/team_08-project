@@ -85,7 +85,6 @@ def get_all_posts_page(request):
         response['Posts'].append(model_to_json(post, time_stamp))
     return JsonResponse(response)
 
-
 def upload_comment_page(request):
     """Upload post into post timeline post table"""
     try:  # validate request

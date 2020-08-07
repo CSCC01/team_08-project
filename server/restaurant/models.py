@@ -6,7 +6,7 @@ from cloud_storage import cloud_controller
 from restaurant.enum import Prices, Categories
 from django.core.exceptions import ObjectDoesNotExist
 import requests
-
+from geo import geo_controller
 
 class Food(models.Model):
     """ Model for the Food Items on the Menu """
@@ -14,10 +14,11 @@ class Food(models.Model):
     name = models.CharField(max_length=50, default='')
     restaurant_id = models.CharField(max_length=24, editable=False)
     description = models.CharField(max_length=200, blank=True, default='')
-    picture = models.CharField(max_length=200, blank=True, default='')
+    picture = models.CharField(max_length=200, blank=True, default='https://storage.googleapis.com/default-assets/no-image.png')
     price = models.DecimalField(max_digits=6, decimal_places=2)
     tags = models.ListField(default=[], blank=True)
     specials = models.CharField(max_length=51, blank=True)
+    category = models.CharField(max_length=50, blank=True, default='')
 
     class Meta:
         unique_together = (("name", "restaurant_id"),)
@@ -36,10 +37,15 @@ class Food(models.Model):
             picture=food_data['picture'],
             price=food_data['price'],
             specials=food_data['specials'],
+            category=food_data['category'],
         )
         dish.clean_fields()
         dish.clean()
         dish.save()
+        restaurant = Restaurant.objects.get(_id=food_data['restaurant_id'])
+        if food_data['category'] not in restaurant.categories:
+            restaurant.categories.append(food_data['category'])
+            restaurant.save(update_fields=['categories'])
         return Food.objects.get(name=food_data['name'], restaurant_id=food_data['restaurant_id'])
 
     @classmethod
@@ -179,13 +185,14 @@ class Restaurant(models.Model):
     GEO_location = models.CharField(max_length=200)
     external_delivery_link = models.CharField(max_length=200, blank=True)
     cover_photo_url = models.CharField(max_length=200,
-                                       default='https://www.nautilusplus.com/content/uploads/2016/08/Pexel_junk-food.jpeg')
+                                       default='https://storage.googleapis.com/default-assets/cover.jpg')
     logo_url = models.CharField(max_length=200,
-                                default='https://d1csarkz8obe9u.cloudfront.net/posterpreviews/diner-restaurant-logo-design-template-0899ae0c7e72cded1c0abc4fe2d76ae4_screen.jpg?ts=1561476509')
+                                default='https://storage.googleapis.com/default-assets/logo.jpg')
     rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.00)
     owner_name = models.CharField(max_length=50, blank=True)
     owner_story = models.CharField(max_length=3000, blank=True)
     owner_picture_url = models.CharField(max_length=200, blank=True)
+    categories = models.ListField(default=[], blank=True)
 
     @classmethod
     def get(cls, _id):
@@ -226,6 +233,10 @@ class Restaurant(models.Model):
             restaurant = cls(
                 **restaurant_data
             )
+            try:
+                restaurant.GEO_location = geo_controller.geocode(restaurant_data['address'])
+            except ValueError:
+                pass
             restaurant.clean_fields()
             restaurant.clean()
             restaurant.save()
@@ -238,7 +249,8 @@ class Restaurant(models.Model):
         :param fields: Dictionary of fields to validate
         :return: A list of fields that were invalid. Returns None if all fields are valid
         """
-        restaurant_urls = ['twitter', 'instagram', 'cover_photo_url', 'logo_url', 'owner_picture_url', 'external_delivery_link']
+        restaurant_urls = ['twitter', 'instagram', 'cover_photo_url', 'logo_url', 'owner_picture_url',
+                           'external_delivery_link']
 
         invalid = {'Invalid': []}
 

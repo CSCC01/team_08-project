@@ -80,6 +80,7 @@ class PostSuite(TestCase):
             'content': 'Post',
             'likes': [],
             'comments': [],
+
         }
         self.assertDictEqual(actual, expected)
 
@@ -124,9 +125,9 @@ class PostSuite(TestCase):
         """ Test if all post documents are returned """
         request = RequestFactory().get('/api/timeline/post/get_all/')
         actual = json.loads(server.get_all_posts_page(request).content)['Posts']
-        expected = [self.data2, self.data3]
         for post in actual:
             del post['Timestamp']
+        expected = [self.data3, self.data2]
         self.assertListEqual(expected, actual)
 
     def test_get_post_by_restaurant(self):
