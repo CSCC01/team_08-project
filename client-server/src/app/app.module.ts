@@ -47,7 +47,7 @@ import { PageErrorComponent } from './components/page-error/page-error.component
 import { CartCardComponent } from './components/cart-card/cart-card.component';
 import { FavouritesComponent } from './pages/favourites/favourites.component';
 import { AllOwnersComponent } from './pages/all-owners/all-owners.component';
-import { ValidatedFormControlComponent } from './components/validated-form-control/validated-form-control.component';
+import { DynamicLabelComponent } from './components/dynamic-label/dynamic-label.component';
 
 @NgModule({
   declarations: [
@@ -82,7 +82,7 @@ import { ValidatedFormControlComponent } from './components/validated-form-contr
     PageErrorComponent,
     FavouritesComponent,
     AllOwnersComponent,
-    ValidatedFormControlComponent,
+    DynamicLabelComponent,
   ],
   imports: [
     BrowserModule,

@@ -5,6 +5,7 @@ import { AuthService } from '../../auth/auth.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LoginService } from 'src/app/service/login.service';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
+import { formError } from '../../utils/forms';
 
 @Component({
   selector: 'app-profile',
@@ -37,9 +38,22 @@ export class ProfileComponent implements OnInit {
       file: [''],
     });
   }
-
   openEditModal(content) {
     this.modalRef = this.modalService.open(content);
+  }
+
+//   holds the error labels' states (this is where the labels get them from @Input)
+  errors = {
+    'name': '',
+    'address': '',
+    'phone': '',
+    'birthday': ''
+  }
+
+//   conveniece function which causes an error label with the given fieldname to error
+//   look at utils.formError.userConst to modify the error text
+  formError(fieldName: string){
+    this.errors[fieldName] = formError.userErrorConst[fieldName];
   }
 
   updateProfile() {
@@ -60,29 +74,36 @@ export class ProfileComponent implements OnInit {
       userInfo.phone = null;
     }
 
+    formError.clearErrors(this.errors);
     if (
-      (userInfo.phone != null && userInfo.phone.length != 10) ||
-      (userInfo.birthday != null &&
-        !userInfo.birthday.match('^\\d{4}-\\d{2}-\\d{2}$')) ||
-      !userInfo.name
+      !formError.isPhoneValid(userInfo.phone) ||
+      !formError.isBirthdayValid(userInfo.birthday) ||
+      !userInfo.name || !userInfo.address
     ) {
-      alert(
-        'Please ensure formats are proper. Name should not empty, phone numbers should be 10 digits with no dashes and birthday should be YYYY-MM-DD'
-      );
+        if(!formError.isBirthdayValid(userInfo.birthday)) this.formError('birthday');
+        if(!formError.isPhoneValid(userInfo.phone)) this.formError('phone');
+        if(!userInfo.address) this.formError('address');
+        if(!userInfo.name) this.formError('name');
     } else {
+      
       this.loginService.editUser(userInfo).subscribe((data) => {
-        if (this.newImage) {
-          this.onSubmit();
+        //if response is invalid, populate the errors
+        if(formError.isInvalidResponse(data)){
+            formError.HandleInvalid(data, this.formError)
+        }else{
+          if (this.newImage) {
+            this.onSubmit();
+          }
+          else{
+              this.modalRef.close();
+              setTimeout(function () {
+                window.location.reload();
+              }, 100);
+          }
+          this.getUserInfo();
         }
-        else{
-            this.modalRef.close();
-            setTimeout(function () {
-              window.location.reload();
-            }, 100);
-        }
-        this.getUserInfo();
       });
-
+      
     }
   }
 
