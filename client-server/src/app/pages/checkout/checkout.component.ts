@@ -6,6 +6,7 @@ import cartItems from '../../../assets/data/cart.json';
 import { OrdersService } from 'src/app/service/orders.service';
 import { RestaurantsService } from 'src/app/service/restaurants.service';
 import { StaticSymbol } from '@angular/compiler';
+import { windowWhen } from 'rxjs/operators';
 
 @Component({
   selector: 'app-checkout',
@@ -96,5 +97,11 @@ export class CheckoutComponent implements OnInit {
         window.location.reload();
       }
     );
+  }
+
+  clearCart() {
+    this.orderService.clearCart(this.cartId).subscribe((data) => {
+      window.location.reload();
+    });
   }
 }

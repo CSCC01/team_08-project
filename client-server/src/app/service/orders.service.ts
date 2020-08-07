@@ -49,6 +49,14 @@ export class OrdersService {
     return this.http.get<any>(endpoint, { params: params });
   }
 
+  clearCart(cartId): Observable<any> {
+    const endpoint = `${OrdersService.ORDER_ENDPOINT}/cart/cancel/`;
+    const obj = {
+      _id: cartId,
+    };
+    return this.http.post<any>(endpoint, obj);
+  }
+
   /*
   @Input: 
   @Output: 

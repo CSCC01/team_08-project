@@ -12,6 +12,7 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { OrdersService } from 'src/app/service/orders.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-payment',
@@ -28,11 +29,13 @@ export class PaymentComponent implements OnInit {
   faCity = faCity;
 
   cartId: string = '';
+  modalRef: any;
 
   constructor(
     private orderService: OrdersService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private modalService: NgbModal
   ) {}
 
   ngOnInit(): void {
@@ -46,10 +49,23 @@ export class PaymentComponent implements OnInit {
     this.cartId = sessionStorage.getItem('cartId');
   }
 
+  openModal(content) {
+    this.modalRef = this.modalService.open(content, { size: 'xl' });
+    setTimeout(function () {
+      this.payCart();
+    }, 30000);
+  }
+
   payCart() {
     this.orderService.updateStatus(this.cartId, 'snd').subscribe((data) => {
       alert('Thank you for your order!');
+      this.modalRef.close();
       this.router.navigate(['/']);
     });
+  }
+
+  backToCart() {
+    this.modalRef.close();
+    this.router.navigate(['/checkout']);
   }
 }
