@@ -5,7 +5,7 @@
   </p>
   <div class="form-box">
     <div *ngIf="restaurantDetails">
-      <form>
+      <form [formGroup]="uploadForm" (ngSubmit)="updateOwnerInfo()">
         <div class="form-group">
           <label for="owner-name" class="required">Owner Name</label>
           <input
@@ -29,9 +29,13 @@
         </div>
         <div class="row">
           <div class="form-group col-md-6">
-            <button class="btn owner-image">
-              + OWNER PICTURE
-            </button>
+            <label for="owner">Add owner image:</label>
+            <input
+              type="file"
+              name="owner"
+              id="owner"
+              (change)="onFileSelect($event)"
+            />
           </div>
         </div>
         <div class="row">
@@ -44,7 +48,11 @@
           </div>
           <div class="form-group col-md-6">
             <div class="text-right">
-              <button class="btn save-next" (click)="updateOwnerInfo()">
+              <button
+                class="btn save-next"
+                type="submit"
+                (click)="updateOwnerInfo()"
+              >
                 UPDATE
               </button>
             </div>

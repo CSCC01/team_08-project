@@ -5,9 +5,9 @@ from restaurant.cuisine_dict import load_dict
 from cloud_storage import cloud_controller
 from restaurant.enum import Prices, Categories
 from django.core.exceptions import ObjectDoesNotExist
+import requests
+from geo import geo_controller
 
-
-# Model for the Food Items on the Menu
 class Food(models.Model):
     """ Model for the Food Items on the Menu """
     _id = models.ObjectIdField()
@@ -18,6 +18,7 @@ class Food(models.Model):
     price = models.DecimalField(max_digits=6, decimal_places=2)
     tags = models.ListField(default=[], blank=True)
     specials = models.CharField(max_length=51, blank=True)
+    category = models.CharField(max_length=50, blank=True, default='')
 
     class Meta:
         unique_together = (("name", "restaurant_id"),)
@@ -36,10 +37,15 @@ class Food(models.Model):
             picture=food_data['picture'],
             price=food_data['price'],
             specials=food_data['specials'],
+            category=food_data['category'],
         )
         dish.clean_fields()
         dish.clean()
         dish.save()
+        restaurant = Restaurant.objects.get(_id=food_data['restaurant_id'])
+        if food_data['category'] not in restaurant.categories:
+            restaurant.categories.append(food_data['category'])
+            restaurant.save(update_fields=['categories'])
         return Food.objects.get(name=food_data['name'], restaurant_id=food_data['restaurant_id'])
 
     @classmethod
@@ -68,6 +74,28 @@ class Food(models.Model):
             food.tags = list(map(str, food.tags))
             response['Dishes'].append(model_to_dict(food))
         return response
+
+    @classmethod
+    def field_validate(self, fields):
+        """
+        Validates fields
+        :param fields: Dictionary of fields to validate
+        :return: A list of fields that were invalid. Returns None if all fields are valid
+        """
+        dish_urls = ['picture']
+        invalid = {'Invalid': []}
+
+        for field in dish_urls:
+            if field in fields and fields[field] != '':
+                try:
+                    requests.get(fields[field])
+                except (requests.ConnectionError, requests.exceptions.MissingSchema) as exception:
+                    invalid['Invalid'].append(field)
+
+        if not invalid['Invalid']:
+            return None
+        else:
+            return invalid
 
 
 class ManualTag(models.Model):
@@ -155,7 +183,7 @@ class Restaurant(models.Model):
     instagram = models.CharField(max_length=200, blank=True)
     bio = models.TextField(null=True)
     GEO_location = models.CharField(max_length=200)
-    external_delivery_link = models.CharField(max_length=200)
+    external_delivery_link = models.CharField(max_length=200, blank=True)
     cover_photo_url = models.CharField(max_length=200,
                                        default='https://www.nautilusplus.com/content/uploads/2016/08/Pexel_junk-food.jpeg')
     logo_url = models.CharField(max_length=200,
@@ -164,6 +192,7 @@ class Restaurant(models.Model):
     owner_name = models.CharField(max_length=50, blank=True)
     owner_story = models.CharField(max_length=3000, blank=True)
     owner_picture_url = models.CharField(max_length=200, blank=True)
+    categories = models.ListField(default=[], blank=True)
 
     @classmethod
     def get(cls, _id):
@@ -204,21 +233,38 @@ class Restaurant(models.Model):
             restaurant = cls(
                 **restaurant_data
             )
+            try:
+                restaurant.GEO_location = geo_controller.geocode(restaurant_data['address'])
+            except ValueError:
+                pass
             restaurant.clean_fields()
             restaurant.clean()
             restaurant.save()
             return restaurant
 
     @classmethod
-    def update_logo(cls, img, _id):
+    def field_validate(self, fields):
         """
-        Upload image to google cloud and change restaurant logo to that link
-        :param img:
-        :param _id:
-        :return:
+        Validates fields
+        :param fields: Dictionary of fields to validate
+        :return: A list of fields that were invalid. Returns None if all fields are valid
         """
-        restaurant = cls.get(_id=_id)
-        url = cloud_controller.upload(img, cloud_controller.TEST_BUCKET, content_type=cloud_controller.IMAGE)
-        restaurant.logo_url = url
-        restaurant.save()
-        return url
+        restaurant_urls = ['twitter', 'instagram', 'cover_photo_url', 'logo_url', 'owner_picture_url',
+                           'external_delivery_link']
+
+        invalid = {'Invalid': []}
+
+        for field in restaurant_urls:
+            if field in fields and fields[field] != '':
+                try:
+                    requests.get(fields[field])
+                except (requests.ConnectionError, requests.exceptions.MissingSchema) as exception:
+                    invalid['Invalid'].append(field)
+
+        if 'phone' in fields and fields['phone'] is not None:
+            if len(str(fields['phone'])) != 10:
+                invalid['Invalid'].append('phone')
+        if len(invalid['Invalid']) == 0:
+            return None
+        else:
+            return invalid

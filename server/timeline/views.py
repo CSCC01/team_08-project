@@ -6,6 +6,7 @@ from jsonschema import validate
 import jsonschema
 from bson import ObjectId
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from utils.encoder import BSONEncoder
 
 post_schema = {
     'properties': {
@@ -37,8 +38,9 @@ def upload_post_page(request):
     post = TimelinePost(**body)
     post.full_clean()
     post.save()
-    post._id = str(post._id)
-    return JsonResponse(model_to_dict(post))
+    post_dict = json.loads(json.dumps(model_to_dict(post), cls=BSONEncoder))
+    post_dict['Timestamp'] = post.Timestamp
+    return JsonResponse(post_dict)
 
 def delete_post_page(request):
     """
@@ -83,7 +85,8 @@ def delete_post_page(request):
 
 def get_all_posts_page(request):
     """ retrieve list of restaurants from database """
-    return JsonResponse(TimelinePost.get_all())
+    posts = TimelinePost.get_all()
+    return JsonResponse(json.loads(json.dumps(posts, cls=BSONEncoder)))
 
 
 def upload_comment_page(request):
@@ -114,7 +117,8 @@ def upload_comment_page(request):
 def get_post_by_restaurant_page(request):
     """Retrieve all posts from a restaurant"""
     rest_id = request.GET.get('restaurant_id')
-    return JsonResponse(TimelinePost.get_by_restaurant(rest_id))
+    posts = TimelinePost.get_by_restaurant(rest_id)
+    return JsonResponse(json.loads(json.dumps(posts, cls=BSONEncoder)))
 
 def delete_comment_page(request):
     """ Deletes comment from database """
@@ -134,4 +138,4 @@ def get_comment_data_page(request):
     comment._id = str(comment._id)
     comment.likes = list(map(str, comment.likes))
     return JsonResponse({'_id': comment._id, 'post_id': comment.post_id, 'user_email': comment.user_email,
-                         'likes': comment.likes, 'content': comment.content, 'Timestamp': comment.Timestamp})
+                         'likes': comment.likes, 'content': comment.content, 'Timestamp': comment.Timestamp.strftime("%b %d, %Y %H:%M")})

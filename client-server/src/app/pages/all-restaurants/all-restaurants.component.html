@@ -1,3 +1,11 @@
+<div *ngIf="restaurants != undefined" class="map">
+  <app-map
+    [restaurants]="restaurants"
+    [userId]="userId"
+    [role]="role"
+  ></app-map>
+</div>
+
 <h2 class="header-title">Browse</h2>
 
 <mat-tab-group mat-align-tabs="center">
@@ -10,9 +18,10 @@
       </div>
       <input
         type="text"
-        class="form-control"
-        id="search"
+        class="form-control my-0 py-1 search"
         placeholder="Search"
+        [(ngModel)]="inputRestaurant"
+        (ngModelChange)="searchRestaurants()"
       />
     </div>
     <div class="restaruant-listings-box">
@@ -22,25 +31,13 @@
             [category]="'Rating'"
             [subcategories]="['1 star', '2 star', '3 star', '4 star', '5 star']"
             [length]="5"
-            (events)="displayList($event)"
+            (events)="filterRating($event)"
           ></app-filterlist-card>
           <app-filterlist-card
             [category]="'Price Range'"
-            [subcategories]="['$', '$$', '$$$']"
+            [subcategories]="['Low', 'Medium', 'High']"
             [length]="3"
-            (events)="displayList($event)"
-          ></app-filterlist-card>
-          <app-filterlist-card
-            [category]="'Filter'"
-            [subcategories]="[
-              'Category',
-              'Category',
-              'Category',
-              'Category',
-              'Category'
-            ]"
-            [length]="5"
-            (events)="displayList($event)"
+            (events)="filterPricepoint($event)"
           ></app-filterlist-card>
         </div>
         <div class="col-md-8">
@@ -60,38 +57,22 @@
         </span>
       </div>
       <input
-        class="form-control my-0 py-1"
+        class="form-control my-0 py-1 search"
         type="text"
         placeholder="Search"
         aria-label="Search"
+        [(ngModel)]="inputDishes"
+        (ngModelChange)="searchDishes()"
       />
     </div>
     <div class="dishes-listings-box">
       <div class="row">
         <div class="col-md-3">
           <app-filterlist-card
-            [category]="'Rating'"
-            [subcategories]="['1 star', '2 star', '3 star', '4 star', '5 star']"
-            [length]="5"
-            (events)="displayList($event)"
-          ></app-filterlist-card>
-          <app-filterlist-card
             [category]="'Price Range'"
-            [subcategories]="['$', '$$', '$$$']"
-            [length]="3"
-            (events)="displayList($event)"
-          ></app-filterlist-card>
-          <app-filterlist-card
-            [category]="'Filter'"
-            [subcategories]="[
-              'Category',
-              'Category',
-              'Category',
-              'Category',
-              'Category'
-            ]"
-            [length]="5"
-            (events)="displayList($event)"
+            [subcategories]="['$0 - $20', '$21 - $40', '$41 - $60', '$60+']"
+            [length]="4"
+            (events)="filterPrice($event)"
           ></app-filterlist-card>
         </div>
         <div class="col-md-9">

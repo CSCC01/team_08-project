@@ -1,7 +1,13 @@
 @import "src/styles";
 
+.logo {
+  height: 75px;
+  width: auto;
+}
+
 .navbar {
   background-color: $primary-color;
+  z-index: 100;
 }
 
 .navbar-brand {
@@ -54,4 +60,47 @@
 
 .upgrade-button:hover {
   color: $navigation-accent-color;
+}
+
+.confirm {
+  padding: 5px 30px;
+}
+
+.cancel {
+  background-color: white;
+  color: $secondary-color;
+  border-color: $secondary-color;
+}
+
+.cancel:hover {
+  background-color: $secondary-color;
+  color: white;
+}
+
+.dropdown {
+  font-size: 15px;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-weight: 700;
+  background-color: $primary-color;
+  margin: 0;
+  padding: 0;
+}
+
+.address:hover {
+  color: white;
+}
+
+.dropdown:hover {
+  font-size: 15px;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-weight: 700;
+  background-color: $primary-color;
+  border-color: $primary-color;
+  color: white;
+  margin: 0;
+  padding: 0;
+}
+
+.address-icon {
+  font-size: 15px;
 }

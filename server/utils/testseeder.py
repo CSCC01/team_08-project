@@ -3,7 +3,7 @@ from utils.document_seed_generator import Seeder
 from faker import Faker
 import json
 
-class AddTestCase(SimpleTestCase):
+class SeederTestCases(SimpleTestCase):
 
     def setUp(self):
         self.seeder = Seeder()

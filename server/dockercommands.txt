@@ -1,0 +1,16 @@
+docker exec -it server bash
+docker-compose stop
+docker-compose build
+sudo docker-compose -f docker-compose.yml up -d server
+docker exec server pip list
+docker logs -f server
+
+waitress-serve --port=80 SDServer.wsgi:application
+uwsgi --socket :8000 --module SDServer.wsgi:application
+uwsgi --http :8000 --module SDServer.wsgi:application
+
+new 
+docker build -f Dockerfile-dev -t server .
+docker run -p 8000:8000 server
+
+check over restaurant_find_all

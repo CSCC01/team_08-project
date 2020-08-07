@@ -1,5 +1,7 @@
 from django.forms import model_to_dict
 from django.http import HttpResponse, JsonResponse
+
+from geo import geo_controller
 from user.models import SDUser
 from restaurant.models import Restaurant
 import json
@@ -18,7 +20,8 @@ signup_schema = {
         "restaurant_id": {"type": "string"},
         "birthday": {"type": "string", "format": "date"},
         "address": {"type": "string"},
-        "phone": {"type": "number"}
+        "phone": {"type": "number"},
+        "GEO_location": {"type": "string"}
     }
 }
 
@@ -71,14 +74,22 @@ def exists_page(request):
 
 
 def edit_user_page(request):
-    """Update User data"""
+    """ Update User data """
     validate(instance=request.body, schema=signup_schema)
     body = json.loads(request.body)
+    invalid = SDUser.field_validate(body)
+    if invalid is not None:
+        return JsonResponse(invalid)
     user = SDUser.objects.get(email=body["email"])
     del body['email']
     for field in body:
         if field in user_editable:
             setattr(user, field, body[field])
+    if "address" in body:
+        try:
+            setattr(user, 'GEO_location', geo_controller.geocode(body['address']))
+        except ValueError:
+            pass
     user.clean_fields()
     user.clean()
     user.save()

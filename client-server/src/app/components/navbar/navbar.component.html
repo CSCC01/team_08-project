@@ -1,6 +1,5 @@
 <nav class="navbar navbar-expand-lg">
-  <img src="assets/images/icon.png" style="height: 75px; width: auto;" />
-  <a class="navbar-brand" href="#">Scarborough Dining</a>
+  <img src="../../../assets/images/scarborough_dining.png" class="logo" />
   <button
     class="navbar-toggler"
     type="button"
@@ -15,151 +14,146 @@
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item nav-link">
-        <a
-          routerLink="/"
-          [queryParams]="{
-            role: role,
-            userId: userId,
-            restaurantId: restaurantId
-          }"
-          class="nav-link"
-        >
+        <a routerLink="/" class="nav-link">
           HOME
         </a>
       </li>
+
       <li class="nav-item nav-link" *ngIf="auth.loggedIn && role == 'BU'">
-        <a
-          routerLink="profile"
-          [queryParams]="{ role: role, userId: userId }"
-          routerLinkActive="active"
-          class="nav-link"
-        >
-          PROFILE
-        </a>
+        <div ngbDropdown class="d-inline-block">
+          <button class="btn dropdown" id="dropdownBasic1" ngbDropdownToggle>
+            USER INFO
+          </button>
+          <div ngbDropdownMenu aria-labelledby="dropdownProfile">
+            <button ngbDropdownItem (click)="profile()">
+              Profile
+            </button>
+            <button ngbDropdownItem (click)="favourites()">
+              Favourites
+            </button>
+          </div>
+        </div>
       </li>
       <li class="nav-item nav-link" *ngIf="role == 'RO'">
-        <a
-          routerLink="dashboard"
-          [queryParams]="{
-            role: role,
-            userId: userId,
-            restaurantId: restaurantId
-          }"
-          routerLinkActive="active"
-          class="nav-link"
-        >
+        <a routerLink="dashboard" routerLinkActive="active" class="nav-link">
           DASHBOARD
         </a>
       </li>
       <li class="nav-item nav-link" *ngIf="auth.loggedIn && role == 'RO'">
-        <a
-          routerLink="restaurant"
-          [queryParams]="{
-            role: role,
-            userId: userId,
-            restaurantId: restaurantId
-          }"
-          routerLinkActive="active"
-          class="nav-link"
-        >
+        <a routerLink="restaurant" routerLinkActive="active" class="nav-link">
           RESTAURANT PAGE
         </a>
       </li>
-      <li class="nav-item nav-link">
-        <a
-          routerLink="all-listings"
-          [queryParams]="{
-            role: role,
-            userId: userId
-          }"
-          *ngIf="role != 'RO'"
-          routerLinkActive="active"
-          class="nav-link"
-        >
+      <li class="nav-item nav-link" *ngIf="auth.loggedIn && role == 'BU'">
+        <div ngbDropdown class="d-inline-block">
+          <button class="btn dropdown" id="dropdownBasic1" ngbDropdownToggle>
+            BROWSE
+          </button>
+          <div ngbDropdownMenu aria-labelledby="dropdownBrowse">
+            <button ngbDropdownItem (click)="browse()">
+              Restaurants
+            </button>
+            <button ngbDropdownItem (click)="timeline()">
+              Timeline
+            </button>
+            <button ngbDropdownItem (click)="owners()">
+              Chefs
+            </button>
+          </div>
+        </div>
+      </li>
+
+      <li class="nav-item nav-link" *ngIf="!auth.loggedIn">
+        <a routerLinkActive="active" class="nav-link" (click)="browse()">
           BROWSE
         </a>
       </li>
-      <li class="nav-item nav-link">
-        <a
-          routerLink="timeline"
-          [queryParams]="{
-            role: role,
-            userId: userId,
-            restaurantId: restaurantId
-          }"
-          routerLinkActive="active"
-          class="nav-link"
-        >
+      <li class="nav-item nav-link" *ngIf="!auth.loggedIn || role == 'RO'">
+        <a routerLinkActive="active" class="nav-link" (click)="timeline()">
           TIMELINE
+        </a>
+      </li>
+      <li class="nav-item nav-link" *ngIf="!auth.loggedIn">
+        <a routerLinkActive="active" class="nav-link" (click)="owners()">
+          CHEFS
+        </a>
+      </li>
+      <li *ngIf="role == 'BU'" class="nav-item nav-link">
+        <a routerLink="checkout" routerLinkActive="active" class="nav-link">
+          CART
         </a>
       </li>
     </ul>
     <ul class="navbar-nav">
-      <button
-        type="button"
-        class="upgrade-button"
-        *ngIf="auth.loggedIn && role == 'BU'"
-        data-toggle="modal"
-        data-target="#exampleModal"
-      >
-        Upgrade to Restaurant Account
-      </button>
-      <div
-        class="modal fade"
-        id="exampleModal"
-        tabindex="-1"
-        role="dialog"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-      >
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">
-                Confirm Account Upgrade
-              </h5>
-              <button
-                type="button"
-                class="close"
-                data-dismiss="modal"
-                aria-label="Close"
-              >
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              Are you sure you want to upgrade this account to a restaurant
-              account?
-            </div>
-            <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-outline-secondary"
-                data-dismiss="modal"
-              >
-                Exit
-              </button>
-              <button
-                type="button"
-                class="btn btn-outline-secondary"
-                *ngIf="auth.loggedIn"
-                data-dismiss="modal"
-                [routerLink]="['../restaurant-setup']"
-              >
-                Confirm
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <li class="nav-item">
+      <li *ngIf="role == 'BU'" class="nav-item nav-link">
+        <p class="nav-link address" *ngIf="this.userAddress">
+          <fa-icon class="address-icon icon" [icon]="faMapMarkerAlt"></fa-icon>
+          {{ this.userAddress | titlecase }}
+        </p>
+        <p class="nav-link address" *ngIf="!this.userAddress">
+          No Address Provided
+          <fa-icon class="address-icon icon" [icon]="faMapMarkerAlt"></fa-icon>
+        </p>
+      </li>
+      <li class="nav-item nav-link">
+        <button
+          type="button"
+          class="upgrade-button"
+          *ngIf="auth.loggedIn && role == 'BU'"
+          (click)="openModal(content)"
+        >
+          Upgrade to Restaurant Account
+        </button>
+      </li>
+      <li class="nav-item nav-link">
         <a (click)="auth.login()" *ngIf="!auth.loggedIn" class="nav-link">
           LOG IN
         </a>
-        <a (click)="auth.logout()" *ngIf="auth.loggedIn" class="nav-link">
+        <a
+          (click)="reload(); auth.logout()"
+          *ngIf="auth.loggedIn"
+          class="nav-link"
+        >
           LOG OUT
         </a>
       </li>
     </ul>
   </div>
 </nav>
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h2 class="modal-title" id="modal-basic-title">
+      Confirm Account Upgrade
+    </h2>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-box">
+      <div class="form-group">
+        Are you sure you want to upgrade this account to a restaurant account?
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="text-right">
+      <button class="btn confirm cancel" (click)="modal.dismiss('Cross click')">
+        CANCEL
+      </button>
+      <button
+        class="btn confirm"
+        (click)="goToSetup()"
+        [routerLink]="['../restaurant-setup']"
+      >
+        CONFIRM
+      </button>
+    </div>
+  </div>
+</ng-template>

@@ -15,6 +15,9 @@ import { MenuEditComponent } from './pages/menu-edit/menu-edit.component';
 import { TimelineComponent } from './pages/timeline/timeline.component';
 import { OwnerEditComponent } from './pages/owner-edit/owner-edit.component';
 import { RestaurantEditComponent } from './pages/restaurant-edit/restaurant-edit.component';
+import { CheckoutComponent } from './pages/checkout/checkout.component';
+import { FavouritesComponent } from './pages/favourites/favourites.component';
+import { AllOwnersComponent } from './pages/all-owners/all-owners.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -38,6 +41,10 @@ const routes: Routes = [
   { path: 'timeline', component: TimelineComponent },
   { path: 'owner-edit', component: OwnerEditComponent },
   { path: 'restaurant-edit', component: RestaurantEditComponent },
+  { path: 'checkout', component: CheckoutComponent },
+  { path: 'favourites', component: FavouritesComponent },
+  { path: 'all-owners', component: AllOwnersComponent },
+  { path: '**', redirectTo: '' },
 ];
 
 @NgModule({

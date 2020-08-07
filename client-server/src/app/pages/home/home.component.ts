@@ -1,35 +1,47 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  HostListener,
+  ViewChild,
+  TemplateRef,
+  AfterViewInit,
+} from '@angular/core';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import {
   faArrowCircleUp,
   faArrowCircleDown,
+  faCalendar,
 } from '@fortawesome/free-solid-svg-icons';
-import dishes from '../../../assets/data/dishes.json';
-import stories from '../../../assets/data/stories.json';
 import { AuthService } from 'src/app/auth/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DataService } from 'src/app/service/data.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { LoginService } from '../../service/login.service';
+import { RestaurantsService } from 'src/app/service/restaurants.service';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent implements OnInit {
-  restaurantId: string = '';
-  userId: string = '';
+export class HomeComponent implements OnInit, AfterViewInit {
   role: string = '';
+  userId: string = '';
+  userData: any;
 
   isShow: boolean;
   topPosToStartShowing = 100;
   faArrowCircleUp = faArrowCircleUp;
   faArrowCircleDown = faArrowCircleDown;
   arrowsOutside = true;
+  faCalendar = faCalendar;
+
+  @ViewChild('userInfo', { static: true }) content: TemplateRef<any>;
+  modalRef: any;
 
   totalStars: number = 5;
-  dishes: any[];
-  stories: any[];
+  dishes: any[] = [];
+  stories: any[] = [];
 
   cuisines = [
     {
@@ -67,29 +79,61 @@ export class HomeComponent implements OnInit {
 
   constructor(
     public auth: AuthService,
-    private data: DataService,
     private route: ActivatedRoute,
-    private router: Router
-  ) {
-    this.dishes = dishes;
-    this.stories = stories;
-  }
+    private modalService: NgbModal,
+    private router: Router,
+    private loginService: LoginService,
+    private restaurantsService: RestaurantsService
+  ) {}
 
   ngOnInit(): void {
-    this.role = this.route.snapshot.queryParams.role;
-    this.userId = this.route.snapshot.queryParams.userId;
-    this.restaurantId = this.route.snapshot.queryParams.restaurantId;
-
-    this.data.changeRestaurantId(this.restaurantId);
-    this.data.changeUserId(this.userId);
-    this.data.changeRole(this.role);
-
     AOS.init({
       delay: 300,
       duration: 1500,
       once: false,
       anchorPlacement: 'top-bottom',
     });
+
+    this.restaurantsService.getDishes().subscribe((data) => {
+      const len = data.Dishes.length < 5 ? data.Dishes.length : 5;
+      for (let i = 0; i < len; i++) {
+        data.Dishes[i].type = 'dish';
+        this.dishes[i] = data.Dishes[i];
+      }
+    });
+
+    this.restaurantsService.listRestaurants().subscribe((data) => {
+      const len = data.Restaurants.length < 5 ? data.Restaurants.length : 5;
+      for (let i = 0; i < len; i++) {
+        this.stories[i] = {
+          type: 'story',
+          name: data.Restaurants[i].owner_name,
+          profile_pic: data.Restaurants[i].owner_picture_url,
+          bio: data.Restaurants[i].owner_story,
+          restaurant: data.Restaurants[i].name,
+          _id: data.Restaurants[i]._id,
+        };
+      }
+    });
+
+    this.userId = sessionStorage.getItem('userId');
+    this.role = sessionStorage.getItem('role');
+
+    if (this.userId.length > 0 && this.role == 'BU') {
+      this.loginService.getUser({ email: this.userId }).subscribe((data) => {
+        this.userData = data;
+
+        if (!data.birthday || !data.address || !data.phone) {
+          this.modalRef = this.modalService.open(this.content);
+        }
+      });
+    }
+  }
+
+  ngAfterViewInit(): void {
+    if (window.innerWidth < 850) {
+      this.onResize();
+    }
   }
 
   @HostListener('window:resize', ['$event'])
@@ -149,5 +193,42 @@ export class HomeComponent implements OnInit {
 
   browseListings() {
     this.router.navigate(['/all-listings']);
+  }
+
+  updateProfile() {
+    var userInfo = {
+      email: this.userId,
+      name: (<HTMLInputElement>document.getElementById('name')).value,
+      address: (<HTMLInputElement>document.getElementById('address')).value,
+      phone: (<HTMLInputElement>document.getElementById('phone')).value,
+      birthday: (<HTMLInputElement>document.getElementById('dateOfBirth'))
+        .value,
+    };
+
+    sessionStorage.setItem('userAddress', userInfo.address);
+
+    if (userInfo.birthday == '') {
+      userInfo.birthday = null;
+    }
+    if (userInfo.phone == '') {
+      userInfo.phone = null;
+    }
+
+    if (
+      (userInfo.phone != null && userInfo.phone.length != 10) ||
+      (userInfo.birthday != null &&
+        !userInfo.birthday.match('^\\d{4}-\\d{2}-\\d{2}$')) ||
+      !userInfo.name
+    ) {
+      alert(
+        'Please ensure formats are proper. Name should not empty, phone numbers should be 10 digits with no dashes and birthday should be YYYY-MM-DD'
+      );
+    } else {
+      this.loginService.editUser(userInfo).subscribe((data) => {});
+      this.modalRef.close();
+      setTimeout(function () {
+        window.location.reload();
+      }, 100);
+    }
   }
 }

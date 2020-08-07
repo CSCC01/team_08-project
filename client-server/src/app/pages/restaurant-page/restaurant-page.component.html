@@ -1,6 +1,9 @@
+<div *ngIf="error">
+  <app-page-error></app-page-error>
+</div>
+
 <div *ngIf="restaurantDetails">
   <div class="text-right">
-    <!-- <div class="button-container"> -->
     <img
       src="{{ restaurantDetails.cover_photo_url }}"
       alt="header"
@@ -14,8 +17,54 @@
       <fa-icon [icon]="faEdit"></fa-icon>
       <b>EDIT RESTAURANT DETAILS</b>
     </button>
-    <!-- </div> -->
+    <button
+      *ngIf="role == 'RO'"
+      class="btn editHeader"
+      (click)="openEditHeaderModal(headerModal)"
+    >
+      <fa-icon [icon]="faEdit"></fa-icon>
+      <b>EDIT HEADER</b>
+    </button>
   </div>
+
+  <ng-template #headerModal let-modal>
+    <div class="modal-header">
+      <h2 class="modal-title" id="modal-basic-title">Edit Header Image</h2>
+      <button
+        type="button"
+        class="close"
+        aria-label="Close"
+        (click)="modal.dismiss('Cross click')"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label for="cover">Add cover image:</label>
+            <input
+              type="file"
+              name="cover"
+              id="cover"
+              (change)="onFileSelect($event)"
+            />
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <div class="text-right">
+        <button class="btn saveBtn skip" (click)="modal.dismiss('Cross click')">
+          CANCEL
+        </button>
+        <button class="btn saveBtn" type="submit" (click)="onSubmit()">
+          CONFIRM
+        </button>
+      </div>
+    </div>
+  </ng-template>
 
   <div>
     <div class="card infoCard">
@@ -71,6 +120,16 @@
           <div class="media-icons">
             <fa-icon class="media-icon" [icon]="faHeartLine"></fa-icon>
             <a
+              *ngIf="
+                restaurantDetails.external_delivery_link != '' &&
+                restaurantDetails.external_delivery_link != ' '
+              "
+              href="{{ restaurantDetails.external_delivery_link }}"
+              target="_blank"
+            >
+              <fa-icon class="media-icon" [icon]="faShippingFast"></fa-icon>
+            </a>
+            <a
               *ngIf="restaurantDetails.instagram != ''"
               href="{{ restaurantDetails.instagram }}"
               target="_blank"
@@ -108,12 +167,33 @@
       </div>
       <div class="row" style="margin: 0;">
         <div class="form-group col-md-5">
-          <img class="owner-image" src="assets/images/owner.jpg" />
+          <div *ngIf="restaurantDetails.owner_picture_url">
+            <img
+              class="owner-image"
+              src="{{ restaurantDetails.owner_picture_url }}"
+              alt="If you're seeing this, update your owner picture!"
+            />
+          </div>
+          <div *ngIf="!restaurantDetails.owner_picture_url">
+            <img
+              class="owner-image"
+              src="../../../assets/images/undraw_chef.png"
+              alt="If you're seeing this, update your owner picture!"
+            />
+          </div>
         </div>
         <div class="form-group col-md-7">
-          <h2 class="owner-name">{{ restaurantDetails.owner_name }}</h2>
-          <div class="card story-card">
+          <div *ngIf="restaurantDetails.owner_name">
+            <h2 class="owner-name">{{ restaurantDetails.owner_name }}</h2>
+          </div>
+          <div *ngIf="!restaurantDetails.owner_name">
+            <h2 class="owner-name">Owner Name Placeholder</h2>
+          </div>
+          <div class="card story-card" *ngIf="restaurantDetails.owner_story">
             <p>{{ restaurantDetails.owner_story }}</p>
+          </div>
+          <div class="card story-card" *ngIf="!restaurantDetails.owner_story">
+            <p>Owner Story Placeholder</p>
           </div>
         </div>
       </div>

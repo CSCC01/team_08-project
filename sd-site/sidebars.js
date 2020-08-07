@@ -20,6 +20,7 @@ module.exports = {
       "components/review-card",
       "components/timeline-post",
       "components/view-review-card",
+      "components/cart-card",
     ],
   },
 };

@@ -34,7 +34,7 @@ class SDUserTestCases(TestCase):
         expected = {"nickname": "TesterA", "name": "Tester", "picture": "picA",
                     "last_updated": "2020-06-26T14:07:39.888Z",
                     "email": "A@mail.com", "email_verified": True, "role": "BU",
-                    "restaurant_id": None, "birthday": None, "address": "", "phone": None}
+                    "restaurant_id": None, "birthday": None, "address": "", "phone": None, "GEO_location": ''}
         self.assertJSONEqual(actual, expected)
 
     def test_signup_invalid_role(self):
@@ -61,7 +61,7 @@ class SDUserTestCases(TestCase):
         """
         request = self.factory.post('/api/user/role_reassign/',
                                     {"user_email": "C@mail.com", "role": "RO", "name": "Rando Resto",
-                                     "address": "211 detroit", "phone": 6475210680,
+                                     "address": "116 memon place", "phone": 6475210680,
                                      "city": "toronto", "email": "calvin@gmail.com",
                                      "cuisine": "african", "pricepoint": "Medium",
                                      "twitter": "https://twitter.com/SupremeDreams_s1",
@@ -93,7 +93,6 @@ class SDUserTestCases(TestCase):
                                      "twitter": "https://twitter.com/SupremeDreams_s1",
                                      "instagram": "https://www.instagram.com/rdcworld1/2?hl=en",
                                      "bio": "Finger licking good chicken",
-                                     "GEO_location": "{\"longitude\": 44.068203, \"latitude\":-114.742043}",
                                      "external_delivery_link": "https://docs.djang22oproject.com/en/topics/testing/overview/",
                                      "cover_photo_url": "link",
                                      "logo_url": "link",
@@ -105,7 +104,7 @@ class SDUserTestCases(TestCase):
                               cuisine='african', pricepoint='Medium', twitter='https://twitter.com/SupremeDreams_s1',
                               instagram='https://www.instagram.com/rdcworld1/2?hl=en',
                               bio='Finger licking good chicken',
-                              GEO_location="{\"longitude\": 44.068203, \"latitude\":-114.742043}",
+                              GEO_location="{'lat': 42.3295629, 'lng': -83.0492457}",
                               external_delivery_link='https://docs.djang22oproject.com/en/topics/testing/overview/',
                               cover_photo_url='link', logo_url='link', rating='3.00')
         self.assertDictEqual(model_to_dict(actual), model_to_dict(expected))
@@ -116,7 +115,8 @@ class SDUserTestCases(TestCase):
         response = data_page(request)
         expected = {"nickname": "TesterE", "name": "Tester", "picture": "picE",
                     "last_updated": "2020-06-26T14:07:39.888Z", "email": "E@mail.com", "email_verified": True,
-                    "role": "BU", "restaurant_id": None, "birthday": None, "address": "", "phone": None}
+                    "role": "BU", "restaurant_id": None, "birthday": None,
+                    "address": "", "phone": None, "GEO_location": ''}
         actual = response.content
         self.assertJSONEqual(actual, expected)
 
@@ -136,14 +136,29 @@ class SDUserTestCases(TestCase):
         actual = response.content
         self.assertJSONEqual(actual, expected)
 
-    def test_edit_user(self):
+    def test_edit_user_valid(self):
         """ Test if user document is properly updated """
+        request = self.factory.post('/api/user/edit/',
+                                    {"name": "Tester2",
+                                     "email": "E@mail.com", "role": "RO", "address": "116 memon place",
+                                     "phone": 4162139000},
+                                    content_type='application/json')
+        actual = edit_user_page(request).content
+
+        expected = {"nickname": "TesterE", "name": "Tester2", "picture": "picE",
+                    "last_updated": "2020-06-26T14:07:39.888Z",
+                    "email": "E@mail.com", "email_verified": True, "role": "BU",
+                    "restaurant_id": None, "birthday": None, "address": "116 memon place",
+                    "phone": 4162139000, "GEO_location": "{'lat': 43.9048502, 'lng': -79.2828746}"}
+        self.assertJSONEqual(actual, expected)
+
+    def test_edit_user_invalid(self):
+        """ Test if invalid fields are returned """
         request = self.factory.post('/api/user/edit/',
                                     {"name": "Tester2", "picture": "picE2",
                                      "email": "E@mail.com", "role": "RO", "address": "101 Road",
-                                     "phone": 4162139000}, content_type='application/json')
+                                     "phone": 416213900, "GEO_location": "{'lat': '28.90054', 'long': '-81.26367'}"},
+                                    content_type='application/json')
         actual = edit_user_page(request).content
-        expected = {"nickname": "TesterE", "name": "Tester2", "picture": "picE2",
-                    "last_updated": "2020-06-26T14:07:39.888Z",
-                    "email": "E@mail.com", "email_verified": True, "role": "BU",
-                    "restaurant_id": None, "birthday": None, "address": "101 Roads", "phone": 4162139000}
+        expected = {"Invalid": ['picture', 'phone']}
+        self.assertJSONEqual(actual, expected)

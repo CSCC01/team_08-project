@@ -1,0 +1,25 @@
+<div class="order-page">
+  <div class="order-box">
+    <h2>Orders</h2>
+    <div *ngIf="cartItems.length == 0">
+      <p class="no-orders">No orders to display!</p>
+      <button class="btn order-now" [routerLink]="['/all-listings']">
+        Order Now!
+      </button>
+    </div>
+
+    <div *ngIf="cartItems.length > 0">
+      <div *ngFor="let item of cartItems">
+        <app-cart-card [dish]="item"></app-cart-card>
+      </div>
+      <div class="total-info">
+        <h3 class="total">Grand Total: ${{ this.total }}</h3>
+        <button class="btn place-order" [routerLink]="['/payment']">
+          Place Order
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <img class="bottom-left" src="../../../assets/images/undraw_shopping.png" />
+</div>
