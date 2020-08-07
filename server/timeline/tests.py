@@ -126,7 +126,7 @@ class PostSuite(TestCase):
         actual = json.loads(server.get_all_posts_page(request).content)['Posts']
         for post in actual:
             del post['Timestamp']
-        expected = [self.data2, self.data3]
+        expected = [self.data3, self.data2]
         self.assertListEqual(expected, actual)
 
     def test_get_post_by_restaurant(self):
