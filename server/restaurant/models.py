@@ -182,7 +182,7 @@ class Restaurant(models.Model):
     twitter = models.CharField(max_length=200, blank=True)
     instagram = models.CharField(max_length=200, blank=True)
     bio = models.TextField(null=True)
-    GEO_location = models.CharField(max_length=200)
+    GEO_location = models.CharField(blank=True, max_length=200)
     external_delivery_link = models.CharField(max_length=200, blank=True)
     cover_photo_url = models.CharField(max_length=200,
                                        default='https://www.nautilusplus.com/content/uploads/2016/08/Pexel_junk-food.jpeg')

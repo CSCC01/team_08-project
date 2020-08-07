@@ -134,7 +134,7 @@ This section will go over all the backends components of the Scarborough Dining 
     title = models.CharField(max_length=256)
     content = models.TextField(max_length=4096)
     Timestamp = models.DateTimeField(auto_now=True)
-    rating = models.IntegerField(blank=True)
+    rating = models.IntegerField()
 ```
 
 ## URLs
