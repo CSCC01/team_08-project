@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../auth/auth.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LoginService } from 'src/app/service/login.service';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
-import { formError } from '../../utils/forms';
+import { formValidation } from '../../validation/forms';
+import { userValidator } from '../../validation/userValidator';
+import { formValidator } from '../../validation/formValidator';
 
 @Component({
   selector: 'app-profile',
@@ -20,6 +22,7 @@ export class ProfileComponent implements OnInit {
 
   uploadForm: FormGroup;
   newImage: boolean = false;
+  validator: formValidator = new userValidator();
 
   constructor(
     private route: ActivatedRoute,
@@ -27,7 +30,7 @@ export class ProfileComponent implements OnInit {
     public auth: AuthService,
     private loginService: LoginService,
     private modalService: NgbModal,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
   ) {}
 
   ngOnInit() {
@@ -42,54 +45,32 @@ export class ProfileComponent implements OnInit {
     this.modalRef = this.modalService.open(content);
   }
 
-//   holds the error labels' states (this is where the labels get them from @Input)
-  errors = {
-    'name': '',
-    'address': '',
-    'phone': '',
-    'birthday': ''
-  }
-
-//   conveniece function which causes an error label with the given fieldname to error
-//   look at utils.formError.userConst to modify the error text
-  formError(fieldName: string){
-    this.errors[fieldName] = formError.userErrorConst[fieldName];
-  }
 
   updateProfile() {
+
+    let birthday =  (<HTMLInputElement>document.getElementById('dateOfBirth')).value;
+    let today = Date();
+
     var userInfo = {
       email: this.userId,
       name: (<HTMLInputElement>document.getElementById('name')).value,
       address: (<HTMLInputElement>document.getElementById('address')).value,
       phone: (<HTMLInputElement>document.getElementById('phone')).value,
-      birthday: (<HTMLInputElement>document.getElementById('dateOfBirth'))
-        .value,
+      birthday: birthday,
+      age: birthday
     };
     sessionStorage.setItem('userAddress', userInfo.address);
 
-    if (userInfo.birthday == '') {
-      userInfo.birthday = null;
-    }
-    if (userInfo.phone == '') {
-      userInfo.phone = null;
-    }
-
-    formError.clearErrors(this.errors);
-    if (
-      !formError.isPhoneValid(userInfo.phone) ||
-      !formError.isBirthdayValid(userInfo.birthday) ||
-      !userInfo.name || !userInfo.address
-    ) {
-        if(!formError.isBirthdayValid(userInfo.birthday)) this.formError('birthday');
-        if(!formError.isPhoneValid(userInfo.phone)) this.formError('phone');
-        if(!userInfo.address) this.formError('address');
-        if(!userInfo.name) this.formError('name');
-    } else {
-      
+    // clear formErrors
+    this.validator.clearAllErrors();
+    //validate all formfields, the callback will throw appropriate errors, return true if any validation failed
+    let failFlag = this.validator.validateAll(userInfo, (key) => this.validator.setError(key));
+    //if any validation failed, do not POST
+    if (!failFlag){
       this.loginService.editUser(userInfo).subscribe((data) => {
         //if response is invalid, populate the errors
-        if(formError.isInvalidResponse(data)){
-            formError.HandleInvalid(data, this.formError)
+        if(data && formValidation.isInvalidResponse(data)){
+            formValidation.HandleInvalid(data, (key) => this.validator.setError(key))
         }else{
           if (this.newImage) {
             this.onSubmit();

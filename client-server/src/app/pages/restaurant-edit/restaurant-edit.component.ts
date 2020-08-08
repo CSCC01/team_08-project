@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { RestaurantsService } from '../../service/restaurants.service';
+import { formValidation } from "../../validation/forms";
+import { restaurantValidator } from '../../validation/restaurantValidator';
+import { formValidator } from '../../validation/formValidator';
 
 @Component({
   selector: 'app-restaurant-edit',
@@ -15,6 +18,7 @@ export class RestaurantEditComponent implements OnInit {
   role: string = '';
 
   uploadForm: FormGroup;
+  validator: formValidator = new restaurantValidator();
   newImage: boolean = false;
 
   constructor(
@@ -46,6 +50,7 @@ export class RestaurantEditComponent implements OnInit {
   }
 
   updateRestaurantInfo() {
+      
     var restaurantInfo = {
       restaurant_id: this.restaurantId,
       name: (<HTMLInputElement>document.getElementById('restaurant-name'))
@@ -60,6 +65,7 @@ export class RestaurantEditComponent implements OnInit {
       cuisine: (<HTMLInputElement>document.getElementById('restaurant-cuisine'))
         .value,
       bio: (<HTMLInputElement>document.getElementById('restaurant-bio')).value,
+      email:(<HTMLInputElement>document.getElementById('restaurant-email')).value,
       twitter: (<HTMLInputElement>document.getElementById('twitter')).value,
       instagram: (<HTMLInputElement>document.getElementById('instagram')).value,
       external_delivery_link: (<HTMLInputElement>(
@@ -67,23 +73,27 @@ export class RestaurantEditComponent implements OnInit {
       )).value,
     };
 
-    if (
-      restaurantInfo.name == '' ||
-      restaurantInfo.address == '' ||
-      restaurantInfo.city == '' ||
-      restaurantInfo.phone == '' ||
-      restaurantInfo.pricepoint == 'Choose...' ||
-      restaurantInfo.cuisine == '' ||
-      restaurantInfo.bio == ''
-    ) {
-      alert('Please enter all requried information about the restaurant!');
-    } else {
-      this.restaurantsService.editRestaurant(restaurantInfo);
-      if (this.newImage) {
-        this.onSubmit();
-      }
+    
+    this.validator.clearAllErrors();
 
-      this.router.navigate(['/restaurant']);
+    let failFlag = this.validator.validateAll(restaurantInfo, (key) => this.validator.setError(key));
+
+    if (!failFlag){
+      this.restaurantsService.editRestaurant(restaurantInfo).subscribe(
+          (data) => {
+            if(data && formValidation.isInvalidResponse(data)){
+                console.log(data);
+                formValidation.HandleInvalid(data, (key) => this.validator.setError(key))
+              }else{
+                if (this.newImage) {
+                    this.onSubmit();
+                  }
+            
+                  this.router.navigate(['/restaurant']);
+              }
+          }
+      );
+
     }
   }
 

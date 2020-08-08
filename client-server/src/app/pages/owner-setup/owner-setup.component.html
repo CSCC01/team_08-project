@@ -14,6 +14,9 @@
           placeholder="Ex: Jane Doe"
           required
         />
+        <app-dynamic-label class="error-label" 
+        [name]="'errorName'" 
+        [message]="validator.errors['owner_name']" ></app-dynamic-label>
       </div>
       <div class="form-group">
         <label for="owner-story" class="required">Owner Story</label>
@@ -23,6 +26,9 @@
           rows="4"
           placeholder="Tell customers the story of your culinary joruney towards opening your restaurant..."
         ></textarea>
+        <app-dynamic-label class="error-label" 
+        [name]="'errorStory'" 
+        [message]="validator.errors['owner_story']" ></app-dynamic-label>
       </div>
       <div class="row">
         <div class="form-group col-md-6">

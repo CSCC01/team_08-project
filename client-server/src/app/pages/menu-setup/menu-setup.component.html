@@ -51,6 +51,9 @@
           placeholder="Ex: Spicy Chicken"
           required
         />
+        <app-dynamic-label class="error-label" 
+        [name]="'errorName'" 
+        [message]="validator.errors['name']" ></app-dynamic-label>
       </div>
 
       <div class="form-group">
@@ -66,6 +69,9 @@
           placeholder="Ex: 12.99"
           required
         />
+        <app-dynamic-label class="error-label" 
+        [name]="'errorPrice'" 
+        [message]="validator.errors['price']" ></app-dynamic-label>
       </div>
 
       <div class="form-group">
@@ -81,6 +87,9 @@
           placeholder="Ex: Appetizer"
           required
         />
+        <app-dynamic-label class="error-label" 
+        [name]="'errorCategory'" 
+        [message]="validator.errors['menuCategory']" ></app-dynamic-label>
       </div>
 
       <div class="form-group">
@@ -96,6 +105,9 @@
           placeholder="Ex: Indian"
           required
         />
+        <app-dynamic-label class="error-label" 
+        [name]="'errorCuisine'" 
+        [message]="validator.errors['cuisine']" ></app-dynamic-label>
       </div>
 
       <div class="form-group">
@@ -111,6 +123,9 @@
           placeholder="Tell customers the story of your dish..."
           required
         ></textarea>
+        <app-dynamic-label class="error-label" 
+        [name]="'errorInfo'" 
+        [message]="validator.errors['dishInfo']" ></app-dynamic-label>
       </div>
 
       <div class="form-group">
@@ -126,6 +141,9 @@
           placeholder="Ex: Nuts, Peanut"
           required
         />
+        <app-dynamic-label class="error-label" 
+        [name]="'errorAllergy'" 
+        [message]="validator.errors['allergy']" ></app-dynamic-label>
       </div>
 
       <div class="row">

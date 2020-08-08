@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { RestaurantsService } from '../../service/restaurants.service';
+import { formValidation } from "../../validation/forms";
+import { ownerValidator } from '../../validation/ownerValidator';
+import { formValidator } from '../../validation/formValidator';
 
 @Component({
   selector: 'app-owner-setup',
@@ -14,6 +17,7 @@ export class OwnerSetupComponent implements OnInit {
   role: string = '';
 
   uploadForm: FormGroup;
+  validator: formValidator = new ownerValidator();
   newImage: boolean = false;
 
   constructor(
@@ -46,15 +50,24 @@ export class OwnerSetupComponent implements OnInit {
       owner_story: (<HTMLInputElement>document.getElementById('owner-story'))
         .value,
     };
-    if (restaurantInfo.owner_name == '' || restaurantInfo.owner_story == '') {
-      alert('Please enter all requried information about the owner!');
-    } else {
-      this.restaurantsService.editRestaurant(restaurantInfo);
-      if (this.newImage) {
-        this.onSubmit();
-      }
 
-      this.router.navigate(['/menu-setup']);
+    this.validator.clearAllErrors();
+    let failFlag = this.validator.validateAll(restaurantInfo, (key) => this.validator.setError(key));
+
+    if (!failFlag){
+      this.restaurantsService.editRestaurant(restaurantInfo).subscribe((data) => {
+        if(data && formValidation.isInvalidResponse(data)){
+            console.log(data);
+            formValidation.HandleInvalid(data, (key) => this.validator.setError(key))
+          }else{
+            if (this.newImage) {
+                this.onSubmit();
+              }
+        
+              this.router.navigate(['/menu-setup']);
+          }
+      });
+
     }
   }
 

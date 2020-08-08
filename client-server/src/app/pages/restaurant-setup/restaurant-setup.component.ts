@@ -4,6 +4,9 @@ import { LoginService } from '../../service/login.service';
 import { AuthService } from '../../auth/auth.service';
 import { RestaurantsService } from '../../service/restaurants.service';
 import { Router, ActivatedRoute } from '@angular/router';
+import { formValidation } from '../../validation/forms';
+import { restaurantValidator } from '../../validation/restaurantValidator';
+import { formValidator } from '../../validation/formValidator';
 
 @Component({
   selector: 'app-restaurant-setup',
@@ -16,6 +19,7 @@ export class RestaurantSetupComponent implements OnInit {
 
   uploadForm: FormGroup;
   newImage: boolean = false;
+  validator: formValidator = new restaurantValidator();
 
   constructor(
     public auth: AuthService,
@@ -59,35 +63,34 @@ export class RestaurantSetupComponent implements OnInit {
       GEO_location: 'blank',
     };
 
-    if (
-      restaurantInfo.name == '' ||
-      restaurantInfo.address == '' ||
-      restaurantInfo.city == '' ||
-      restaurantInfo.phone == '' ||
-      restaurantInfo.email == '' ||
-      restaurantInfo.pricepoint == 'Choose...' ||
-      restaurantInfo.cuisine == '' ||
-      restaurantInfo.bio == ''
-    ) {
-      alert('Please enter all requried information about the restaurant!');
-    } else {
+    this.validator.clearAllErrors();
+
+    let failFlag = this.validator.validateAll(restaurantInfo, (key) => this.validator.setError(key));
+
+    //if any of the validations failed, do not POST
+    if (!failFlag){
       // Attach a restaurant ID to the current user and upgrade them
       this.restaurantsService.getRestaurantID(restaurantInfo).subscribe(
         (data) => {
-          this.restaurantId = data._id;
-          if (this.newImage) {
-            this.onSubmit();
+          if(data && formValidation.isInvalidResponse(data)){
+            console.log(data);
+            formValidation.HandleInvalid(data, (key) => this.validator.setError(key))
+          }else{
+            this.restaurantId = data._id;
+            if (this.newImage) {
+                this.onSubmit();
+            }
+
+            sessionStorage.setItem('restaurantId', data._id);
+            this.router.navigate(['/owner-setup']);
+
+            this.auth.userProfile$.source.subscribe((userInfo) => {
+                userInfo.role = 'RO';
+                userInfo.restaurant_id = data._id;
+                sessionStorage.setItem('role', 'RO');
+                this.loginService.addNewUser(userInfo);
+            });
           }
-
-          sessionStorage.setItem('restaurantId', data._id);
-          this.router.navigate(['/owner-setup']);
-
-          this.auth.userProfile$.source.subscribe((userInfo) => {
-            userInfo.role = 'RO';
-            userInfo.restaurant_id = data._id;
-            sessionStorage.setItem('role', 'RO');
-            this.loginService.addNewUser(userInfo);
-          });
         },
         (error) => {
           alert('Sorry a restaurant with this email has already been found');
