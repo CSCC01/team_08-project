@@ -102,15 +102,17 @@ export class MenuSetupComponent implements OnInit {
             }else{
                 if (this.newImage) {
                     this.onSubmit(data._id);
+                }else{
+                    this.dishes.push(data);
+                    this.dishName = '';
+                    this.price = '';
+                    this.menuCategory = '';
+                    this.cuisine = '';
+                    this.dishInfo = '';
+                    this.allergy = '';
+            
+                    
                 }
-                this.dishes.push(data);
-                this.dishName = '';
-                this.price = '';
-                this.menuCategory = '';
-                this.cuisine = '';
-                this.dishInfo = '';
-                this.allergy = '';
-        
                 this.modalRef.close();
           }
         });

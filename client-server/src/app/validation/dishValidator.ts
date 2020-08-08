@@ -20,7 +20,7 @@ export class dishValidator extends formValidator{
     errorStrings = {
         'name': 'Invalid Name',
         'description': 'Invalid Description',
-        'price':"Invalid Price",
+        'price':"Invalid Price, make sure it is a positve number",
         'cuisine': 'Invalid Cuisine',
         'dishInfo': 'Invalid Dish',
         'allergy': 'Invalid Allergy',
@@ -30,7 +30,7 @@ export class dishValidator extends formValidator{
     validationFuncs = formValidator.replaceDefaults({
         'name': '',
         'description': '',
-        'price': (price) => formValidation.isNumberValid(price),
+        'price': (price) => formValidation.isNumberValid(price) && Number(price) > 0,
         'cuisine': '',
         'dishInfo': '',
         'allergy': '',
