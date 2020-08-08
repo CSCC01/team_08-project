@@ -101,8 +101,13 @@ export class CheckoutComponent implements OnInit {
   }
 
   clearCart() {
-    this.orderService.clearCart(this.cartId).subscribe((data) => {
-      window.location.reload();
-    });
+    this.orderService.clearCart(this.cartId).subscribe(
+      (data) => {
+        window.location.reload();
+      },
+      (error) => {
+        window.location.reload();
+      }
+    );
   }
 }
