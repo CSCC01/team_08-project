@@ -11,38 +11,7 @@ class TimelinePost(models.Model):
     Timestamp = models.DateTimeField(auto_now=True)
     comments = models.ListField(default=[], blank=True)
 
-    @classmethod
-    def get_by_restaurant(cls, rest_id):
-        """
-        Retrieve posts by restaurant id
-        :param rest_id: id of restaurant
-        :return: post data in json
-        """
-        response = {'Posts': []}
-        for post in list(TimelinePost.objects.filter(restaurant_id=rest_id)):
-            post._id = str(post._id)
-            post.likes = list(map(str, post.likes))
-            post.comments = list(map(str, post.comments))
-            response['Posts'].append(({'_id': post._id, 'restaurant_id': post.restaurant_id, 'user_email': post.user_email,
-                                       'content': post.content, 'likes': post.likes, 'comments': post.comments,
-                                       'Timestamp': post.Timestamp.strftime("%b %d, %Y %H:%M")}))
-        return response
 
-    @classmethod
-    def get_all(cls):
-        """
-        retrieve list of posts from database
-        :return: return list of posts json data wrapped in dictionary
-        """
-        response = {'Posts': []}
-        for post in list(TimelinePost.objects.all()):
-            post._id = str(post._id)
-            post.likes = list(map(str, post.likes))
-            post.comments = list(map(str, post.comments))
-            response['Posts'].append(({'_id': post._id, 'restaurant_id': post.restaurant_id, 'user_email': post.user_email,
-                                       'content': post.content, 'likes': post.likes, 'comments': post.comments,
-                                       'Timestamp': post.Timestamp.strftime("%b %d, %Y %H:%M")}))
-        return response
 
 
 # Model for a comment on a timeline post

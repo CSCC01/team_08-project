@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../../auth/auth.service';
 import {
   faFacebookSquare,
   faTwitter,
@@ -15,7 +16,7 @@ export class FooterComponent implements OnInit {
   faTwitter = faTwitter;
   faInstagram = faInstagram;
 
-  constructor() {}
+  constructor(public auth: AuthService) {}
 
   ngOnInit(): void {}
 }

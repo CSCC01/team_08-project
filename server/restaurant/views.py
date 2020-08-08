@@ -4,7 +4,7 @@ from django.forms.models import model_to_dict
 from jsonschema import validate
 import json
 from request_form import upload_form
-
+from geo import geo_controller
 # jsonschema validation schemes
 food_schema = {
     "properties": {
@@ -59,7 +59,7 @@ restaurant_schema = {
 dish_editable = ["name", "description", "picture", "price", "specials", "category"]
 
 restaurant_editable = ["name", "address", "phone", "updated_at", "email", "city", "cuisine", "pricepoint", "twitter",
-                       "instagram", "bio", "GEO_location", "external_delivery_link", "cover_photo_url", "logo_url",
+                       "instagram", "bio", "external_delivery_link", "cover_photo_url", "logo_url",
                        "owner_name", "owner_story", "owner_picture_url"]
 
 
@@ -166,6 +166,11 @@ def edit_restaurant_page(request):
     for field in body:
         if field in restaurant_editable:
             setattr(restaurant, field, body[field])
+    if "address" in body:
+        try:
+            setattr(restaurant, 'GEO_location', geo_controller.geocode(body['address']))
+        except ValueError:
+            pass
     restaurant.clean_fields()
     restaurant.clean()
     restaurant.save()

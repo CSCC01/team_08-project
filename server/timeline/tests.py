@@ -2,7 +2,6 @@ from django.forms import model_to_dict
 from django.test import TestCase, RequestFactory
 from timeline.models import TimelinePost, TimelineComment
 from timeline import views as server
-import datetime
 import json
 from bson import ObjectId
 
@@ -73,6 +72,7 @@ class PostSuite(TestCase):
         request = RequestFactory().post('api/timeline/post/upload/', self.data, content_type='application/json')
         response = server.upload_post_page(request)
         actual = json.loads(response.content)
+        del actual['Timestamp']
         expected = {
             '_id': '222222222222222222222222',
             'restaurant_id': '000000000000000000000000',
@@ -80,6 +80,7 @@ class PostSuite(TestCase):
             'content': 'Post',
             'likes': [],
             'comments': [],
+
         }
         self.assertDictEqual(actual, expected)
 
@@ -126,7 +127,7 @@ class PostSuite(TestCase):
         actual = json.loads(server.get_all_posts_page(request).content)['Posts']
         for post in actual:
             del post['Timestamp']
-        expected = [self.data2, self.data3]
+        expected = [self.data3, self.data2]
         self.assertListEqual(expected, actual)
 
     def test_get_post_by_restaurant(self):
