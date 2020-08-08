@@ -44,6 +44,7 @@ This section will go over all the backends components of the Scarborough Dining 
     price = models.DecimalField(max_digits=6, decimal_places=2)
     tags = models.ListField(default=[], blank=True)
     specials = models.CharField(max_length=51, blank=True)
+    category = models.CharField(max_length=50, blank=True, default='')
 ```
 
 ###### Manual Tag for Food Item
@@ -69,7 +70,7 @@ This section will go over all the backends components of the Scarborough Dining 
     twitter = models.CharField(max_length=200, blank=True)
     instagram = models.CharField(max_length=200, blank=True)
     bio = models.TextField(null=True)
-    GEO_location = models.CharField(max_length=200)
+    GEO_location = models.CharField(blank=True, max_length=200)
     external_delivery_link = models.CharField(max_length=200, blank=True)
     cover_photo_url = models.CharField(max_length=200,
                                        default='https://www.nautilusplus.com/content/uploads/2016/08/Pexel_junk-food.jpeg')
@@ -79,6 +80,7 @@ This section will go over all the backends components of the Scarborough Dining 
     owner_name = models.CharField(max_length=50, blank=True)
     owner_story = models.CharField(max_length=3000, blank=True)
     owner_picture_url = models.CharField(max_length=200, blank=True)
+    categories = models.ListField(default=[], blank=True)
 ```
 
 ###### Prices (Enum)
@@ -136,7 +138,7 @@ This section will go over all the backends components of the Scarborough Dining 
     title = models.CharField(max_length=256)
     content = models.TextField(max_length=4096)
     Timestamp = models.DateTimeField(auto_now=True)
-    rating = models.IntegerField(blank=True)
+    rating = models.IntegerField()
 ```
 
 ## URLs
@@ -159,7 +161,7 @@ This section will go over all the backends components of the Scarborough Dining 
 | /restaurant/dish/get_by_restaurant/ |                                                                                  restaurant_id                                                                                   |                                                                                    | GET  |              Retrieves all dishes from restaurant               |
 |          /restaurant/get/           |                                                                                       \_id                                                                                       |                                                                                    | GET  |                    Retrieves Restaurant data                    |
 |        /restaurant/get_all/         |                                                                                                                                                                                  |                                                                                    | GET  |                    Retrieves all Restaurants                    |
-|         /restaurant/insert/         | name, address, phone, email (unique), city, cuisine, pricepoint (_Price_ Name), instagram, twitter, GEO_location, external_delivery_link, bio, cover_photo_url, logo_url, rating |               owner_name, owner_story, owner_picture_url, categories               | POST |                  Registers a Restaurant to DB                   |
+|         /restaurant/insert/         | name, address, phone, email (unique), city, cuisine, pricepoint (_Price_ Name), instagram, twitter, GEO_location, external_delivery_link, bio, cover_photo_url, logo_url         |               owner_name, owner_story, owner_picture_url, categories               | POST |                  Registers a Restaurant to DB                   |
 |          /restaurant/edit/          |                                                                                  restaurant_id                                                                                   | **(All Fields Needed for /restaurant/insert/ except for rating and GEO_location)** | POST |  Updates the fields of the given Restaurant with the new data   |
 |       /timeline/post/upload/        |                                                                        restaurant_id, user_email, content                                                                        |                                                                                    | POST |                   Add post to timeline table                    |
 |  /timeline/post/get_by_restaurant/  |                                                                                  restaurant_id                                                                                   |                                                                                    | GET  |      Retrieves all posts from restaurant sorted by recency      |
