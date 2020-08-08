@@ -198,7 +198,7 @@
         </div>
       </div>
     </mat-tab>
-    <mat-tab label="Menu">
+    <mat-tab *ngFor="let tab of categories" label="{{ tab | titlecase }}">
       <div style="text-align: center;">
         <button *ngIf="role == 'RO'" class="btn editBtn" (click)="editMenu()">
           <fa-icon [icon]="faEdit"></fa-icon>
@@ -211,8 +211,13 @@
       </ngb-alert>
       <div class="col">
         <div class="row">
-          <div *ngFor="let dish of restaurantMenu" class="col-sm-4 d-flex">
-            <app-dish-card [dish]="dish"></app-dish-card>
+          <div *ngFor="let dish of restaurantMenu">
+            <div
+              *ngIf="dish.category.toLowerCase() == tab.toLowerCase()"
+              class="col-sm-4 d-flex"
+            >
+              <app-dish-card [dish]="dish"></app-dish-card>
+            </div>
           </div>
         </div>
       </div>

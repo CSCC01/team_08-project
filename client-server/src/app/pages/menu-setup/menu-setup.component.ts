@@ -83,7 +83,10 @@ export class MenuSetupComponent implements OnInit {
           picture: '',
           price: price.toFixed(2),
           specials: '',
+          category: this.menuCategory,
         };
+
+        console.log(dishInfo);
 
         this.restaurantsService.createDish(dishInfo).subscribe((data) => {
           if (this.newImage) {

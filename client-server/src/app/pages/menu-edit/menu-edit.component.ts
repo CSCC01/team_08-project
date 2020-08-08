@@ -84,7 +84,7 @@ export class MenuEditComponent implements OnInit {
       this.dishId = dish._id;
       this.dishName = dish.name;
       this.price = dish.price;
-      this.menuCategory = 'default'; //TODO: currently not accepted as input
+      this.menuCategory = dish.category;
       this.cuisine = 'default';
       this.dishInfo = dish.description;
       this.allergy = 'default';
@@ -124,6 +124,7 @@ export class MenuEditComponent implements OnInit {
         dishInfo['description'] = this.dishInfo;
         dishInfo['price'] = price.toFixed(2);
         dishInfo['specials'] = '';
+        dishInfo['category'] = this.menuCategory;
 
         if (this.dishEdit) {
           this.restaurantsService.editDish(dishInfo).subscribe((data) => {
