@@ -21,12 +21,14 @@
         <button
           class="btn accept"
           *ngIf="!order.complete_tstmp && !order.accept_tstmp"
+          (click)="acceptOrder()"
         >
           Accept
         </button>
         <button
           class="btn complete"
           *ngIf="!order.complete_tstmp && order.accept_tstmp"
+          (click)="completeOrder()"
         >
           Complete
         </button>

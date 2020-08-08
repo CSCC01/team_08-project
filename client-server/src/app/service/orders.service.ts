@@ -77,4 +77,20 @@ export class OrdersService {
     };
     return this.http.get(endpoint, { params: params });
   }
+
+  /*
+  @Input: A cart ID and a boolean for status
+  @Output: None
+
+  Updates the status of the cart
+  */
+  updateStatus(cartId, status): Observable<any> {
+    const endpoint = `${OrdersService.ORDER_ENDPOINT}/cart/update_status/`;
+    const obj = {
+      _id: cartId,
+      status: status,
+    };
+    console.log(obj);
+    return this.http.post<any>(endpoint, obj);
+  }
 }

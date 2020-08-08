@@ -9,8 +9,14 @@
 
   <mat-tab-group mat-align-tabs="center">
     <mat-tab label="New Orders">
-      <div class="new-orders" *ngFor="let order of new_orders">
-        <div *ngIf="new_orders.length > 0">
+      <div *ngIf="new_orders.length > 0">
+        <div *ngIf="new_orders.length == 1">
+          <h4>{{ new_orders.length }} New Order</h4>
+        </div>
+        <div *ngIf="new_orders.length > 1">
+          <h4>{{ new_orders.length }} New Orders</h4>
+        </div>
+        <div class="new-orders" *ngFor="let order of new_orders">
           <app-order-card [order]="order"></app-order-card>
         </div>
       </div>
@@ -23,8 +29,14 @@
       </div>
     </mat-tab>
     <mat-tab label="In-Progress">
-      <div class="in-progress" *ngFor="let order of in_progress">
-        <div *ngIf="in_progress.length > 0">
+      <div *ngIf="in_progress.length > 0">
+        <div *ngIf="in_progress.length == 1">
+          <h4>{{ in_progress.length }} In-Progress Order</h4>
+        </div>
+        <div *ngIf="in_progress.length > 1">
+          <h4>{{ in_progress.length }} In-Progress Orders</h4>
+        </div>
+        <div class="in-progress" *ngFor="let order of in_progress">
           <app-order-card [order]="order"></app-order-card>
         </div>
       </div>
@@ -37,8 +49,14 @@
       </div>
     </mat-tab>
     <mat-tab label="Completed">
-      <div class="completed" *ngFor="let order of complete">
-        <div *ngIf="complete.length > 0">
+      <div *ngIf="complete.length > 0">
+        <div *ngIf="complete.length == 1">
+          <h4>{{ complete.length }} Complete Order</h4>
+        </div>
+        <div *ngIf="complete.length > 1">
+          <h4>{{ complete.length }} Complete Orders</h4>
+        </div>
+        <div class="completed" *ngFor="let order of complete">
           <app-order-card [order]="order"></app-order-card>
         </div>
       </div>
