@@ -1,11 +1,20 @@
 <div class="card cardBox">
   <div class="row">
     <div class="col-md-3">
-      <img
-        src="{{ restaurant.logo_url }}"
-        class="card-img"
-        alt="{{ restaurant.name }}"
-      />
+      <div *ngIf="restaurant.logo_url">
+        <img
+          src="{{ restaurant.logo_url }}"
+          class="card-img"
+          alt="{{ restaurant.name }}"
+        />
+      </div>
+      <div *ngIf="!restaurant.logo_url">
+        <img
+          src="../../../assets/images/find_dining_logo.png"
+          class="card-img"
+          alt="{{ restaurant.name }}"
+        />
+      </div>
     </div>
     <div class="col-md-9">
       <div class="card-body">
