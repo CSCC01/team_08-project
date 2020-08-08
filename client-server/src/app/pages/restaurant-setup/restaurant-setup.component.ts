@@ -73,7 +73,6 @@ export class RestaurantSetupComponent implements OnInit {
       this.restaurantsService.getRestaurantID(restaurantInfo).subscribe(
         (data) => {
           if(data && formValidation.isInvalidResponse(data)){
-            console.log(data);
             formValidation.HandleInvalid(data, (key) => this.validator.setError(key))
           }else{
             this.restaurantId = data._id;

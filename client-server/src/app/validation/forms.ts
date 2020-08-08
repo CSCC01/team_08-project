@@ -17,8 +17,6 @@ export class formValidation {
     static ageDifference(Date1: string, Date2: string) {
         let First = new Date(Date1);
         let Second = new Date(Date2);
-        console.log("First" + First.toString());
-        console.log("Second" + Second.toString());
         let diffMs = First.getTime() - Second.getTime();
         return diffMs/(formValidation.MS_PER_DAY*formValidation.DAYS_PER_YEAR);
     }
@@ -28,14 +26,12 @@ export class formValidation {
         let currentDate = (today.getFullYear()).toString().padStart(4,'0') + "-" + 
         (today.getMonth() + 1).toString().padStart(2,'0') + "-" + 
         today.getDate().toString().padStart(2,'0');
-        console.log(currentDate);
         return currentDate;
     }
 
     static isOlderThanAge(birthday: string, age: number) {
         // debugging print
         let currentAge = formValidation.ageDifference(formValidation.currentDate(), birthday);
-        console.log(currentAge)
         return currentAge > age;
     }
 

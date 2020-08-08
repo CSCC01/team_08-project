@@ -49,13 +49,14 @@ export class ProfileComponent implements OnInit {
   updateProfile() {
 
     let birthday =  (<HTMLInputElement>document.getElementById('dateOfBirth')).value;
+
     var userInfo = {
       email: this.userId,
       name: (<HTMLInputElement>document.getElementById('name')).value,
       address: (<HTMLInputElement>document.getElementById('address')).value,
       phone: (<HTMLInputElement>document.getElementById('phone')).value,
       birthday: birthday,
-      age: formValidation.ageDifference(formValidation.currentDate(), birthday)
+      age: birthday
     };
     sessionStorage.setItem('userAddress', userInfo.address);
 

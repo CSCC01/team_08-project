@@ -50,7 +50,7 @@ export class RestaurantEditComponent implements OnInit {
   }
 
   updateRestaurantInfo() {
-      
+
     var restaurantInfo = {
       restaurant_id: this.restaurantId,
       name: (<HTMLInputElement>document.getElementById('restaurant-name'))
@@ -82,7 +82,6 @@ export class RestaurantEditComponent implements OnInit {
       this.restaurantsService.editRestaurant(restaurantInfo).subscribe(
           (data) => {
             if(data && formValidation.isInvalidResponse(data)){
-                console.log(data);
                 formValidation.HandleInvalid(data, (key) => this.validator.setError(key))
               }else{
                 if (this.newImage) {

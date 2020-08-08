@@ -110,8 +110,6 @@ export class MenuSetupComponent implements OnInit {
                     this.cuisine = '';
                     this.dishInfo = '';
                     this.allergy = '';
-            
-                    
                 }
                 this.modalRef.close();
           }

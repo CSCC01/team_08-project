@@ -65,7 +65,6 @@ export class OwnerEditComponent implements OnInit {
     if (!failFlag) {
       this.restaurantsService.editRestaurant(restaurantInfo).subscribe((data) => {
         if(data && formValidation.isInvalidResponse(data)){
-            console.log(data);
             formValidation.HandleInvalid(data, (key) => this.validator.setError(key))
           }else{
             if (this.newImage) {

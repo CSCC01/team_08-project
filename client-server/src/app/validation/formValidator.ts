@@ -37,7 +37,6 @@ export abstract class formValidator{
         Object.keys(data).forEach(key => {
             // gets the corresponding validation function from the object in formError and calls it on key
             // if it fails, then it causes the field to error and set the failureFlag
-            console.log(key);
             if(this.validationFuncs.hasOwnProperty(key) && ! this.validationFuncs[key](data[key])){
                 failureCallback(key);
                 failFlag = true;
