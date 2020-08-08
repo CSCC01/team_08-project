@@ -14,7 +14,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent implements OnInit, AfterViewInit {
-  title: string = 'Scarborough Dining';
+  title: string = 'Find Dining Scarborough';
 
   restaurantId: string = '';
   role: string = '';
@@ -39,7 +39,7 @@ export class NavbarComponent implements OnInit, AfterViewInit {
     if (window.innerWidth < 650) {
       this.title = 'SDining';
     } else {
-      this.title = 'Scarborough Dining';
+      this.title = 'Find Dining Scarborough';
     }
   }
 

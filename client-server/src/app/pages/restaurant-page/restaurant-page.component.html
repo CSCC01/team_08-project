@@ -120,7 +120,10 @@
           <div class="media-icons">
             <fa-icon class="media-icon" [icon]="faHeartLine"></fa-icon>
             <a
-              *ngIf="restaurantDetails.external_delivery_link != ''"
+              *ngIf="
+                restaurantDetails.external_delivery_link != '' &&
+                restaurantDetails.external_delivery_link != ' '
+              "
               href="{{ restaurantDetails.external_delivery_link }}"
               target="_blank"
             >
@@ -189,7 +192,7 @@
           <div class="card story-card" *ngIf="restaurantDetails.owner_story">
             <p>{{ restaurantDetails.owner_story }}</p>
           </div>
-          <div class="card story-card" *ngIf="restaurantDetails.owner_story">
+          <div class="card story-card" *ngIf="!restaurantDetails.owner_story">
             <p>Owner Story Placeholder</p>
           </div>
         </div>
