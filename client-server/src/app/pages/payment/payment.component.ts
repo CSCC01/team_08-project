@@ -31,6 +31,9 @@ export class PaymentComponent implements OnInit {
   cartId: string = '';
   modalRef: any;
 
+  timeLeft: number = 30;
+  interval: any;
+
   constructor(
     private orderService: OrdersService,
     private route: ActivatedRoute,
@@ -50,10 +53,15 @@ export class PaymentComponent implements OnInit {
   }
 
   openModal(content) {
-    this.modalRef = this.modalService.open(content, { size: 'xl' });
-    setTimeout(function () {
-      this.payCart();
-    }, 30000);
+    this.modalRef = this.modalService.open(content, { size: 's' });
+    this.interval = setInterval(() => {
+      if (this.timeLeft > 0) {
+        this.timeLeft--;
+      } else {
+        this.timeLeft = 30;
+      }
+    }, 1000);
+    setTimeout(() => this.payCart(), 30000);
   }
 
   payCart() {

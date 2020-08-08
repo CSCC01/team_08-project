@@ -52,6 +52,7 @@ export class CheckoutComponent implements OnInit {
   }
 
   loadCart() {
+    this.cartId = sessionStorage.getItem('cartId');
     this.cartItems = [];
     this.orderService.getCarts(this.userId, false).subscribe((status) => {
       if (status.carts) {
