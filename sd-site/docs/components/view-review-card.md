@@ -29,9 +29,9 @@ Currently, the review object should contain:
 
 ```json
 {
-  "name": "{{ user name }}",
-  "date": "{{ date review was posted }}}",
-  "image_path": "{{ url to user image, provided by Auth0 }}",
+  "reviewer": "{{ The name of the reviwer }}",
+  "Timestamp": "{{ date the review was posted }}}",
+  "reviewer_image": "{{ url to user image, provided by Auth0 and the profile page }}",
   "rating": "{{ review rating }}",
   "title": "{{ review title }}",
   "review": "{{ review content }}"
@@ -42,10 +42,10 @@ Example:
 
 ```json
 {
-  "name": "Bob",
-  "date": "June 29",
-  "image_path": "https://i2.wp.com/cdn.auth0.com/avatars/e.png?ssl=1",
-  "rating": 4.3,
+  "reviewer": "Bob",
+  "Timestamp": "2020-08-08T02:22:29.292+00:00",
+  "image_path": "https://s.gravatar.com/avatar/9da1ee3c0b16457286e3e73a67c35201?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fsa.png",
+  "rating": 4,
   "title": "Good Food",
   "review": "It's really good"
 }
