@@ -183,6 +183,5 @@ export class RestaurantPageComponent implements OnInit {
           this.reviews[i].reviewer_image = data.picture;
         });
     }
-    console.log(this.reviews);
   }
 }
