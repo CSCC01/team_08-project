@@ -70,7 +70,6 @@ export class RestaurantPageComponent implements OnInit {
       (data) => {
         this.restaurantDetails = data;
         this.categories = data.categories;
-        console.log(data);
       },
       (error) => {
         this.error = true;

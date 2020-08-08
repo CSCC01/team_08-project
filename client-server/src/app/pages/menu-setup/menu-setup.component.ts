@@ -86,8 +86,6 @@ export class MenuSetupComponent implements OnInit {
           category: this.menuCategory,
         };
 
-        console.log(dishInfo);
-
         this.restaurantsService.createDish(dishInfo).subscribe((data) => {
           if (this.newImage) {
             this.onSubmit(data._id);
