@@ -39,6 +39,12 @@ module.exports = {
           position: "left",
         },
         {
+          to: "docs/components/dish-card",
+          activeBasePath: "docs/components",
+          label: "Components",
+          position: "left",
+        },
+        {
           href: "https://github.com/CSCC01/team_08-project",
           label: "GitHub",
           position: "right",
