@@ -51,11 +51,14 @@ export class MapComponent implements OnInit {
 
         for (var i = 0; i < this.restaurants.length; i++) {
           var index = this.restaurants[i];
-          var GEOJson = JSON.parse(index.GEO_location.replace(/\'/g, '"'));
+          if (index.GEO_location != 'blank') {
+            var GEOJson = JSON.parse(index.GEO_location.replace(/\'/g, '"'));
+          }
+          console.log(GEOJson);
 
-          if (index.GEO_location != 'blank' && GEOJson.long != undefined) {
+          if (index.GEO_location != 'blank' && GEOJson.lng != undefined) {
             var marker = new mapboxgl.Marker({ color: '#165788' })
-              .setLngLat([GEOJson.long, GEOJson.lat])
+              .setLngLat([GEOJson.lng, GEOJson.lat])
               .setPopup(
                 new mapboxgl.Popup().setHTML(
                   `<h2>${index.name}</h2>
