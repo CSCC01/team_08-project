@@ -50,6 +50,10 @@ export class DishCardComponent implements OnInit {
   }
 
   addOrder() {
+    if (this.restaurantId == undefined) {
+      this.restaurantId = this.dish.restaurant_id;
+    }
+
     this.orderService.getCarts(this.userId, false).subscribe((status) => {
       if (status.carts) {
         this.cartId = status.carts[0]._id;
