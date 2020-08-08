@@ -2,7 +2,6 @@ from django.forms import model_to_dict
 from django.test import TestCase, RequestFactory
 from timeline.models import TimelinePost, TimelineComment
 from timeline import views as server
-import datetime
 import json
 from bson import ObjectId
 

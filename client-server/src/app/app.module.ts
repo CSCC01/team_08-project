@@ -47,6 +47,8 @@ import { PageErrorComponent } from './components/page-error/page-error.component
 import { CartCardComponent } from './components/cart-card/cart-card.component';
 import { FavouritesComponent } from './pages/favourites/favourites.component';
 import { AllOwnersComponent } from './pages/all-owners/all-owners.component';
+import { AllOrdersComponent } from './pages/all-orders/all-orders.component';
+import { AllOrderCardComponent } from './components/all-order-card/all-order-card.component';
 
 @NgModule({
   declarations: [
@@ -81,6 +83,8 @@ import { AllOwnersComponent } from './pages/all-owners/all-owners.component';
     PageErrorComponent,
     FavouritesComponent,
     AllOwnersComponent,
+    AllOrdersComponent,
+    AllOrderCardComponent,
   ],
   imports: [
     BrowserModule,

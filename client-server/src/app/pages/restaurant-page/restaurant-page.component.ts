@@ -10,9 +10,9 @@ import {
 import { faHeart, faEnvelope } from '@fortawesome/free-regular-svg-icons';
 import { faTwitter, faInstagram } from '@fortawesome/free-brands-svg-icons';
 import { RestaurantsService } from 'src/app/service/restaurants.service';
-import dishes from '../../../assets/data/dishes.json';
 import reviews from '../../../assets/data/reviews.json';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ReviewsService } from 'src/app/service/reviews.service';
 
 @Component({
   selector: 'app-restaurant-page',
@@ -22,9 +22,11 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 export class RestaurantPageComponent implements OnInit {
   restaurantId: string = '';
   role: string = '';
+  userId: string = '';
   error: boolean = false;
 
   headerModalRef: any;
+  reviewModalRef: any;
   uploadForm: FormGroup;
   newImage: boolean = false;
 
@@ -32,19 +34,6 @@ export class RestaurantPageComponent implements OnInit {
   reviews: any[] = [];
   restaurantDetails: any;
   restaurantMenu: any[] = [];
-
-  menu = {
-    category: [
-      {
-        name: 'Appetizer',
-        menu: dishes,
-      },
-      {
-        name: 'Dessert',
-        menu: dishes,
-      },
-    ],
-  };
 
   totalStars = 5;
   faMapMarker = faMapMarkerAlt;
@@ -60,10 +49,11 @@ export class RestaurantPageComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private restaurantsService: RestaurantsService,
+    private reviewService: ReviewsService,
     private headerModalService: NgbModal,
+    private reviewModalService: NgbModal,
     private formBuilder: FormBuilder
   ) {
-    this.dishes = dishes;
     this.reviews = reviews;
   }
 
@@ -72,6 +62,7 @@ export class RestaurantPageComponent implements OnInit {
       this.route.snapshot.queryParams.restaurantId ||
       sessionStorage.getItem('restaurantId');
     this.role = sessionStorage.getItem('role');
+    this.userId = sessionStorage.getItem('userId');
 
     // generate restaurant page
     this.restaurantsService.getRestaurant(this.restaurantId).subscribe(
@@ -155,5 +146,18 @@ export class RestaurantPageComponent implements OnInit {
         window.location.reload();
       });
     this.headerModalRef.close();
+  }
+
+  openReviewModal(content) {
+    this.reviewModalRef = this.reviewModalService.open(content, { size: 'm' });
+  }
+
+  addReview(review) {
+    review.restaurant_id = this.restaurantId;
+    review.user_email = this.userId;
+
+    this.reviewService.insertReview(review).subscribe((data) => {});
+
+    this.reviewModalRef.close();
   }
 }

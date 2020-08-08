@@ -7,7 +7,7 @@ class SDUser(models.Model):
     """ Scarborough Dining User """
     nickname = models.CharField(max_length=30, blank=True, default="")
     name = models.CharField(max_length=50, default='')
-    picture = models.CharField(max_length=200, default='')
+    picture = models.CharField(max_length=200, default='https://storage.googleapis.com/default-assets/user.png')
     last_updated = models.CharField(max_length=200, default='')
     email = models.EmailField(primary_key=True, default='')
     email_verified = models.BooleanField(default=False)

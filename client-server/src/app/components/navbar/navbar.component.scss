@@ -1,5 +1,11 @@
 @import "src/styles";
 
+.logo {
+  height: 75px;
+  width: auto;
+  margin-right: 50px;
+}
+
 .navbar {
   background-color: $primary-color;
   z-index: 100;

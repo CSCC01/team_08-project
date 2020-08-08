@@ -14,7 +14,7 @@ class Food(models.Model):
     name = models.CharField(max_length=50, default='')
     restaurant_id = models.CharField(max_length=24, editable=False)
     description = models.CharField(max_length=200, blank=True, default='')
-    picture = models.CharField(max_length=200, blank=True, default='')
+    picture = models.CharField(max_length=200, blank=True, default='https://storage.googleapis.com/default-assets/no-image.png')
     price = models.DecimalField(max_digits=6, decimal_places=2)
     tags = models.ListField(default=[], blank=True)
     specials = models.CharField(max_length=51, blank=True)
@@ -185,9 +185,9 @@ class Restaurant(models.Model):
     GEO_location = models.CharField(blank=True, max_length=200)
     external_delivery_link = models.CharField(max_length=200, blank=True)
     cover_photo_url = models.CharField(max_length=200,
-                                       default='https://www.nautilusplus.com/content/uploads/2016/08/Pexel_junk-food.jpeg')
+                                       default='https://storage.googleapis.com/default-assets/cover.jpg')
     logo_url = models.CharField(max_length=200,
-                                default='https://d1csarkz8obe9u.cloudfront.net/posterpreviews/diner-restaurant-logo-design-template-0899ae0c7e72cded1c0abc4fe2d76ae4_screen.jpg?ts=1561476509')
+                                default='https://storage.googleapis.com/default-assets/logo.jpg')
     rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.00)
     owner_name = models.CharField(max_length=50, blank=True)
     owner_story = models.CharField(max_length=3000, blank=True)

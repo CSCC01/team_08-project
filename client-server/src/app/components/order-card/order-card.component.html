@@ -1,27 +1,72 @@
 <div class="card cardBox">
   <div class="row">
-    <div class="col-md-6">
+    <div class="info col-md-6">
       <h2>Order #{{ order.id }}</h2>
       <p class="body-text"><b>Name:</b> {{ order.name }}</p>
-      <p class="body-text"><b>Email:</b> {{ order.email }}</p>
+      <p class="body-text"><b>Email:</b> {{ order.user_email }}</p>
       <p class="body-text"><b>Phone Number:</b> {{ order.phone }}</p>
       <br />
     </div>
-    <div class="col-md-6">
+    <div class="order col-md-6">
       <div class="orders" *ngFor="let dish of order.dishes">
-        <p class="dishes">{{ dish.quantity }} x {{ dish.name }}</p>
+        <p class="dishes">{{ dish.count }} x {{ dish.dish_name }}</p>
       </div>
       <div class="row buttons">
-        <button class="btn cancel">
+        <button
+          class="btn cancel"
+          *ngIf="!order.complete_tstmp && !order.accept_tstmp"
+          (click)="openModal(delete)"
+        >
           Cancel
         </button>
-        <button class="btn accept" *ngIf="!order.AccDec_Timestamp">
+        <button
+          class="btn accept"
+          *ngIf="!order.complete_tstmp && !order.accept_tstmp"
+          (click)="acceptOrder()"
+        >
           Accept
         </button>
-        <button class="btn complete" *ngIf="order.AccDec_Timestamp">
+        <button
+          class="btn complete"
+          *ngIf="!order.complete_tstmp && order.accept_tstmp"
+          (click)="completeOrder()"
+        >
           Complete
         </button>
       </div>
     </div>
   </div>
 </div>
+
+<ng-template #delete let-modal>
+  <div class="modal-header">
+    <h2 class="modal-title" id="modal-basic-title">
+      Confirm Order Deletion
+    </h2>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-box">
+      <div class="form-group">
+        Are you sure you want to delete this order?
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="text-right">
+      <button class="btn confirm cancel" (click)="modal.dismiss('Cross click')">
+        Cancel
+      </button>
+      <button class="btn confirm" (click)="cancelOrder()">
+        Confirm
+      </button>
+    </div>
+  </div>
+</ng-template>

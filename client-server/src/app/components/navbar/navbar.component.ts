@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, AfterViewInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../auth/auth.service';
 import {
   faUserCircle,
@@ -13,8 +13,8 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss'],
 })
-export class NavbarComponent implements OnInit, AfterViewInit {
-  title: string = 'Scarborough Dining';
+export class NavbarComponent implements OnInit {
+  title: string = 'Find Dining Scarborough';
 
   restaurantId: string = '';
   role: string = '';
@@ -34,25 +34,10 @@ export class NavbarComponent implements OnInit, AfterViewInit {
     private modalService: NgbModal
   ) {}
 
-  @HostListener('window:resize', ['$event'])
-  onResize() {
-    if (window.innerWidth < 650) {
-      this.title = 'SDining';
-    } else {
-      this.title = 'Scarborough Dining';
-    }
-  }
-
   ngOnInit(): void {
     this.role = sessionStorage.getItem('role');
     this.userId = sessionStorage.getItem('userId');
     this.userAddress = sessionStorage.getItem('userAddress');
-  }
-
-  ngAfterViewInit(): void {
-    if (window.innerWidth < 650) {
-      this.onResize();
-    }
   }
 
   upgradeUser(): void {
@@ -106,7 +91,7 @@ export class NavbarComponent implements OnInit, AfterViewInit {
   }
 
   openModal(content) {
-    this.modalRef = this.modalService.open(content, { size: 's' });
+    this.modalRef = this.modalService.open(content);
   }
 
   goToSetup() {

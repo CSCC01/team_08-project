@@ -14,6 +14,7 @@ module.exports = {
     Components: [
       "components/dish-card",
       "components/filterlist-card",
+      "components/all-order-card",
       "components/order-card",
       "components/owner-card",
       "components/restaurant-card",
