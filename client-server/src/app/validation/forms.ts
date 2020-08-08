@@ -15,10 +15,10 @@ export class formValidation {
     }
     // gives the difference calculated as abs(Date1-Date2) in years
     static ageDifference(Date1: string, Date2: string) {
-        console.log("date1" + Date1.toString());
-        console.log("date2" + Date2.toString());
-        let First = new Date(Date1.toString().replace('-', '/'));
-        let Second = new Date(Date2.toString().replace('-', '/'));
+        let First = new Date(Date1);
+        let Second = new Date(Date2);
+        console.log("First" + First.toString());
+        console.log("Second" + Second.toString());
         let diffMs = First.getTime() - Second.getTime();
         return diffMs/(formValidation.MS_PER_DAY*formValidation.DAYS_PER_YEAR);
     }

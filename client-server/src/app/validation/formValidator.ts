@@ -41,7 +41,6 @@ export abstract class formValidator{
             if(this.validationFuncs.hasOwnProperty(key) && ! this.validationFuncs[key](data[key])){
                 failureCallback(key);
                 failFlag = true;
-                console.log(this.validationFuncs[key](''));
             } 
         })
         return failFlag;
