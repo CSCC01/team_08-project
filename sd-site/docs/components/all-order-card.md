@@ -31,7 +31,7 @@ Currently, the dish object should contain:
 
 ```json
 {
-  "_id": "{{ id from MongoDB }}",
+  "id": "{{ id from MongoDB }}",
   "user_name": "{{ person name }}",
   "email": "{{ person email }}",
   "phone": "{{ person phone number }}",

@@ -103,7 +103,7 @@ export class AllOrdersComponent implements OnInit {
 
   shortenOrderID(): void {
     for (let i = 0; i < this.orders.length; i++) {
-      this.orders[i]._id = this.orders[i]._id.slice(-6);
+      this.orders[i].id = this.orders[i]._id.slice(-6);
     }
   }
 
