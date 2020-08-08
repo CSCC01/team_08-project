@@ -12,8 +12,10 @@ export class OrdersService {
   constructor(private http: HttpClient) {}
 
   /*
-  @Input: 
-  @Output: 
+  @Input: Object with restaurant id (where you are ordering from) and user email
+  @Output: None
+
+  Create a cart for a user.
   */
   insertCart(restaurantId, email): Observable<any> {
     const endpoint = `${OrdersService.ORDER_ENDPOINT}/cart/insert/`;
@@ -25,8 +27,10 @@ export class OrdersService {
   }
 
   /*
-  @Input: 
-  @Output: 
+  @Input: Cart id
+  @Output: List of items in the cart
+
+  Get a list of items in a particular cart.
   */
   getCartItems(cartId): Observable<any> {
     const endpoint = `${OrdersService.ORDER_ENDPOINT}/item/get_by_cart/`;
@@ -37,8 +41,10 @@ export class OrdersService {
   }
 
   /*
-  @Input: 
-  @Output: 
+  @Input: Object with user email and sent status (either true or false)
+  @Output: List of carts that are send (true), or list of carts not yet sent (false)
+
+  Get a list of carts for a user based on sent status.
   */
   getCarts(userId, sent): Observable<any> {
     const endpoint = `${OrdersService.ORDER_ENDPOINT}/cart/user_carts/`;
@@ -49,6 +55,12 @@ export class OrdersService {
     return this.http.get<any>(endpoint, { params: params });
   }
 
+  /*
+  @Input: Cart id to clear
+  @Output: None
+
+  Clear all items from a cart and delete the cart.
+  */
   clearCart(cartId): Observable<any> {
     const endpoint = `${OrdersService.ORDER_ENDPOINT}/cart/cancel/`;
     const obj = {
@@ -58,8 +70,10 @@ export class OrdersService {
   }
 
   /*
-  @Input: 
-  @Output: 
+  @Input: Object with cart id, food id, and food amount
+  @Output: None
+
+  Add a certain amount of items to the cart.
   */
   insertItem(cartId, foodId, count): Observable<any> {
     const endpoint = `${OrdersService.ORDER_ENDPOINT}/item/insert/`;
@@ -72,8 +86,10 @@ export class OrdersService {
   }
 
   /*
-  @Input: 
-  @Output: 
+  @Input: Item id of item to remove
+  @Output: None
+
+  Remove an item from cart.
   */
   removeItem(itemId): Observable<any> {
     const endpoint = `${OrdersService.ORDER_ENDPOINT}/item/remove/`;
@@ -84,8 +100,10 @@ export class OrdersService {
   }
 
   /*
-  @Input: 
-  @Output: 
+  @Input: Object with item id and new amount
+  @Output: None
+
+  Edit the amount of an item in the cart.
   */
   editAmount(itemId, count): Observable<any> {
     const endpoint = `${OrdersService.ORDER_ENDPOINT}/item/edit_amount/`;
@@ -97,8 +115,10 @@ export class OrdersService {
   }
 
   /*
-  @Input: 
-  @Output: 
+  @Input: Object with cart id to update and status (snd, cmt, acc)
+  @Output: None
+
+  Update a cart status to send it through the ordering process.
   */
   updateStatus(cartId, status): Observable<any> {
     const endpoint = `${OrdersService.ORDER_ENDPOINT}/cart/update_status/`;
