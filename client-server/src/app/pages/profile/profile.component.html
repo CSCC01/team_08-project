@@ -18,10 +18,10 @@
         <br />
         <p><b>Address:</b> {{ userData.address | titlecase }}</p>
         <p><b>Phone:</b> {{ userData.phone }}</p>
-        <button class="btn edit-profile" (click)="openEditModal(userInfo)">
+        <button class="btn edit-profile" (click)="openEditModal(userInfo)" placement="top" ngbTooltip="Update Your Info">
           Edit Profile
         </button>
-        <button class="btn all-orders">View All Transaction Orders</button>
+        <button class="btn all-orders" placement="bottom" ngbTooltip="View Order History">View All Transaction Orders</button>
       </div>
     </div>
   </div>
