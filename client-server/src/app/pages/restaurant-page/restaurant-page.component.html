@@ -221,6 +221,15 @@
     <mat-tab disabled></mat-tab>
     <mat-tab label="Media"> Media </mat-tab>
     <mat-tab label="Reviews">
+      <div style="text-align: center;">
+        <button
+          *ngIf="role == 'BU'"
+          class="btn addReview"
+          (click)="openReviewModal(reviewContent)"
+        >
+          ADD REVIEW
+        </button>
+      </div>
       <ngb-alert *ngIf="reviews.length == 0" [dismissible]="false">
         No reviews at the moment. Be the first!
       </ngb-alert>
@@ -231,3 +240,17 @@
     </mat-tab>
   </mat-tab-group>
 </div>
+
+<ng-template #reviewContent let-modal>
+  <div class="modal-header">
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <app-review-card (review)="addReview($event)"></app-review-card>
+</ng-template>

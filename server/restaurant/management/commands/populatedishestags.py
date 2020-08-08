@@ -50,7 +50,7 @@ class Command(BaseCommand):
         for _ in range(options['numentries']):
             #separate document for non-random fields in seeding process
             Document = {
-                'picture' : "https://i.imgur.com/rqDiXQE.jpg"
+                'picture' : "https://storage.googleapis.com/default-assets/no-image.png"
             }
             rand_Document = seed.gen_rand_dict(gen_dict)
             Document.update(rand_Document)

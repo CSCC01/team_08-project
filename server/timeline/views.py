@@ -1,12 +1,11 @@
 import json
 from django.http import JsonResponse, HttpResponseBadRequest, HttpResponse
-from django.forms import model_to_dict
 from timeline.models import TimelinePost, TimelineComment
 from jsonschema import validate
 import jsonschema
 from bson import ObjectId
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
-from utils.encoder import BSONEncoder
+from utils.model_json import model_to_json
 
 post_schema = {
     'properties': {
@@ -29,18 +28,16 @@ def upload_post_page(request):
     """Upload post into post timeline post table"""
 
     try:  # validate request
-        validate(instance= request.body, schema=post_schema)
+        validate(instance=request.body, schema=post_schema)
     except jsonschema.exceptions.ValidationError:
         return HttpResponseBadRequest('Invalid request')
 
     body = json.loads(request.body)
-
     post = TimelinePost(**body)
     post.full_clean()
     post.save()
-    post_dict = json.loads(json.dumps(model_to_dict(post), cls=BSONEncoder))
-    post_dict['Timestamp'] = post.Timestamp
-    return JsonResponse(post_dict)
+    return JsonResponse(model_to_json(post, {'Timestamp': post.Timestamp}))
+
 
 def delete_post_page(request):
     """
@@ -61,13 +58,9 @@ def delete_post_page(request):
         post = TimelinePost.objects.get(_id=body['post_id'])
     except jsonschema.exceptions.ValidationError:
         return HttpResponseBadRequest('Invalid post_id')
-    comment_response_list = []
 
-    # convert the postid to a string for JSON encoding
-    post._id = str(post._id)
-    # for the return value, copy the post in a dictionary
-    post_deleted = model_to_dict(post)
-    post_deleted['comments'] = [str(comment) for comment in post.comments]
+    comment_response_list = []
+    post_deleted = model_to_json(post)
 
     # for each comment
     for comment in post.comments:
@@ -76,33 +69,36 @@ def delete_post_page(request):
             comment_gotten = TimelineComment.objects.get(_id=ObjectId(comment))
         except:
             print("CommentID: " + comment + " missing from database")
-        comment_gotten._id = str(comment_gotten._id)
-        comment_response_list.append(model_to_dict(comment_gotten))
+        comment_response_list.append(model_to_json(comment_gotten))
         comment_gotten.delete()
 
     post.delete()
     return JsonResponse({'post': post_deleted, 'comments': comment_response_list})
 
+
 def get_all_posts_page(request):
     """ retrieve list of restaurants from database """
-    posts = TimelinePost.get_all()
-    return JsonResponse(json.loads(json.dumps(posts, cls=BSONEncoder)))
-
+    posts = list(TimelinePost.objects.all())
+    response = {'Posts': []}
+    for post in posts:
+        time_stamp = {'Timestamp': post.Timestamp.strftime("%b %d, %Y %H:%M")}
+        response['Posts'].append(model_to_json(post, time_stamp))
+    return JsonResponse(response)
 
 def upload_comment_page(request):
     """Upload post into post timeline post table"""
-    try:    # validate request
+    try:  # validate request
         validate(instance=request.body, schema=comment_schema)
     except jsonschema.exceptions.ValidationError:
-        return HttpResponseBadRequest('Invalid request') 
-      
+        return HttpResponseBadRequest('Invalid request')
+
     body = json.loads(request.body)
-    
+
     try:  # validate post
         post = TimelinePost.objects.get(_id=body['post_id'])
     except ObjectDoesNotExist:
         return HttpResponseBadRequest('Invalid Post_id')
-      
+
     # create comment
     comment = TimelineComment(**body)
     comment.full_clean()
@@ -110,15 +106,19 @@ def upload_comment_page(request):
     # update post
     post.comments.append(comment._id)
     post.save()
-    comment._id = str(comment._id)
-    return JsonResponse(model_to_dict(comment))
+    return JsonResponse(model_to_json(comment))
 
 
 def get_post_by_restaurant_page(request):
     """Retrieve all posts from a restaurant"""
     rest_id = request.GET.get('restaurant_id')
-    posts = TimelinePost.get_by_restaurant(rest_id)
-    return JsonResponse(json.loads(json.dumps(posts, cls=BSONEncoder)))
+    posts = list(TimelinePost.objects.filter(restaurant_id=rest_id))
+    response = {'Posts': []}
+    for post in posts:
+        time_stamp = {'Timestamp': post.Timestamp.strftime("%b %d, %Y %H:%M")}
+        response['Posts'].append(model_to_json(post, time_stamp))
+    return JsonResponse(response)
+
 
 def delete_comment_page(request):
     """ Deletes comment from database """
@@ -126,16 +126,25 @@ def delete_comment_page(request):
     body = json.loads(request.body)
     comment = TimelineComment.objects.get(_id=body["_id"])
     post = TimelinePost.objects.get(_id=comment.post_id)
-    post.comments.remove(comment._id)
-    post.save(update_fields=["comments"])
+    remove_comment_from_post(post, comment._id)
     comment.delete()
     return HttpResponse(status=200)
-  
-  
+
+
+def remove_comment_from_post(post, comment_id):
+    """
+    Helper function to remove comment from post
+    :params-post: associated post
+    :params-comment: comment_id to be deleted
+    :return: updated post
+    """
+    post.comments.remove(comment_id)
+    post.save(update_fields=['comments'])
+    return post
+
+
 def get_comment_data_page(request):
     """ Retrieve comment data of given comment from database """
     comment = TimelineComment.objects.get(_id=request.GET.get('_id'))
-    comment._id = str(comment._id)
-    comment.likes = list(map(str, comment.likes))
-    return JsonResponse({'_id': comment._id, 'post_id': comment.post_id, 'user_email': comment.user_email,
-                         'likes': comment.likes, 'content': comment.content, 'Timestamp': comment.Timestamp.strftime("%b %d, %Y %H:%M")})
+    time_stamp = {'Timestamp': comment.Timestamp.strftime("%b %d, %Y %H:%M")}
+    return JsonResponse(model_to_json(comment, time_stamp))
