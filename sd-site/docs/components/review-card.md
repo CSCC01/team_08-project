@@ -53,7 +53,7 @@ When _submit_ is pressed on the card, the review data is returned in JSON format
 
 ```json
 {
-  "comments": "One of the best I have eaten!",
+  "content": "One of the best I have eaten!",
   "rating": 5,
   "title": "Good dish"
 }
