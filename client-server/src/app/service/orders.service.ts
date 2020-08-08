@@ -80,7 +80,7 @@ export class OrdersService {
 
   /*
   @Input: A cart ID and a boolean for status
-  @Output: None
+  @Output: An observable
 
   Updates the status of the cart
   */
@@ -90,7 +90,20 @@ export class OrdersService {
       _id: cartId,
       status: status,
     };
-    console.log(obj);
+    return this.http.post<any>(endpoint, obj);
+  }
+
+  /*
+  @Input: A cart ID and a boolean for status
+  @Output: None
+
+  Updates the status of the cart
+  */
+  cancelCart(cartId): Observable<any> {
+    const endpoint = `${OrdersService.ORDER_ENDPOINT}/cart/cancel/`;
+    const obj = {
+      _id: cartId,
+    };
     return this.http.post<any>(endpoint, obj);
   }
 }
