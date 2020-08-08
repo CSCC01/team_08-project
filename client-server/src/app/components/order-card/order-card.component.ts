@@ -19,7 +19,6 @@ export class OrderCardComponent implements OnInit {
   ngOnInit(): void {}
 
   acceptOrder(): void {
-    console.log('hi');
     this.updateStatusofCart('acc');
   }
 
