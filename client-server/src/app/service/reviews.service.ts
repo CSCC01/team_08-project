@@ -20,4 +20,17 @@ export class ReviewsService {
     const endpoint = `${ReviewsService.REVIEW_ENDPOINT}/insert/`;
     return this.http.post<any>(endpoint, review);
   }
+
+  /*
+  @Input: Review object
+  @Output: None
+  Add review to database for a restaurant
+  */
+  getReviewbyRestaurant(restaurantId): Observable<any> {
+    const endpoint = `${ReviewsService.REVIEW_ENDPOINT}/get_by_restaurant/`;
+    var params = {
+      restaurant_id: restaurantId,
+    };
+    return this.http.get(endpoint, { params: params });
+  }
 }

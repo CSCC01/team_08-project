@@ -111,9 +111,9 @@ export class RestaurantsService {
 
   Edits information for a restuarant using its id.
   */
-  editRestaurant(restInfo): void {
+  editRestaurant(restInfo): Observable<any> {
     const endpoint = `${RestaurantsService.RO_ENDPOINT}/edit/`;
-    this.http.post<any>(endpoint, restInfo).subscribe((data) => {});
+    return this.http.post<any>(endpoint, restInfo);
   }
 
   uploadRestaurantMedia(formData, id, location): Observable<any> {

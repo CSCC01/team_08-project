@@ -13,6 +13,7 @@
       *ngIf="role == 'RO'"
       class="btn editRestaurant"
       (click)="editRestaurant()"
+      placement="top" ngbTooltip="Update Restaurant Info"
     >
       <fa-icon [icon]="faEdit"></fa-icon>
       <b>EDIT RESTAURANT DETAILS</b>
@@ -21,6 +22,7 @@
       *ngIf="role == 'RO'"
       class="btn editHeader"
       (click)="openEditHeaderModal(headerModal)"
+      placement="bottom" ngbTooltip="Update your Header"
     >
       <fa-icon [icon]="faEdit"></fa-icon>
       <b>EDIT HEADER</b>
@@ -127,28 +129,28 @@
               href="{{ restaurantDetails.external_delivery_link }}"
               target="_blank"
             >
-              <fa-icon class="media-icon" [icon]="faShippingFast"></fa-icon>
+              <fa-icon class="media-icon" [icon]="faShippingFast" placement="bottom" ngbTooltip="You can also order here"></fa-icon>
             </a>
             <a
               *ngIf="restaurantDetails.instagram != ''"
               href="{{ restaurantDetails.instagram }}"
               target="_blank"
             >
-              <fa-icon class="media-icon" [icon]="faInstagram"></fa-icon>
+              <fa-icon class="media-icon" [icon]="faInstagram" placement="bottom" ngbTooltip="View our Instagram"></fa-icon>
             </a>
             <a
               *ngIf="restaurantDetails.twitter != ''"
               href="{{ restaurantDetails.twitter }}"
               target="_blank"
             >
-              <fa-icon class="media-icon" [icon]="faTwitter"></fa-icon>
+              <fa-icon class="media-icon" [icon]="faTwitter" placement="bottom" ngbTooltip="View our Twitter"></fa-icon>
             </a>
           </div>
         </div>
       </div>
     </div>
 
-    <button class="updatesBtn" (click)="viewTimeline()">
+    <button class="updatesBtn" (click)="viewTimeline()" placement="top" ngbTooltip="View our Timeline">
       <b>VIEW UPDATES</b>
     </button>
   </div>
@@ -158,7 +160,7 @@
   </div>
 
   <div style="text-align: center;">
-    <button *ngIf="role == 'RO'" class="btn editBtn" (click)="editMenu()">
+    <button *ngIf="role == 'RO'" class="btn editBtn" (click)="editMenu()" placement="bottom" ngbTooltip="Update Your Menu">
       <fa-icon [icon]="faEdit"></fa-icon>
       <b>EDIT MENU</b>
     </button>
@@ -167,7 +169,7 @@
   <mat-tab-group mat-align-tabs="center">
     <mat-tab label="About Us">
       <div style="text-align: center;">
-        <button *ngIf="role == 'RO'" class="btn editBtn" (click)="editOwner()">
+        <button *ngIf="role == 'RO'" class="btn editBtn" (click)="editOwner()" placement="bottom" ngbTooltip="Update Owner Info">
           <fa-icon [icon]="faEdit"></fa-icon>
           <b>EDIT OWNER</b>
         </button>
@@ -205,6 +207,7 @@
         </div>
       </div>
     </mat-tab>
+
     <mat-tab *ngFor="let tab of categories" label="{{ tab | titlecase }}">
       <br />
       <ngb-alert *ngIf="restaurantMenu.length == 0" [dismissible]="false">

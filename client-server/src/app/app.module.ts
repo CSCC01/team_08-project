@@ -47,6 +47,7 @@ import { PageErrorComponent } from './components/page-error/page-error.component
 import { CartCardComponent } from './components/cart-card/cart-card.component';
 import { FavouritesComponent } from './pages/favourites/favourites.component';
 import { AllOwnersComponent } from './pages/all-owners/all-owners.component';
+import { DynamicLabelComponent } from './components/dynamic-label/dynamic-label.component';
 import { AllOrdersComponent } from './pages/all-orders/all-orders.component';
 import { AllOrderCardComponent } from './components/all-order-card/all-order-card.component';
 
@@ -83,8 +84,9 @@ import { AllOrderCardComponent } from './components/all-order-card/all-order-car
     PageErrorComponent,
     FavouritesComponent,
     AllOwnersComponent,
+    DynamicLabelComponent,
     AllOrdersComponent,
-    AllOrderCardComponent,
+    AllOrderCardComponent
   ],
   imports: [
     BrowserModule,

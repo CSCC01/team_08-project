@@ -4,6 +4,9 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { RestaurantsService } from 'src/app/service/restaurants.service';
+import { formValidation } from "../../validation/forms";
+import { dishValidator } from '../../validation/dishValidator';
+import { formValidator } from '../../validation/formValidator';
 
 @Component({
   selector: 'app-menu-edit',
@@ -16,6 +19,7 @@ export class MenuEditComponent implements OnInit {
   role: string = '';
 
   uploadForm: FormGroup;
+  validator: formValidator = new dishValidator();
   newImage: boolean = false;
 
   faEdit = faEdit;
@@ -105,17 +109,22 @@ export class MenuEditComponent implements OnInit {
   }
 
   configDish() {
-    if (
-      this.dishName == '' ||
-      this.price == '' ||
-      this.menuCategory == '' ||
-      this.cuisine == '' ||
-      this.dishInfo == '' ||
-      this.allergy == ''
+
+    // only used for form validation
+    var validationInfo = {
+        name: this.dishName,
+        price: this.price,
+        menuCategory: this.menuCategory,
+        cuisine: this.cuisine,
+        dishInfo: this.dishInfo,
+        allergy: this.allergy
+    }
+    
+    this.validator.clearAllErrors();
+    let failFlag = this.validator.validateAll(validationInfo, (key) => this.validator.setError(key));
+
+    if ( ! failFlag
     ) {
-      alert('Please enter requried information about the dish!');
-    } else {
-      if (!isNaN(Number(this.price))) {
         const price: number = +this.price;
         var dishInfo = {};
         dishInfo['_id'] = this.dishId;
@@ -123,6 +132,7 @@ export class MenuEditComponent implements OnInit {
         dishInfo['restaurant_id'] = this.restaurantId;
         dishInfo['description'] = this.dishInfo;
         dishInfo['price'] = price.toFixed(2);
+        dishInfo['category'] = this.menuCategory;
         dishInfo['specials'] = '';
         dishInfo['category'] = this.menuCategory;
 
@@ -149,9 +159,6 @@ export class MenuEditComponent implements OnInit {
 
         this.clearInput();
         this.dishModalRef.close();
-      } else {
-        alert('Please enter a valid price!');
-      }
     }
   }
 

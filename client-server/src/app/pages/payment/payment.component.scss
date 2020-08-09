@@ -65,3 +65,14 @@
 .billing {
   padding-top: 10px;
 }
+
+.cancel {
+  background-color: white;
+  color: $secondary-color;
+  border-color: $secondary-color;
+}
+
+.cancel:hover {
+  background-color: $secondary-color;
+  color: white;
+}

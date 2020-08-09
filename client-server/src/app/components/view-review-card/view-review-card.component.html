@@ -1,11 +1,11 @@
 <div class="card review-card">
   <div class="row">
     <div class="col-md-1" style="margin-right: 20px;">
-      <img src="{{ review.image_path }}" class="review-user-img" />
+      <img src="{{ review.reviewer_image }}" class="review-user-img" />
     </div>
     <div class="col-md-10">
       <div class="d-flex justify-content-between">
-        <p>{{ review.name }} | {{ review.date }}</p>
+        <p>{{ review.reviewer }} | {{ review.Timestamp }}</p>
         <star-rating
           value="{{ review.rating }}"
           totalstars="{{ totalStars }}"
@@ -16,7 +16,7 @@
         ></star-rating>
       </div>
       <h5>{{ review.title }}</h5>
-      <p>{{ review.review }}</p>
+      <p>{{ review.content }}</p>
     </div>
   </div>
 </div>

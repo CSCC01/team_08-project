@@ -10,9 +10,9 @@ import {
 import { faHeart, faEnvelope } from '@fortawesome/free-regular-svg-icons';
 import { faTwitter, faInstagram } from '@fortawesome/free-brands-svg-icons';
 import { RestaurantsService } from 'src/app/service/restaurants.service';
-import reviews from '../../../assets/data/reviews.json';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ReviewsService } from 'src/app/service/reviews.service';
+import { LoginService } from '../../service/login.service';
 
 @Component({
   selector: 'app-restaurant-page',
@@ -51,12 +51,11 @@ export class RestaurantPageComponent implements OnInit {
     private router: Router,
     private restaurantsService: RestaurantsService,
     private reviewService: ReviewsService,
+    private loginService: LoginService,
     private headerModalService: NgbModal,
     private reviewModalService: NgbModal,
     private formBuilder: FormBuilder
-  ) {
-    this.reviews = reviews;
-  }
+  ) {}
 
   ngOnInit(): void {
     this.restaurantId =
@@ -86,6 +85,9 @@ export class RestaurantPageComponent implements OnInit {
     this.uploadForm = this.formBuilder.group({
       file: [''],
     });
+
+    // generate restaurant reviews
+    this.getReview();
   }
 
   @HostListener('window:resize', ['$event'])
@@ -157,9 +159,31 @@ export class RestaurantPageComponent implements OnInit {
   addReview(review) {
     review.restaurant_id = this.restaurantId;
     review.user_email = this.userId;
-
     this.reviewService.insertReview(review).subscribe((data) => {});
-
     this.reviewModalRef.close();
+    setTimeout(function () {
+      window.location.reload();
+    }, 100);
+  }
+
+  getReview() {
+    this.reviews = [];
+    this.reviewService
+      .getReviewbyRestaurant(this.restaurantId)
+      .subscribe((data) => {
+        this.reviews = data.Reviews;
+        this.getReviewerInfo();
+      });
+  }
+
+  getReviewerInfo() {
+    for (let i = 0; i < this.reviews.length; i++) {
+      this.loginService
+        .getUser({ email: this.reviews[i].user_email })
+        .subscribe((data) => {
+          this.reviews[i].reviewer = data.name;
+          this.reviews[i].reviewer_image = data.picture;
+        });
+    }
   }
 }

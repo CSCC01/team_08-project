@@ -137,7 +137,7 @@
             <option selected>Choose...</option>
             <option>Alberta</option>
             <option>British Columbia</option>
-            <option>Maintoba</option>
+            <option>Manitoba</option>
             <option>New Brunswick</option>
             <option>Northwest Territories</option>
             <option>Nova Scotia</option>
@@ -170,7 +170,9 @@
         </div>
       </div>
       <div class="submit">
-        <button class="btn">Pay Now!</button>
+        <button class="btn btn-outline-secondary" (click)="openModal(content)">
+          Pay Now!
+        </button>
       </div>
     </form>
   </div>
@@ -179,3 +181,32 @@
     src="../../../assets/images/undraw_payments_21w6.png"
   />
 </div>
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h2 class="modal-title" id="modal-basic-title">Confirm Order</h2>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    Are you sure about your order? After 30 seconds, the order will process.
+    Click confirm to expedite the process.
+    <p>{{ timeLeft }} seconds left...</p>
+  </div>
+  <div class="modal-footer">
+    <div class="text-right">
+      <button class="btn cancel" (click)="backToCart()">
+        CANCEL
+      </button>
+      <button class="btn" type="submit" (click)="payCart()">
+        CONFIRM
+      </button>
+    </div>
+  </div>
+</ng-template>

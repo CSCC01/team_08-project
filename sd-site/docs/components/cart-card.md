@@ -30,7 +30,7 @@ Currently, the dish object should contain _(Subject to Change)_:
 ```json
 {
   "name": "{{ Dish Name }}",
-  "photo": "{{ Dish Photo }}",
+  "picture": "{{ Dish Photo }}",
   "restaurant": "{{ Restaurant Name }}",
   "price": "{{ Dish Price }}",
   "quantity": "{{ Quantity }}",
@@ -43,7 +43,7 @@ Example:
 ```json
 {
   "name": "Special Dish 1",
-  "photo": "../../../assets/images/cuisines/chinese.jpg",
+  "picture": "../../../assets/images/cuisines/chinese.jpg",
   "restaurant": "Rob's Ribs",
   "price": "2.99",
   "quantity": 2,

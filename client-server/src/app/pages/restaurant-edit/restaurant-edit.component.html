@@ -16,6 +16,9 @@
             value="{{ restaurantDetails.name | titlecase }}"
             required
           />
+          <app-dynamic-label class="error-label" 
+          [name]="'errorName'" 
+          [message]="validator.errors['name']" ></app-dynamic-label>
         </div>
         <div class="row">
           <div class="form-group col-md-8">
@@ -29,6 +32,9 @@
               value="{{ restaurantDetails.address | titlecase }}"
               placeholder="Ex: 1234 Address Ave"
             />
+            <app-dynamic-label class="error-label" 
+            [name]="'errorAddress'" 
+            [message]="validator.errors['address']" ></app-dynamic-label>
           </div>
           <div class="form-group col-md-4">
             <label for="restaurant-city" class="required">City</label>
@@ -39,6 +45,9 @@
               placeholder="Ex: Scarborough"
               value="{{ restaurantDetails.city | titlecase }}"
             />
+            <app-dynamic-label class="error-label" 
+            [name]="'errorCity'" 
+            [message]="validator.errors['city']" ></app-dynamic-label>
           </div>
         </div>
         <div class="row">
@@ -51,17 +60,22 @@
               placeholder="Ex: 4161234567"
               value="{{ restaurantDetails.phone }}"
             />
+            <app-dynamic-label class="error-label" 
+            [name]="'errorPhone'" 
+            [message]="validator.errors['phone']" ></app-dynamic-label>
           </div>
           <div class="form-group col-md-8">
-            <label for="restaurant-email">Email (Cannot be edited) </label>
+            <label for="restaurant-email">Email</label>
             <input
               type="text"
               class="form-control"
               id="restaurant-email"
               placeholder="Ex: sample@email.com"
-              readonly
               value="{{ restaurantDetails.email }}"
             />
+            <app-dynamic-label class="error-label" 
+            [name]="'errorEmail'" 
+            [message]="validator.errors['email']" ></app-dynamic-label>
           </div>
         </div>
         <div class="row">
@@ -77,6 +91,9 @@
               <option>Medium</option>
               <option>High</option>
             </select>
+            <app-dynamic-label class="error-label" 
+            [name]="'errorPrice'" 
+            [message]="validator.errors['pricepoint']" ></app-dynamic-label>
           </div>
           <div class="form-group col-md-8">
             <label for="restaurant-cuisine" class="required">Cuisine</label>
@@ -88,6 +105,9 @@
               value="{{ restaurantDetails.cuisine | titlecase }} "
               required
             />
+            <app-dynamic-label class="error-label" 
+            [name]="'errorCuisine'" 
+            [message]="validator.errors['cuisine']" ></app-dynamic-label>
           </div>
         </div>
         <div class="form-group">
@@ -102,6 +122,9 @@
             value="{{ restaurantDetails.bio }}"
             required
           ></textarea>
+          <app-dynamic-label class="error-label" 
+          [name]="'errorBiography'" 
+          [message]="validator.errors['bio']" ></app-dynamic-label>
         </div>
         <div class="form-group">
           <label for="external-delivery"
@@ -114,6 +137,9 @@
             id="external-delivery"
             value="{{ restaurantDetails.external_delivery_link }}"
           />
+          <app-dynamic-label class="error-label" 
+          [name]="'errorDelivery'" 
+          [message]="validator.errors['external_delivery_link']" ></app-dynamic-label>
         </div>
         <div class="row">
           <div class="form-group col-md-6">
@@ -124,6 +150,9 @@
               id="twitter"
               value="{{ restaurantDetails.twitter }}"
             />
+            <app-dynamic-label class="error-label" 
+            [name]="'errorTwitter'" 
+            [message]="validator.errors['twitter']" ></app-dynamic-label>
           </div>
           <div class="form-group col-md-6">
             <label for="instagram">Instagram URL</label>
@@ -133,6 +162,9 @@
               id="instagram"
               value="{{ restaurantDetails.instagram }}"
             />
+            <app-dynamic-label class="error-label" 
+            [name]="'errorInstagram'" 
+            [message]="validator.errors['instagram']" ></app-dynamic-label>
           </div>
         </div>
         <div class="row">

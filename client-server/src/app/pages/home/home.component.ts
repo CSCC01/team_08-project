@@ -18,6 +18,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LoginService } from '../../service/login.service';
 import { RestaurantsService } from 'src/app/service/restaurants.service';
+import { formValidation } from "../../validation/forms";
+import { userValidator } from '../../validation/userValidator';
+import { formValidator } from '../../validation/formValidator';
 
 @Component({
   selector: 'app-home',
@@ -28,6 +31,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
   role: string = '';
   userId: string = '';
   userData: any;
+
+  validator: formValidator = new userValidator();
 
   isShow: boolean;
   topPosToStartShowing = 100;
@@ -195,40 +200,43 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.router.navigate(['/all-listings']);
   }
 
+  browseStories() {
+    this.router.navigate(['/all-owners']);
+  }
+
   updateProfile() {
+
+    let birthday = (<HTMLInputElement>document.getElementById('dateOfBirth')).value
+
     var userInfo = {
       email: this.userId,
       name: (<HTMLInputElement>document.getElementById('name')).value,
       address: (<HTMLInputElement>document.getElementById('address')).value,
       phone: (<HTMLInputElement>document.getElementById('phone')).value,
-      birthday: (<HTMLInputElement>document.getElementById('dateOfBirth'))
-        .value,
+      birthday: birthday,
+      age: birthday
     };
 
     sessionStorage.setItem('userAddress', userInfo.address);
 
-    if (userInfo.birthday == '') {
-      userInfo.birthday = null;
-    }
-    if (userInfo.phone == '') {
-      userInfo.phone = null;
-    }
+    // clear formErrors
+    this.validator.clearAllErrors();
+    //validate all formfields, the callback will throw appropriate errors, return true if any validation failed
+    let failFlag = this.validator.validateAll(userInfo, (key) => this.validator.setError(key));
+    //if any validation failed, do not POST
+    if (!failFlag) {
+      this.loginService.editUser(userInfo).subscribe((data) => {
+        //if response is invalid, populate the errors
+        if(formValidation.isInvalidResponse(data)){
+            formValidation.HandleInvalid(data, (key) => this.validator.setError(key))
+        }else{
+            this.modalRef.close();
+            setTimeout(function () {
+            window.location.reload();
+            }, 100);
+        }
+      });
 
-    if (
-      (userInfo.phone != null && userInfo.phone.length != 10) ||
-      (userInfo.birthday != null &&
-        !userInfo.birthday.match('^\\d{4}-\\d{2}-\\d{2}$')) ||
-      !userInfo.name
-    ) {
-      alert(
-        'Please ensure formats are proper. Name should not empty, phone numbers should be 10 digits with no dashes and birthday should be YYYY-MM-DD'
-      );
-    } else {
-      this.loginService.editUser(userInfo).subscribe((data) => {});
-      this.modalRef.close();
-      setTimeout(function () {
-        window.location.reload();
-      }, 100);
     }
   }
 }

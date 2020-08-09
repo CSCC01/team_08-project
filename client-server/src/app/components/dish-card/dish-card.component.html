@@ -7,7 +7,7 @@
           <h5 class="card-title">{{ dish.name | titlecase }}</h5>
           <p class="card-text">${{ dish.price }}</p>
         </div>
-        <button class="btn" (click)="openDish(content)">
+        <button class="btn" (click)="openDish(content)" placement="top" ngbTooltip="View Dish Details">
           View dish
         </button>
       </div>
@@ -39,7 +39,11 @@
             <div *ngIf="role == 'BU'" class="picker-wrapper">
               <ng-number-picker [(value)]="value"></ng-number-picker>
             </div>
-            <button *ngIf="role == 'BU'" class="btn order-btn">
+            <button
+              *ngIf="role == 'BU'"
+              class="btn order-btn"
+              (click)="addOrder()"
+            >
               ADD ORDER
             </button>
           </div>
