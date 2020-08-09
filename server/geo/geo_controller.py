@@ -18,6 +18,7 @@ def geocode(address):
     if len(results) == 0:
         raise ValueError('No results')
     elif len(results) == 1:
-        return results[0]['geometry']['location']
+        location = results[0]['geometry']['location']
+        return {'long': location['lng'], 'lat': location['lat']}
     else:
         raise ValueError('Ambiguous query')

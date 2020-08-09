@@ -3,6 +3,9 @@ from djongo import models
 from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
 from restaurant.models import Food
+from utils.model_util import save_and_clean
+from . import order_util
+
 
 
 class Cart(models.Model):
@@ -60,7 +63,7 @@ class Cart(models.Model):
         indicating that the cart has reached the RO
         """
         cart = Cart.objects.get(_id=cart_id)
-        if cart.accept_tstmp is None and cart.complete_tstmp is None and cart.send_tstmp is None:
+        if order_util.can_send(cart):
             cart.send_tstmp = timezone.now()
             cart.save(update_fields=['send_tstmp'])
             return cart
@@ -72,7 +75,7 @@ class Cart(models.Model):
         indicating that the orders are being prepared by the RO
         """
         cart = Cart.objects.get(_id=cart_id)
-        if cart.accept_tstmp is None and cart.complete_tstmp is None and cart.send_tstmp is not None:
+        if order_util.can_accept_decline(cart):
             cart.accept_tstmp = timezone.now()
             cart.save(update_fields=['accept_tstmp'])
             return cart
@@ -81,13 +84,11 @@ class Cart(models.Model):
     # updates the complete_timestamp of the given cart to now
     # cancels the given cart, indicating that the given cart has been declined by the RO
     def decline_cart(self, cart_id):
-        cart = Cart.objects.get(_id = cart_id)
-        if cart.accept_tstmp is None and cart.complete_tstmp is None and cart.send_tstmp is not None:
+        cart = Cart.objects.get(_id=cart_id)
+        if order_util.can_accept_decline(cart):
             cart.complete_tstmp = timezone.now()
             cart.is_cancelled = True
-            cart.clean_fields()
-            cart.clean()
-            cart.save(update_fields=['complete_tstmp', 'is_cancelled'])
+            save_and_clean(cart)
             return cart
         raise ValueError('Could not decline order')
 
@@ -98,32 +99,34 @@ class Cart(models.Model):
         and can no longer be edited by the user
         """
         cart = Cart.objects.get(_id=cart_id)
-        if cart.accept_tstmp is not None and cart.complete_tstmp is None and cart.send_tstmp is not None:
+        if order_util.can_complete(cart):
             cart.complete_tstmp = timezone.now()
             cart.save(update_fields=['complete_tstmp'])
             return cart
         else:
             raise ValueError('Could not complete order')
- 
+
     def users_active_cart(self, user_email):
         """
         gets the user's current active cart (non-sent, non-completed, non-cancelled, non-accepted)
         """
-        return Cart.objects.get(user_email= user_email, complete_tstmp= None, accept_tstmp= None, send_tstmp= None,is_cancelled= False)
+        return Cart.objects.get(user_email=user_email, complete_tstmp=None, accept_tstmp=None, send_tstmp=None,
+                                is_cancelled=False)
 
     def users_sent_carts(self, user_email):
         """
         gets the user's current sent but non-closed carts
         """
-        carts = list(Cart.objects.filter(user_email= user_email, complete_tstmp= None).exclude(send_tstmp= None))
+        carts = list(Cart.objects.filter(user_email=user_email, complete_tstmp=None).exclude(send_tstmp=None))
         return carts
 
     def restaurants_carts(self, restaurant_id):
         """
         gets the restaurants current sent carts
         """
-        carts = list(Cart.objects.filter(restaurant_id= restaurant_id).exclude(send_tstmp= None))
+        carts = list(Cart.objects.filter(restaurant_id=restaurant_id).exclude(send_tstmp=None))
         return carts
+
 
 class Item(models.Model):
     """ Model for one type of Item in the cart """
@@ -142,9 +145,7 @@ class Item(models.Model):
         :return: the item instance
         """
         item = cls(cart_id=cart_id, food_id=food_id, count=count)
-        item.clean_fields()
-        item.clean()
-        item.save()
+        save_and_clean(item)
         cart = Cart.objects.get(_id=ObjectId(cart_id))
         cart.add_to_total(float(Food.objects.get(_id=food_id).price), count)
         cart.update_num_items(1)
@@ -178,27 +179,22 @@ class Item(models.Model):
         :param count: The desired count
         :return: whether this edit was successful or not
         """
-        item = Item.objects.get(_id= item_id)
-        cart = Cart.objects.get(_id = item.cart_id)
-        if(count != 0):
+        item = Item.objects.get(_id=item_id)
+        cart = Cart.objects.get(_id=item.cart_id)
+        if count != 0:
             currcount = item.count
             deltacount = count - currcount
-            cart.add_to_total(float(Food.objects.get(_id=item.food_id).price), deltacount)
+            price = float(Food.objects.get(_id=item.food_id).price)
+            cart.add_to_total(price, deltacount)
             item.count = count
-            item.clean_fields()
-            item.clean()
-            item.save()
-            cart.clean_fields()
-            cart.clean()
-            cart.save()
+            item = save_and_clean(item)
+            cart = save_and_clean(cart)
             return {'item': item, 'cart': cart}
         # if the desired count is 0, just delete the item
         else:
             cls.remove_item(item_id)
             return {'item': {}}
 
-
     @classmethod
     def get_items_by_cart(cls, cart_id):
         return list(Item.objects.filter(cart_id=cart_id))
-

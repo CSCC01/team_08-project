@@ -3,8 +3,8 @@ from restaurant.models import Food, ManualTag, Restaurant
 from django.forms.models import model_to_dict
 from jsonschema import validate
 import json
-from request_form import upload_form
-from geo import geo_controller
+from utils.model_util import model_to_json, save_and_clean, edit_model, update_model_geo
+
 # jsonschema validation schemes
 food_schema = {
     "properties": {
@@ -49,6 +49,7 @@ restaurant_schema = {
         "external_delivery_link": {"type": "string"},
         "cover_photo_url": {"type": "string"},
         "logo_url": {"type": "string"},
+        "rating": {"type": "string"},
         "owner_name": {"type": "string"},
         "owner_story": {"type": "string"},
         "owner_picture_url": {"type": "string"}
@@ -66,8 +67,10 @@ def insert_tag_page(request):
     """Insert tag to database"""
     validate(instance=request.body, schema=tag_schema)
     body = json.loads(request.body)
-    tag = ManualTag.add_tag(body['food_name'], body['restaurant_id'], body['category'], body['value'])
-    return JsonResponse(model_to_dict(tag))
+    food_name, restaurant_id, category, value = \
+        body['food_name'], body['restaurant_id'], body['category'], body['value']
+    tag = ManualTag.add_tag(food_name, restaurant_id, category, value)
+    return JsonResponse(model_to_json(tag))
 
 
 def clear_tags_page(request):
@@ -81,11 +84,19 @@ def clear_tags_page(request):
 def get_dish_by_restaurant_page(request):
     """Retrieve all dishes from a restaurant"""
     rest_id = request.GET.get('restaurant_id')
-    return JsonResponse(Food.get_by_restaurant(rest_id))
+    dishes = Food.get_by_restaurant(rest_id)
+    response = {'Dishes': []}
+    for dish in dishes:
+        response['Dishes'].append(model_to_json(dish))
+    return JsonResponse(response)
 
 
 def all_dishes_page(request):
     """Retrieve all dishes from the database"""
+    foods = Food.objects.all()
+    response = {'Dishes': []}
+    for food in foods:
+        response['Dishes'].append(model_to_json(food))
     return JsonResponse(Food.get_all())
 
 
@@ -94,11 +105,10 @@ def insert_dish_page(request):
     validate(instance=request.body, schema=food_schema)
     body = json.loads(request.body)
     invalid = Food.field_validate(body)
-    if invalid is not None:
+    if invalid:
         return JsonResponse(invalid)
     food = Food.add_dish(body)
-    food._id = str(food._id)
-    return JsonResponse(model_to_dict(food))
+    return JsonResponse(model_to_json(food))
 
 
 def delete_dish_page(request):
@@ -129,14 +139,18 @@ def get_restaurant_page(request):
 
     restaurant = Restaurant.get(_id)
     if restaurant:
-        return JsonResponse(model_to_dict(restaurant))
+        return JsonResponse(model_to_json(restaurant))
     else:
         return JsonResponse({})
 
 
 def get_all_restaurants_page(request):
     """Retrieve all restaurants"""
-    return JsonResponse(Restaurant.get_all())
+    response = {'Restaurants': []}
+    restaurants = list(Restaurant.objects.all())
+    for restaurant in restaurants:
+        response['Restaurants'].append(model_to_json(restaurant))
+    return JsonResponse(response)
 
 
 def insert_restaurant_page(request):
@@ -144,13 +158,12 @@ def insert_restaurant_page(request):
     validate(instance=request.body, schema=restaurant_schema)
     body = json.loads(request.body)
     invalid = Restaurant.field_validate(body)
-    if invalid is not None:
+    if invalid:
         return JsonResponse(invalid)
-    restaurant = Restaurant.insert(body)
-    if restaurant is not None:
-        restaurant._id = str(restaurant._id)
-        return JsonResponse(model_to_dict(restaurant))
-    else:
+    try:
+        restaurant = Restaurant.insert(body)
+        return JsonResponse(model_to_json(restaurant))
+    except ValueError:
         return HttpResponseBadRequest('duplicate email')
 
 
@@ -159,31 +172,23 @@ def edit_restaurant_page(request):
     validate(instance=request.body, schema=restaurant_schema)
     body = json.loads(request.body)
     invalid = Restaurant.field_validate(body)
-    if invalid is not None:
+    if invalid:  # exit if invalid body
         return JsonResponse(invalid)
     restaurant = Restaurant.get(body["restaurant_id"])
-    for field in body:
-        if field in restaurant_editable:
-            setattr(restaurant, field, body[field])
-    if "address" in body:
-        try:
-            setattr(restaurant, 'GEO_location', geo_controller.geocode(body['address']))
-        except ValueError:
-            pass
-    restaurant.clean_fields()
-    restaurant.clean()
-    restaurant.save()
-    restaurant._id = str(restaurant._id)
-    return JsonResponse(model_to_dict(restaurant))
+    edit_model(restaurant, body, restaurant_editable)
+    if address_changed(body):
+        update_model_geo(restaurant, body['address'])
+    restaurant = save_and_clean(restaurant)
+    return JsonResponse(model_to_json(restaurant))
 
 
-def update_logo(request):
-    """Upload file to cloud and set logo url to that file's url"""
-    form = upload_form.ImageIdForm(request.POST, request.FILES)
-    if form.is_valid():
-        Restaurant.update_logo(request.FILES['image'], request.POST['_id'])
-        return HttpResponse('SUCCESS')
-    return HttpResponse('FAILURE')
+def address_changed(body):
+    """
+    return if address has changed
+    @param body: edited fields
+    @return: boolean
+    """
+    return 'address' in body
 
 
 def edit_dish_page(request):
@@ -194,11 +199,6 @@ def edit_dish_page(request):
     if invalid is not None:
         return JsonResponse(invalid)
     dish = Food.objects.get(_id=body["_id"])
-    for field in body:
-        if field in dish_editable:
-            setattr(dish, field, body[field])
-    dish.clean_fields()
-    dish.clean()
-    dish.save()
-    dish._id = str(dish._id)
-    return JsonResponse(model_to_dict(dish))
+    edit_model(dish, body, dish_editable)
+    dish = save_and_clean(dish)
+    return JsonResponse(model_to_json(dish))

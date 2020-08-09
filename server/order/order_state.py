@@ -6,4 +6,3 @@ class OrderStates(Enum):
     acc = "accept_cart"
     cmt = "complete_cart"
     snd = "send_cart"
-

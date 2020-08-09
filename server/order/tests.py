@@ -19,9 +19,12 @@ class CartTestCases(TestCase):
 
     def setUp(self):
         self.factory = RequestFactory()
-        self.c1 = Cart.objects.create(restaurant_id='222222222222222222222222', user_email='test2@mail.com', price="0.00")
-        self.c2 = Cart.objects.create(restaurant_id='222222222222222222222222', user_email='test3@mail.com', price="0.00", complete_tstmp = timezone.now())
-        self.c3 = Cart.objects.create(restaurant_id='222222222222222222222222', user_email='test2@mail.com', price="0.00", send_tstmp = timezone.now())
+        self.c1 = Cart.objects.create(restaurant_id='222222222222222222222222', user_email='test2@mail.com',
+                                      price="0.00")
+        self.c2 = Cart.objects.create(restaurant_id='222222222222222222222222', user_email='test3@mail.com',
+                                      price="0.00", complete_tstmp=timezone.now())
+        self.c3 = Cart.objects.create(restaurant_id='222222222222222222222222', user_email='test2@mail.com',
+                                      price="0.00", send_tstmp=timezone.now())
         self.f1 = Food.objects.create(name="foodA", restaurant_id='mock',
                                       description="chicken", picture="picA",
                                       price='10.99')
@@ -60,15 +63,15 @@ class CartTestCases(TestCase):
                                                             'count': 2},
                                 content_type='application/json')
         actual = json.loads(view_response.insert_item_page(req).content)
-        expected = {"_id": str(Item.objects.get(cart_id=str(self.c1._id), food_id= str(self.f1._id))._id),
+        expected = {"_id": str(Item.objects.get(cart_id=str(self.c1._id), food_id=str(self.f1._id))._id),
                     "cart_id": str(self.c1._id), "food_id": str(self.f1._id), "count": 2}
         self.assertDictEqual(actual, expected)
-    
+
     def test_get_users_cart_unsent(self):
         """
         Test if users open carts are returned properly
         """
-        req = self.factory.get('/api/order/cart/user_carts/', {'user_email': 'test2@mail.com', 'is_sent' : False})
+        req = self.factory.get('/api/order/cart/user_carts/', {'user_email': 'test2@mail.com', 'is_sent': False})
         response = view_response.get_users_cart_page(req)
         expected = json.loads(json.dumps(model_to_dict(self.c1), cls=BSONEncoder))
         actual = json.loads(response.content)['carts'][0]
@@ -78,7 +81,7 @@ class CartTestCases(TestCase):
         """
         Test if users sent carts are returned properly
         """
-        req = self.factory.get('/api/order/cart/user_carts/', {'user_email': 'test2@mail.com', 'is_sent' : True})
+        req = self.factory.get('/api/order/cart/user_carts/', {'user_email': 'test2@mail.com', 'is_sent': True})
         response = view_response.get_users_cart_page(req)
         expected = json.loads(json.dumps(model_to_dict(self.c3), cls=BSONEncoder))
         actual = json.loads(response.content)['carts'][0]
@@ -104,21 +107,23 @@ class CartTestCases(TestCase):
         req = self.factory.get('/api/order/cart/restaurant_carts/', {'restaurant_id': '222222222222222222222222'})
         response = view_response.get_restaurant_carts_page(req)
         expected = {
-        'carts': 
-         [
-            json.loads(json.dumps(model_to_dict(self.c3), cls=BSONEncoder))
-         ]
+            'carts':
+                [
+                    json.loads(json.dumps(model_to_dict(self.c3), cls=BSONEncoder))
+                ]
         }
         actual = json.loads(response.content)
-        
+
         self.assertDictEqual(expected, actual)
 
     def test_get_items_by_cart(self):
         """Test if all items from a cart are returned to the user"""
-        req = self.factory.get('api/order/item/get_by_cart/', {'cart_id': str(self.c1._id)}, content_type='application/json')
+        req = self.factory.get('api/order/item/get_by_cart/', {'cart_id': str(self.c1._id)},
+                               content_type='application/json')
         actual = json.loads(view_response.get_items_by_cart_page(req).content)
         expected = {'items': [json.loads(json.dumps(model_to_dict(self.i), cls=BSONEncoder))]}
         self.assertDictEqual(actual, expected)
+
 
 class CartStatusCases(TestCase):
 
@@ -145,12 +150,12 @@ class CartStatusCases(TestCase):
                                          )
         self.cart4 = Cart.objects.create(**{
             "restaurant_id": "111111111111111111111112", "user_email": "tester@mail.com",
-            "price":"0.00", "is_cancelled": False, "send_tstmp": self.time,
+            "price": "0.00", "is_cancelled": False, "send_tstmp": self.time,
             "accept_tstmp": None, "complete_tstmp": None
         })
         self.cart5 = Cart.objects.create(**{
             "restaurant_id": "111111111111111111111113", "user_email": "tester@mail.com",
-            "price":"0.00", "is_cancelled": False, "send_tstmp": None,
+            "price": "0.00", "is_cancelled": False, "send_tstmp": None,
             "accept_tstmp": None, "complete_tstmp": None
         })
         self.factory = RequestFactory()
@@ -235,7 +240,7 @@ class CartStatusCases(TestCase):
 
         time = self.time
 
-        #mock timezone
+        # mock timezone
         mock = MockModule(models.timezone, mockdatetime(time))
         models.timezone = mock.mock()
 
@@ -257,14 +262,13 @@ class CartStatusCases(TestCase):
 
         time = self.time
 
-        #mock timezone
+        # mock timezone
         mock = MockModule(models.timezone, mockdatetime(time))
         models.timezone = mock.mock()
 
         response = view_response.decline_cart_page(request)
         actual = response.content.decode('utf-8')
         expected = 'Could not decline order'
-
 
         models.timezone = mock.undo()
 

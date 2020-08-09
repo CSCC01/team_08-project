@@ -5,7 +5,7 @@ from jsonschema import validate
 import jsonschema
 from bson import ObjectId
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
-from utils.model_json import model_to_json
+from utils.model_util import model_to_json
 
 post_schema = {
     'properties': {

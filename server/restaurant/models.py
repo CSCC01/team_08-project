@@ -1,22 +1,27 @@
 from django.forms import model_to_dict
 from djongo import models
 from bson import ObjectId
-
-from geo.geo_controller import geocode
 from restaurant.cuisine_dict import load_dict
-from cloud_storage import cloud_controller
 from restaurant.enum import Prices, Categories
 from django.core.exceptions import ObjectDoesNotExist
 import requests
-from geo import geo_controller
+from utils.model_util import save_and_clean, update_model_geo
+
+FOOD_PICTURE = 'https://storage.googleapis.com/default-assets/no-image.png'
+
+RESTAURANT_COVER = 'https://storage.googleapis.com/default-assets/cover.jpg'
+RESTAURANT_LOGO = 'https://storage.googleapis.com/default-assets/logo.jpg'
+DISHES = 'dishes.csv'
+
 
 class Food(models.Model):
     """ Model for the Food Items on the Menu """
     _id = models.ObjectIdField()
     name = models.CharField(max_length=50, default='')
-    restaurant_id = models.CharField(max_length=24)
+    restaurant_id = models.CharField(max_length=24, editable=False)
     description = models.CharField(max_length=200, blank=True, default='')
-    picture = models.CharField(max_length=200, blank=True, default='https://storage.googleapis.com/default-assets/no-image.png')
+    picture = models.CharField(max_length=200, blank=True,
+                               default=FOOD_PICTURE)
     price = models.DecimalField(max_digits=6, decimal_places=2)
     tags = models.ListField(default=[], blank=True)
     specials = models.CharField(max_length=51, blank=True)
@@ -24,6 +29,15 @@ class Food(models.Model):
 
     class Meta:
         unique_together = (("name", "restaurant_id"),)
+
+    @classmethod
+    def is_tagged(cls, tag):
+        """
+        check if food is tagged with tag 'tag'
+        @param tag: referenced tag
+        @return: boolean
+        """
+        return tag._id in cls.tags
 
     @classmethod
     def add_dish(cls, food_data):
@@ -36,19 +50,16 @@ class Food(models.Model):
             name=food_data['name'],
             restaurant_id=food_data['restaurant_id'],
             description=food_data['description'],
-            picture=food_data['picture'],
             price=food_data['price'],
             specials=food_data['specials'],
             category=food_data['category'],
         )
-        dish.clean_fields()
-        dish.clean()
-        dish.save()
+        save_and_clean(dish)
         restaurant = Restaurant.objects.get(_id=food_data['restaurant_id'])
-        if food_data['category'] not in restaurant.categories:
+        if restaurant.is_new_category(food_data['category']):
             restaurant.categories.append(food_data['category'])
             restaurant.save(update_fields=['categories'])
-        return Food.objects.get(name=food_data['name'], restaurant_id=food_data['restaurant_id'])
+        return dish
 
     @classmethod
     def get_all(cls):
@@ -70,12 +81,7 @@ class Food(models.Model):
         :param rest_id: id of restaurant
         :return: restaurant data in json
         """
-        response = {'Dishes': []}
-        for food in list(Food.objects.filter(restaurant_id=rest_id)):
-            food._id = str(food._id)
-            food.tags = list(map(str, food.tags))
-            response['Dishes'].append(model_to_dict(food))
-        return response
+        return list(Food.objects.filter(restaurant_id=rest_id))
 
     @classmethod
     def field_validate(self, fields):
@@ -91,13 +97,22 @@ class Food(models.Model):
             if field in fields and fields[field] != '':
                 try:
                     requests.get(fields[field])
-                except (requests.ConnectionError, requests.exceptions.MissingSchema) as exception:
+                except (requests.ConnectionError, requests.exceptions.MissingSchema):
                     invalid['Invalid'].append(field)
 
         if not invalid['Invalid']:
             return None
         else:
             return invalid
+
+    @classmethod
+    def clean_description(cls):
+        description = {food for food in cls.desription.split(' ')}
+        clean_description = {}
+        for word in description:  # clean word, remove no alpha
+            clean_description.add(''.join(e for e in word if e.isalpha()))
+        clean_description.lower()
+        return clean_description
 
 
 class ManualTag(models.Model):
@@ -119,12 +134,18 @@ class ManualTag(models.Model):
                                 restaurant_id=restaurant_id)
         for tag_id in food.tags:
             tag = ManualTag.objects.get(_id=tag_id)
-            for food_id in tag.foods:
-                if food_id == food._id:
-                    tag.foods.remove(food_id)
-                    tag.save()
+            tag.remove_food(food._id)
         food.tags = []
         food.save()
+
+    @classmethod
+    def remove_food(cls, food_id):
+        """
+        remove food_id from tag
+        @param food_id: referenced food_id
+        """
+        cls.tags.remove(food_id)
+        cls.save()
 
     @classmethod
     def add_tag(cls, food_name, restaurant_id, category, value):
@@ -138,21 +159,19 @@ class ManualTag(models.Model):
         """
         food = Food.objects.get(name=food_name,
                                 restaurant_id=restaurant_id)
-        if not ManualTag.objects.filter(value=value, category=category).exists():
+        if not ManualTag.tag_exists(value, category):
             tag = cls(value=value, category=category, foods=[])
-            tag.clean_fields()
-            tag.clean()
-            tag.save()
-        tag = ManualTag.objects.get(value=value, category=category)
+            save_and_clean(tag)
+            return tag
 
-        if tag._id not in food.tags:
-            food.tags.append(tag._id)
-            food.save()
-            tag.foods.append(food._id)
-            tag.save()
-        tag._id = str(tag._id)
-        tag.foods = [str(food) for food in tag.foods]
+        tag = ManualTag.objects.get(value=value, category=category)
+        if not food.is_tagged(tag):
+            add_new_tag(food, tag)
         return tag
+
+    @classmethod
+    def tag_exists(cls, value, category):
+        return cls.objects.filter(value=value, category=category).exists()
 
     @classmethod
     def auto_tag_food(cls, _id):
@@ -162,13 +181,34 @@ class ManualTag(models.Model):
         :return: list of generated tags
         """
         dish = Food.objects.get(_id=ObjectId(_id))
-        desc_set = {''.join(e for e in food if e.isalpha()).lower()
-                    for food in dish.description.split(' ')}  # fancy set comprehension
-        return [cls.add_tag(dish.name, dish.restaurant_id, 'DI', item)  # fancy list comprehension
-                for item in desc_set.intersection(load_dict.read('dishes.csv'))]
+        clean_description = dish.clean_description()
+        cuisine_dict = load_dict.read(DISHES)
+        keywords = clean_description.intersection(cuisine_dict)
+        tags = ManualTag().tag_description(keywords, dish)
+        return tags
 
     def __eq__(self, other):
         return self.food == other.food and self.category == other.category and self.value == other.value
+
+
+    @classmethod
+    def tag_description(cls, keywords, dish):
+        tags = []
+        for keyword in keywords:
+            tags.append(cls.add_tag(dish.name), dish.restuarant_id, Categories.DI.name, keyword)
+        return tags
+
+
+def add_new_tag(food, tag):
+    """
+    add new tag-food relationship
+    @param food: food model
+    @param tag: tag model
+    """
+    food.tags.append(tag._id)
+    tag.foods.append(food._id)
+    tag.save()
+    food.save()
 
 
 class Restaurant(models.Model):
@@ -184,7 +224,7 @@ class Restaurant(models.Model):
     twitter = models.CharField(max_length=200, blank=True)
     instagram = models.CharField(max_length=200, blank=True)
     bio = models.TextField(null=True)
-    GEO_location = models.CharField(blank=True, max_length=200)
+    GEO_location = models.CharField(max_length=200)
     external_delivery_link = models.CharField(max_length=200, blank=True)
     cover_photo_url = models.CharField(max_length=200,
                                        default='https://storage.googleapis.com/default-assets/cover.jpg')
@@ -197,29 +237,26 @@ class Restaurant(models.Model):
     categories = models.ListField(default=[], blank=True)
 
     @classmethod
+    def is_new_category(cls, category):
+        """
+        Check whether category is new
+        @param category: referenced category
+        @return: boolean
+        """
+        return category in cls.categories
+
+    @classmethod
     def get(cls, _id):
         """
         retrieve restaurant based on id
         :param _id: id of restaurant
         :return: restaurant json or None
         """
-        restaurant = list(Restaurant.objects.filter(_id=ObjectId(_id)))
-        if len(restaurant) == 1:
-            restaurant[0]._id = str(restaurant[0]._id)
-            return restaurant[0]
-        return None
-
-    @classmethod
-    def get_all(cls):
-        """
-        Retrieve all restaurants from database
-        :return: list of restauarant json wrapped in jsons
-        """
-        response = {'Restaurants': []}
-        for restaurant in list(Restaurant.objects.all()):
-            restaurant._id = str(restaurant._id)
-            response['Restaurants'].append(model_to_dict(restaurant))
-        return response
+        try:
+            restaurant = Restaurant.objects.get(_id=_id)
+            return restaurant
+        except ObjectDoesNotExist:
+            return None
 
     @classmethod
     def insert(cls, restaurant_data):
@@ -230,18 +267,13 @@ class Restaurant(models.Model):
         """
         try:
             cls.objects.get(email=restaurant_data['email'])
-            return None
+            raise ValueError('Cannot insert')
         except ObjectDoesNotExist:
             restaurant = cls(
                 **restaurant_data
             )
-            try:
-                restaurant.GEO_location = geo_controller.geocode(restaurant_data['address'])
-            except ValueError:
-                pass
-            restaurant.clean_fields()
-            restaurant.clean()
-            restaurant.save()
+            update_model_geo(restaurant, restaurant_data['address'])
+            restaurant = save_and_clean(restaurant)
             return restaurant
 
     @classmethod
@@ -260,19 +292,12 @@ class Restaurant(models.Model):
             if field in fields and fields[field] != '':
                 try:
                     requests.get(fields[field])
-                except (requests.ConnectionError, requests.exceptions.MissingSchema) as exception:
+                except (requests.ConnectionError, requests.exceptions.MissingSchema):
                     invalid['Invalid'].append(field)
 
         if 'phone' in fields and fields['phone'] is not None:
             if len(str(fields['phone'])) != 10:
                 invalid['Invalid'].append('phone')
-
-        if 'address' in fields:
-            try:
-                geocode(fields['address'])
-            except ValueError:
-                invalid['Invalid'].append('address')
-
         if len(invalid['Invalid']) == 0:
             return None
         else:

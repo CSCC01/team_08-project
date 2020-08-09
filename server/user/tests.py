@@ -160,5 +160,5 @@ class SDUserTestCases(TestCase):
                                      "phone": 416213900, "GEO_location": "{'lat': '28.90054', 'long': '-81.26367'}"},
                                     content_type='application/json')
         actual = edit_user_page(request).content
-        expected = {"Invalid": ['picture', 'phone', 'address']}
+        expected = {"Invalid": ['picture', 'phone']}
         self.assertJSONEqual(actual, expected)
