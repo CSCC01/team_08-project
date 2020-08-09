@@ -5,6 +5,7 @@ import json
 from utils.model_util import model_to_json, save_and_clean, edit_model, update_model_geo, models_to_json
 
 # jsonschema validation schemes
+
 food_schema = {
     "properties": {
         "_id": {"type": "string"},
@@ -27,7 +28,7 @@ tag_schema = {
         "category": {"type": "string"},
         "foods": {"type": "array",
                   "items": {"type": "string"}
-                }
+                  }
     }
 }
 
@@ -113,17 +114,26 @@ def delete_dish_page(request):
     ManualTag.clear_food_tags(body["food_name"], body["restaurant_id"])
     food = Food.objects.get(name=body["food_name"], restaurant_id=body["restaurant_id"])
     food.delete()
-    if not category_exists(body['restaurant_id'], food.category):
-        restaurant = Restaurant.objects.get(_id=body['restaurant_id'])
-        restaurant.categories.remove(food.category)
-        restaurant.save(update_fields=['categories'])
+    restaurant = Restaurant.objects.get(_id=body["restaurant_id"])
+    if not category_exists(body["restaurant_id"], food.category):
+        remove_category(food.category, restaurant)
     return HttpResponse(status=200)
+
+
+def remove_category(category, restaurant):
+    """
+    remove category from restaurant
+    @param category: food category
+    @param restaurant: restaurant document
+    """
+    restaurant.categories.remove(category)
+    restaurant.save(update_fields=['categories'])
 
 
 def category_exists(restaurant_id, category):
     """
     check if restaurant still covers category 'category'
-    @param restaurant_id:referenced restaurant
+    @param restaurant:referenced restaurant
     @param category: category
     @return:boolean
     """
@@ -196,12 +206,64 @@ def address_changed(body):
 
 def edit_dish_page(request):
     """Update Dish data"""
+    # validation
     validate(instance=request.body, schema=food_schema)
     body = json.loads(request.body)
     invalid = Food.field_validate(body)
     if invalid is not None:
         return JsonResponse(invalid)
+
     dish = Food.objects.get(_id=body["_id"])
+    restaurant = Restaurant.objects.get(_id=dish.restaurant_id)
+    if should_add_category(body, dish.category, restaurant):    # add category if new
+        add_cateogory(dish.category, restaurant)
+
+    # edit model
     edit_model(dish, body, dish_editable)
     dish = save_and_clean(dish)
+
+    # if category has been edited, may remove old category
+    if category_is_changed(body) and category_exists(body['category'], restaurant._id):
+        remove_category(body['category', restaurant])
     return JsonResponse(model_to_json(dish))
+
+
+def category_is_changed(body):
+    """
+    check whether category was edited
+    @param body: request body for editing
+    @return: boolean
+    """
+    return 'category' in body
+
+
+def new_category(category, restaurant):
+    """
+    check if category is new to restaurant
+    @param category: restaurant category
+    @param restaurant: referenced restaurant
+    @return: boolean
+    """
+    return category in restaurant.categories
+
+
+def should_add_category(body, category, restaurant):
+    """
+    check if should add category
+    @param body:
+    @param category:
+    @param restaurant:
+    @return:
+    """
+    return category_is_changed(body) and new_category(category, restaurant)
+
+
+def add_cateogory(category, restaurant):
+    """
+    add new category to restaurant
+    @param category:
+    @param restaurant:
+    @return:
+    """
+    restaurant.categories.append(category)
+    restaurant.save(update_fields=['categories'])

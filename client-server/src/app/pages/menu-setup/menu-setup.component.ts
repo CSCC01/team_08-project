@@ -87,14 +87,14 @@ export class MenuSetupComponent implements OnInit {
         const price: number = +this.price;
 
         var dishInfo = {
-            name: this.dishName,
-            restaurant_id: this.restaurantId,
-            description: this.dishInfo,
-            category: this.menuCategory,
-            picture: '',
-            price: price.toFixed(2),
-            specials: '',
-          };
+          name: this.dishName,
+          restaurant_id: this.restaurantId,
+          description: this.dishInfo,
+          picture: '',
+          price: price.toFixed(2),
+          specials: '',
+          category: this.menuCategory,
+        };
 
         this.restaurantsService.createDish(dishInfo).subscribe((data) => {
             if(data && formValidation.isInvalidResponse(data)){

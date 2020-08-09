@@ -159,6 +159,13 @@
     <p>{{ restaurantDetails.bio }}</p>
   </div>
 
+  <div style="text-align: center;">
+    <button *ngIf="role == 'RO'" class="btn editBtn" (click)="editMenu()" placement="bottom" ngbTooltip="Update Your Menu">
+      <fa-icon [icon]="faEdit"></fa-icon>
+      <b>EDIT MENU</b>
+    </button>
+  </div>
+
   <mat-tab-group mat-align-tabs="center">
     <mat-tab label="About Us">
       <div style="text-align: center;">
@@ -200,24 +207,21 @@
         </div>
       </div>
     </mat-tab>
-    <mat-tab label="Menu">
-      <div style="text-align: center;">
-        <button *ngIf="role == 'RO'" class="btn editBtn" (click)="editMenu()" placement="bottom" ngbTooltip="Update Your Menu">
-          <fa-icon [icon]="faEdit"></fa-icon>
-          <b>EDIT MENU</b>
-        </button>
-      </div>
+
+    <mat-tab *ngFor="let tab of categories" label="{{ tab | titlecase }}">
       <br />
       <ngb-alert *ngIf="restaurantMenu.length == 0" [dismissible]="false">
         Menu currently empty! Please check again at a later time.
       </ngb-alert>
       <div class="col">
         <div class="row">
-          <div *ngFor="let dish of restaurantMenu" class="col-sm-4 d-flex">
-            <app-dish-card
-              [dish]="dish"
-              [restaurantId]="restaurantId"
-            ></app-dish-card>
+          <div *ngFor="let dish of restaurantMenu">
+            <div
+              *ngIf="dish.category.toLowerCase() == tab.toLowerCase()"
+              class="col-sm-4 d-flex"
+            >
+              <app-dish-card [dish]="dish"></app-dish-card>
+            </div>
           </div>
         </div>
       </div>

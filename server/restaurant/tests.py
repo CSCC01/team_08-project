@@ -160,9 +160,30 @@ class FoodTestCases(TestCase):
 
     def setUp(self):
         """ Load food document """
+        self.restaurant = Restaurant.objects.create(    **{
+            '_id': '222222222222222222222222',
+            'name': 'Winnies lambs',
+            'address': '211 chicago',
+            'phone': 6475040680,
+            'city': 'Chicago',
+            'email': 'winnie@gmail.com',
+            'cuisine': 'asina fusion',
+            'pricepoint': 'High',
+            'twitter': MOCK_VALID_LINK,
+            'instagram': MOCK_VALID_LINK,
+            'bio': 'Finger licking good chicken',
+            'external_delivery_link': MOCK_VALID_LINK,
+            'cover_photo_url': MOCK_VALID_LINK,
+            'logo_url': MOCK_VALID_LINK,
+            'rating': '3.00',
+            'owner_name': 'Colonel Lam',
+            'owner_story': 'lambs are a thing',
+            'owner_picture_url': '',  # test for blank image url validity
+            'categories': []
+        })
         self.foodA = Food.objects.create(name="foodA", restaurant_id="111111111111111111111111", description="descripA", picture="picA",
                                          price='10.99', category='Lunch')
-        self.foodB = Food.objects.create(name="foodB", restaurant_id="restB", description="descripB", picture="picB",
+        self.foodB = Food.objects.create(name="foodB", restaurant_id="222222222222222222222222", description="descripB", picture="picB",
                                          price='20.99')
         self.expected = {
             '_id': '111111111111111111111111',

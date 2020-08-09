@@ -34,6 +34,7 @@ export class RestaurantPageComponent implements OnInit {
   reviews: any[] = [];
   restaurantDetails: any;
   restaurantMenu: any[] = [];
+  categories: string[] = [];
 
   totalStars = 5;
   faMapMarker = faMapMarkerAlt;
@@ -67,6 +68,7 @@ export class RestaurantPageComponent implements OnInit {
     this.restaurantsService.getRestaurant(this.restaurantId).subscribe(
       (data) => {
         this.restaurantDetails = data;
+        this.categories = data.categories;
       },
       (error) => {
         this.error = true;
