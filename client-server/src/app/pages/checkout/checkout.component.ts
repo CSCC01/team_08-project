@@ -7,6 +7,8 @@ import { OrdersService } from 'src/app/service/orders.service';
 import { RestaurantsService } from 'src/app/service/restaurants.service';
 import { StaticSymbol } from '@angular/compiler';
 import { windowWhen } from 'rxjs/operators';
+import { orderUtils } from '../../utils/orders';
+import { generalUtils } from '../../utils/general';
 
 @Component({
   selector: 'app-checkout',
@@ -15,11 +17,19 @@ import { windowWhen } from 'rxjs/operators';
 })
 export class CheckoutComponent implements OnInit {
   userId: string = '';
+//   needed for order history card
+  userName: string = '';
+  userAddress: string= '';
+  userPhone: string = '';
   cartId: string = '';
   restaurantId: string = '';
 
   cartItems: any[] = [];
   foodIds = new Map();
+
+  cartHistory: any[] = [];
+  restaurantsCollected : any[] = [];
+  restaurantFood = new Map();
 
   total: number = 0;
 
@@ -41,14 +51,20 @@ export class CheckoutComponent implements OnInit {
         data.address == '' ||
         data.address == null ||
         data.phone == '' ||
-        data.address == null
+        data.phone == null
       ) {
         alert('Please complete your details to place an order!');
         this.router.navigate(['/profile']);
+      }else{
+          this.userPhone = data.phone;
+          this.userName = data.name;
+          this.userAddress = data.address;
       }
     });
 
     this.loadCart();
+    this.loadOrderHistory(this.userId);
+    this.cartHistory.sort(orderUtils.OrderStatusComparator);
   }
 
   loadCart() {
@@ -85,6 +101,49 @@ export class CheckoutComponent implements OnInit {
             });
         });
       }
+    });
+  }
+
+  loadOrderHistory(userId){
+      
+    this.orderService.getCarts(userId, true).subscribe((response) =>{
+        if(response.carts){
+            // for each cart
+            response.carts.forEach((cart) => {
+
+                cart.dishes = [];
+
+                // add the cart's restaurant id to the list of restaurants for which we have collected food data
+                this.restaurantsCollected.push(cart.restaurant_id);
+                // get the associated food items
+                this.restaurantsService.getRestaurantFood(cart.restaurant_id).subscribe((dishes) => {
+                    // for each dish, make it accessible by id from restaurantFood map
+                    dishes.Dishes.forEach((dish) => {
+                        this.restaurantFood.set(dish._id, dish);
+                    });
+                    // get the cart's items after the food has been loaded
+                    this.getCartItems(cart);
+                });
+                cart.name = this.userName;
+                cart.address = this.userAddress;
+                cart.phone = this.userPhone;
+                cart.user_email = this.userId;
+                cart.id = generalUtils.shortenID(cart._id);
+                this.cartHistory.push(cart);
+            })
+        }
+    })
+  }
+
+//   gets a cart's items and pushes them onto cart
+  getCartItems(cart){
+    this.orderService.getCartItems(cart._id).subscribe((data) => {
+        data.items.forEach((item) =>{
+            let food = this.restaurantFood.get(item.food_id);
+            // push the cart item onto the history
+            item.dish_name = food.name;
+            cart.dishes.push(item);
+        })
     });
   }
 

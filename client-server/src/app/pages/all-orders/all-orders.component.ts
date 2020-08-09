@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { RestaurantsService } from '../../service/restaurants.service';
 import { OrdersService } from '../../service/orders.service';
 import { LoginService } from '../../service/login.service';
+import { generalUtils } from '../../utils/general';
 
 @Component({
   selector: 'app-all-orders',
@@ -67,8 +68,11 @@ export class AllOrdersComponent implements OnInit {
       this.loginService
         .getUser({ email: this.orders[i].user_email })
         .subscribe((data) => {
+            console.log("address");
           this.orders[i].name = data.name;
           this.orders[i].phone = data.phone;
+          this.orders[i].address = data.address;
+         
         });
     }
   }
@@ -103,7 +107,7 @@ export class AllOrdersComponent implements OnInit {
 
   shortenOrderID(): void {
     for (let i = 0; i < this.orders.length; i++) {
-      this.orders[i].id = this.orders[i]._id.slice(-6);
+      this.orders[i].id = generalUtils.shortenID(this.orders[i]._id);
     }
   }
 

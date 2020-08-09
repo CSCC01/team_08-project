@@ -113,9 +113,9 @@ class Cart(models.Model):
 
     def users_sent_carts(self, user_email):
         """
-        gets the user's current sent but non-closed carts
+        gets the user's current sent carts
         """
-        carts = list(Cart.objects.filter(user_email= user_email, complete_tstmp= None).exclude(send_tstmp= None))
+        carts = list(Cart.objects.filter(user_email= user_email).exclude(send_tstmp= None))
         return carts
 
     def restaurants_carts(self, restaurant_id):
