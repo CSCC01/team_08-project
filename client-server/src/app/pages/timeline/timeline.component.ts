@@ -1,8 +1,4 @@
-import {
-  Component,
-  OnInit,
-  ɵCompiler_compileModuleSync__POST_R3__,
-} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';

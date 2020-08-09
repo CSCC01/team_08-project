@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { faSearch, faTshirt } from '@fortawesome/free-solid-svg-icons';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { RestaurantsService } from '../../service/restaurants.service';
 import { geolocation } from '../../utils/geolocation';
 
@@ -34,25 +34,32 @@ export class AllRestaurantsComponent implements OnInit {
 
   loadRestaurants() {
     this.restaurantsService.listRestaurants().subscribe((data) => {
-        this.restaurants = data.Restaurants;
-        this.allRestaurants = data.Restaurants;
-      navigator.geolocation.getCurrentPosition(
-        (positon) => {
-            for (var i = 0; i < this.restaurants.length; i++) {
-                var index = this.restaurants[i];
-                
-                if(index.GEO_location != 'blank' && index.GEO_location != ''){
-                    var GEOJson = JSON.parse(index.GEO_location.replace(/\'/g, '"'));
-                    if (GEOJson[this.LONGITUDE_PROPERTY_NAME] != undefined && GEOJson[this.LATITUDE_PROPERTY_NAME] != undefined) {
-                        this.restaurants[i].distanceFromUser = geolocation.haversineDistance(GEOJson[this.LATITUDE_PROPERTY_NAME], GEOJson[this.LONGITUDE_PROPERTY_NAME], positon.coords.latitude, positon.coords.longitude);
-                    }
-                }
+      this.restaurants = data.Restaurants;
+      this.allRestaurants = data.Restaurants;
+      navigator.geolocation.getCurrentPosition((positon) => {
+        for (var i = 0; i < this.restaurants.length; i++) {
+          var index = this.restaurants[i];
+
+          if (index.GEO_location != 'blank' && index.GEO_location != '') {
+            var GEOJson = JSON.parse(index.GEO_location.replace(/\'/g, '"'));
+            if (
+              GEOJson[this.LONGITUDE_PROPERTY_NAME] != undefined &&
+              GEOJson[this.LATITUDE_PROPERTY_NAME] != undefined
+            ) {
+              this.restaurants[
+                i
+              ].distanceFromUser = geolocation.haversineDistance(
+                GEOJson[this.LATITUDE_PROPERTY_NAME],
+                GEOJson[this.LONGITUDE_PROPERTY_NAME],
+                positon.coords.latitude,
+                positon.coords.longitude
+              );
             }
-            this.restaurants = this.sortClosestCurrentLoc(this.restaurants);
-            this.allRestaurants = this.restaurants;
+          }
         }
-      )
-       
+        this.restaurants = this.sortClosestCurrentLoc(this.restaurants);
+        this.allRestaurants = this.restaurants;
+      });
     });
   }
 
@@ -95,21 +102,21 @@ export class AllRestaurantsComponent implements OnInit {
     }
   }
 
-  sortClosestCurrentLoc(restaurants: Array<any>){
+  sortClosestCurrentLoc(restaurants: Array<any>) {
     return restaurants.sort((rest1, rest2) => {
-        let result = 0;
-        let valid1 = rest1.hasOwnProperty('distanceFromUser');
-        let valid2 = rest2.hasOwnProperty('distanceFromUser');
-        if(!valid1 && valid2) return 0;
-        // if only one is invalid, return a really high weight in direction of the valid one
-        if(!valid1){
-            return 1000;
-        }
-        if(!valid2){
-            return -1000;
-        }
-        return rest1.distanceFromUser - rest2.distanceFromUser;
-    })
+      let result = 0;
+      let valid1 = rest1.hasOwnProperty('distanceFromUser');
+      let valid2 = rest2.hasOwnProperty('distanceFromUser');
+      if (!valid1 && valid2) return 0;
+      // if only one is invalid, return a really high weight in direction of the valid one
+      if (!valid1) {
+        return 1000;
+      }
+      if (!valid2) {
+        return -1000;
+      }
+      return rest1.distanceFromUser - rest2.distanceFromUser;
+    });
   }
 
   filterPricepoint(list) {

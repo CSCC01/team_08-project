@@ -30,7 +30,7 @@ export class ProfileComponent implements OnInit {
     public auth: AuthService,
     private loginService: LoginService,
     private modalService: NgbModal,
-    private formBuilder: FormBuilder,
+    private formBuilder: FormBuilder
   ) {}
 
   ngOnInit() {
@@ -45,10 +45,9 @@ export class ProfileComponent implements OnInit {
     this.modalRef = this.modalService.open(content);
   }
 
-
   updateProfile() {
-
-    let birthday =  (<HTMLInputElement>document.getElementById('dateOfBirth')).value;
+    let birthday = (<HTMLInputElement>document.getElementById('dateOfBirth'))
+      .value;
 
     var userInfo = {
       email: this.userId,
@@ -56,34 +55,36 @@ export class ProfileComponent implements OnInit {
       address: (<HTMLInputElement>document.getElementById('address')).value,
       phone: (<HTMLInputElement>document.getElementById('phone')).value,
       birthday: birthday,
-      age: birthday
+      age: birthday,
     };
     sessionStorage.setItem('userAddress', userInfo.address);
 
     // clear formErrors
     this.validator.clearAllErrors();
     //validate all formfields, the callback will throw appropriate errors, return true if any validation failed
-    let failFlag = this.validator.validateAll(userInfo, (key) => this.validator.setError(key));
+    let failFlag = this.validator.validateAll(userInfo, (key) =>
+      this.validator.setError(key)
+    );
     //if any validation failed, do not POST
-    if (!failFlag){
+    if (!failFlag) {
       this.loginService.editUser(userInfo).subscribe((data) => {
         //if response is invalid, populate the errors
-        if(data && formValidation.isInvalidResponse(data)){
-            formValidation.HandleInvalid(data, (key) => this.validator.setError(key))
-        }else{
+        if (data && formValidation.isInvalidResponse(data)) {
+          formValidation.HandleInvalid(data, (key) =>
+            this.validator.setError(key)
+          );
+        } else {
           if (this.newImage) {
             this.onSubmit();
-          }
-          else{
-              this.modalRef.close();
-              setTimeout(function () {
-                window.location.reload();
-              }, 100);
+          } else {
+            this.modalRef.close();
+            setTimeout(function () {
+              window.location.reload();
+            }, 100);
           }
           this.getUserInfo();
         }
       });
-      
     }
   }
 
@@ -91,6 +92,10 @@ export class ProfileComponent implements OnInit {
     this.loginService.getUser({ email: this.userId }).subscribe((data) => {
       this.userData = data;
     });
+  }
+
+  viewAllOrders() {
+    this.router.navigate(['all-transactions']);
   }
 
   onFileSelect(event) {
