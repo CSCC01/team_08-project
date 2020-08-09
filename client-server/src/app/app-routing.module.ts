@@ -19,6 +19,7 @@ import { CheckoutComponent } from './pages/checkout/checkout.component';
 import { FavouritesComponent } from './pages/favourites/favourites.component';
 import { AllOwnersComponent } from './pages/all-owners/all-owners.component';
 import { AllOrdersComponent } from './pages/all-orders/all-orders.component';
+import { AllTransactionsComponent } from '../app/pages/all-transactions/all-transactions.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -46,6 +47,7 @@ const routes: Routes = [
   { path: 'favourites', component: FavouritesComponent },
   { path: 'all-owners', component: AllOwnersComponent },
   { path: 'all-orders', component: AllOrdersComponent },
+  { path: 'all-transactions', component: AllTransactionsComponent },
   { path: '**', redirectTo: '' },
 ];
 

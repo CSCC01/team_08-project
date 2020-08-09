@@ -50,6 +50,7 @@ import { AllOwnersComponent } from './pages/all-owners/all-owners.component';
 import { DynamicLabelComponent } from './components/dynamic-label/dynamic-label.component';
 import { AllOrdersComponent } from './pages/all-orders/all-orders.component';
 import { AllOrderCardComponent } from './components/all-order-card/all-order-card.component';
+import { AllTransactionsComponent } from './pages/all-transactions/all-transactions.component';
 
 @NgModule({
   declarations: [
@@ -86,7 +87,8 @@ import { AllOrderCardComponent } from './components/all-order-card/all-order-car
     AllOwnersComponent,
     DynamicLabelComponent,
     AllOrdersComponent,
-    AllOrderCardComponent
+    AllOrderCardComponent,
+    AllTransactionsComponent
   ],
   imports: [
     BrowserModule,
