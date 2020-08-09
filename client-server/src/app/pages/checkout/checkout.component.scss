@@ -26,3 +26,32 @@
   width: 200px;
   border-radius: 10px;
 }
+
+.card-wrapper {
+  width: 900px;
+  position: relative;
+
+  @media screen and (max-width: 1000px) {
+    width: auto;
+  }
+}
+
+.trashBtn {
+  z-index: 99;
+  margin: 0;
+  padding: 0;
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  left: 20px;
+}
+
+.trashBtn:hover {
+  fa-icon {
+    color: $secondary-color;
+  }
+}
+
+.clear-cart {
+  width: 200px;
+}

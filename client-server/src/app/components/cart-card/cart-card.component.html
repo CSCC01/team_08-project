@@ -1,7 +1,7 @@
 <div *ngIf="dish" class="card cardBox">
   <div class="row">
     <div class="col-md-4">
-      <img class="dish-photo" src="{{ dish.photo }}" />
+      <img class="dish-photo" src="{{ dish.picture }}" />
     </div>
     <div class="info-body col-md-4">
       <h3 class="info">{{ dish.name | titlecase }}</h3>
@@ -13,10 +13,11 @@
       <div class="number-picker">
         <ng-number-picker
           [(value)]="value"
-          value="{{ dish.quantity }}"
+          (valueChange)="changeQuantity()"
         ></ng-number-picker>
       </div>
-      <h3 class="total">Total: {{ dish.total }}</h3>
+      <button class="btn" (click)="saveNewAmount()">SAVE</button>
+      <h3 class="total">Total: ${{ total }}</h3>
     </div>
   </div>
 </div>

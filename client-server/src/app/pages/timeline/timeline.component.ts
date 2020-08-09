@@ -104,7 +104,7 @@ export class TimelineComponent implements OnInit {
       };
 
       this.timeline.createPost(postObj).subscribe((data) => {
-        this.posts.push(data);
+        this.posts.unshift(data);
         this.postModalRef.close();
       });
 

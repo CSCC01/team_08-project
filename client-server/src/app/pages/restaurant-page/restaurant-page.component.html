@@ -214,7 +214,10 @@
       <div class="col">
         <div class="row">
           <div *ngFor="let dish of restaurantMenu" class="col-sm-4 d-flex">
-            <app-dish-card [dish]="dish"></app-dish-card>
+            <app-dish-card
+              [dish]="dish"
+              [restaurantId]="restaurantId"
+            ></app-dish-card>
           </div>
         </div>
       </div>
