@@ -79,11 +79,13 @@ def delete_post_page(request):
 def get_all_posts_page(request):
     """ retrieve list of restaurants from database """
     posts = list(TimelinePost.objects.all())
+    posts = sort(posts)
     response = {'Posts': []}
     for post in posts:
         time_stamp = {'Timestamp': post.Timestamp.strftime("%b %d, %Y %H:%M")}
         response['Posts'].append(model_to_json(post, time_stamp))
     return JsonResponse(response)
+
 
 def upload_comment_page(request):
     """Upload post into post timeline post table"""
@@ -113,6 +115,7 @@ def get_post_by_restaurant_page(request):
     """Retrieve all posts from a restaurant"""
     rest_id = request.GET.get('restaurant_id')
     posts = list(TimelinePost.objects.filter(restaurant_id=rest_id))
+    posts = sort(posts)
     response = {'Posts': []}
     for post in posts:
         time_stamp = {'Timestamp': post.Timestamp.strftime("%b %d, %Y %H:%M")}
@@ -141,6 +144,16 @@ def remove_comment_from_post(post, comment_id):
     post.comments.remove(comment_id)
     post.save(update_fields=['comments'])
     return post
+
+
+def sort(posts):
+    """
+    sort posts
+    @param posts: list to be sorted
+    @return: sorted list of posts by timestamp
+    """
+    posts.sort(key=lambda x: x.Timestamp, reverse=True)
+    return posts
 
 
 def get_comment_data_page(request):

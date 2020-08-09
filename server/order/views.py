@@ -5,7 +5,7 @@ from jsonschema import validate
 import json
 from .order_state import OrderStates
 from django.core.exceptions import ObjectDoesNotExist
-from utils.model_util import model_to_json
+from utils.model_util import model_to_json, models_to_json
 
 # jsonschema validation schemes
 cart_schema = {
@@ -47,9 +47,7 @@ def get_restaurant_carts_page(request):
     """
     restaurant_id = request.GET.get('restaurant_id')
     carts = Cart.restaurants_carts(Cart, restaurant_id)
-    carts_dict = {'carts': []}
-    for cart in carts:
-        carts_dict['carts'].append(model_to_json(cart))
+    carts_dict = {'carts': models_to_json(carts)}
     return JsonResponse(carts_dict)
 
 
@@ -63,9 +61,7 @@ def get_users_cart_page(request):
         user_id = request.GET.get('user_email')
         if is_sent(request.GET.get('is_sent')):
             carts = Cart().users_sent_carts(user_id)
-            carts_dict = {'carts': []}
-            for cart in carts:  # serialize carts
-                carts_dict['carts'].append(model_to_json(cart))
+            carts_dict = {'carts': models_to_json(carts)}  # serialize carts
             return JsonResponse(carts_dict)
         else:
             cart = Cart().users_active_cart(user_id)
@@ -158,7 +154,7 @@ def edit_item_amount_page(request):
 def get_items_by_cart_page(request):
     """Get all items associated with a given cart"""
     items = Item.get_items_by_cart(request.GET['cart_id'])
-    items = [model_to_json(item) for item in items]
+    items = models_to_json(items)
     return JsonResponse({'items': items})
 
 

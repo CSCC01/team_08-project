@@ -61,7 +61,5 @@ def models_to_json(iterable):
     @param iterable: iterable of models
     @return: list of serialized models
     """
-    models = []
-    for model in iterable:
-        models.append(model_to_json(model))
+    models = list(map(models_to_json, iterable))
     return models
