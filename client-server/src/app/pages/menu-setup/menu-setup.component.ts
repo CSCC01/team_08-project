@@ -3,6 +3,9 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { RestaurantsService } from '../../service/restaurants.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { formValidation } from "../../validation/forms";
+import { dishValidator } from '../../validation/dishValidator';
+import { formValidator } from '../../validation/formValidator';
 
 @Component({
   selector: 'app-menu-setup',
@@ -15,6 +18,7 @@ export class MenuSetupComponent implements OnInit {
   role: string = '';
 
   uploadForm: FormGroup;
+  validator: formValidator = new dishValidator();
   newImage: boolean = false;
 
   modalRef: any;
@@ -64,46 +68,54 @@ export class MenuSetupComponent implements OnInit {
   }
 
   addDish() {
-    if (
-      this.dishName == '' ||
-      this.price == '' ||
-      this.menuCategory == '' ||
-      this.cuisine == '' ||
-      this.dishInfo == '' ||
-      this.allergy == ''
-    ) {
-      alert('Please enter requried information about the dish!');
-    } else {
-      if (!isNaN(Number(this.price))) {
+
+    // only used for form validation
+    var validationInfo = {
+        name: this.dishName,
+        price: this.price,
+        menuCategory: this.menuCategory,
+        cuisine: this.cuisine,
+        dishInfo: this.dishInfo,
+        allergy: this.allergy
+    }
+
+    this.validator.clearAllErrors();
+    let failFlag = this.validator.validateAll(validationInfo, (key) => this.validator.setError(key));
+
+    if ( ! failFlag) {
+
         const price: number = +this.price;
+
         var dishInfo = {
-          name: this.dishName,
-          restaurant_id: this.restaurantId,
-          description: this.dishInfo,
-          picture: '',
-          price: price.toFixed(2),
-          specials: '',
-        };
+            name: this.dishName,
+            restaurant_id: this.restaurantId,
+            description: this.dishInfo,
+            category: this.menuCategory,
+            picture: '',
+            price: price.toFixed(2),
+            specials: '',
+          };
 
         this.restaurantsService.createDish(dishInfo).subscribe((data) => {
-          if (this.newImage) {
-            this.onSubmit(data._id);
-          } else {
-            this.dishes.push(data);
+            if(data && formValidation.isInvalidResponse(data)){
+                formValidation.HandleInvalid(data, (key) => this.validator.setError(key))
+            }else{
+                if (this.newImage) {
+                    this.onSubmit(data._id);
+                }else{
+                    this.dishes.push(data);
+                    this.dishName = '';
+                    this.price = '';
+                    this.menuCategory = '';
+                    this.cuisine = '';
+                    this.dishInfo = '';
+                    this.allergy = '';
+                }
+                this.modalRef.close();
           }
         });
 
-        this.dishName = '';
-        this.price = '';
-        this.menuCategory = '';
-        this.cuisine = '';
-        this.dishInfo = '';
-        this.allergy = '';
 
-        this.modalRef.close();
-      } else {
-        alert('Please enter a valid price!');
-      }
     }
   }
 

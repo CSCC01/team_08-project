@@ -5,7 +5,7 @@
 </h2>
 
 <div *ngIf="role == 'RO' && posts.length != 0" style="text-align: center;">
-  <button class="btn new-post" (click)="openPostModal(postModal)">
+  <button class="btn new-post" (click)="openPostModal(postModal)" placement="top" ngbTooltip="Add a Post">
     NEW POST
   </button>
 </div>
@@ -19,6 +19,7 @@
     *ngIf="role == 'RO'"
     class="btn convo-start"
     (click)="openPostModal(postModal)"
+    placement="top" ngbTooltip="Add a Post"
   >
     START A CONVERSATION
   </button>
@@ -38,6 +39,7 @@
     <button
       class="btn trashBtn"
       (click)="openDeleteModal(deleteModal, post._id, i)"
+      placement="top" ngbTooltip="Delete The Post"
     >
       <fa-icon [icon]="faTrash"></fa-icon>
     </button>

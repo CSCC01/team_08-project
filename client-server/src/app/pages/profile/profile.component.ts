@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../auth/auth.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LoginService } from 'src/app/service/login.service';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
+import { formValidation } from '../../validation/forms';
+import { userValidator } from '../../validation/userValidator';
+import { formValidator } from '../../validation/formValidator';
 
 @Component({
   selector: 'app-profile',
@@ -19,6 +22,7 @@ export class ProfileComponent implements OnInit {
 
   uploadForm: FormGroup;
   newImage: boolean = false;
+  validator: formValidator = new userValidator();
 
   constructor(
     private route: ActivatedRoute,
@@ -26,7 +30,7 @@ export class ProfileComponent implements OnInit {
     public auth: AuthService,
     private loginService: LoginService,
     private modalService: NgbModal,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
   ) {}
 
   ngOnInit() {
@@ -37,50 +41,49 @@ export class ProfileComponent implements OnInit {
       file: [''],
     });
   }
-
   openEditModal(content) {
     this.modalRef = this.modalService.open(content);
   }
 
+
   updateProfile() {
+
+    let birthday =  (<HTMLInputElement>document.getElementById('dateOfBirth')).value;
+
     var userInfo = {
       email: this.userId,
       name: (<HTMLInputElement>document.getElementById('name')).value,
       address: (<HTMLInputElement>document.getElementById('address')).value,
       phone: (<HTMLInputElement>document.getElementById('phone')).value,
-      birthday: (<HTMLInputElement>document.getElementById('dateOfBirth'))
-        .value,
+      birthday: birthday,
+      age: birthday
     };
     sessionStorage.setItem('userAddress', userInfo.address);
 
-    if (userInfo.birthday == '') {
-      userInfo.birthday = null;
-    }
-    if (userInfo.phone == '') {
-      userInfo.phone = null;
-    }
-
-    if (
-      (userInfo.phone != null && userInfo.phone.length != 10) ||
-      (userInfo.birthday != null &&
-        !userInfo.birthday.match('^\\d{4}-\\d{2}-\\d{2}$')) ||
-      !userInfo.name
-    ) {
-      alert(
-        'Please ensure formats are proper. Name should not empty, phone numbers should be 10 digits with no dashes and birthday should be YYYY-MM-DD'
-      );
-    } else {
+    // clear formErrors
+    this.validator.clearAllErrors();
+    //validate all formfields, the callback will throw appropriate errors, return true if any validation failed
+    let failFlag = this.validator.validateAll(userInfo, (key) => this.validator.setError(key));
+    //if any validation failed, do not POST
+    if (!failFlag){
       this.loginService.editUser(userInfo).subscribe((data) => {
-        if (this.newImage) {
-          this.onSubmit();
+        //if response is invalid, populate the errors
+        if(data && formValidation.isInvalidResponse(data)){
+            formValidation.HandleInvalid(data, (key) => this.validator.setError(key))
+        }else{
+          if (this.newImage) {
+            this.onSubmit();
+          }
+          else{
+              this.modalRef.close();
+              setTimeout(function () {
+                window.location.reload();
+              }, 100);
+          }
+          this.getUserInfo();
         }
-        this.getUserInfo();
       });
-
-      this.modalRef.close();
-      setTimeout(function () {
-        window.location.reload();
-      }, 100);
+      
     }
   }
 

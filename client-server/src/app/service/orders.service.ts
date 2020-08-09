@@ -113,6 +113,34 @@ export class OrdersService {
     };
     return this.http.post<any>(endpoint, obj);
   }
+  
+  /*
+  @Input: A restaurant ID
+  @Output: All orders for a particular restaruant
+
+  Get all orders by restaurant
+  */
+  getOrdersbyRestaurant(restaurantId): Observable<any> {
+    const endpoint = `${OrdersService.ORDER_ENDPOINT}/cart/restaurant_carts/`;
+    var params = {
+      restaurant_id: restaurantId,
+    };
+    return this.http.get(endpoint, { params: params });
+  }
+
+  /*
+  @Input: A cart ID
+  @Output: All items for a cart
+
+  Get all items in a cart
+  */
+  getItembyCart(cartId): Observable<any> {
+    const endpoint = `${OrdersService.ORDER_ENDPOINT}/item/get_by_cart/`;
+    var params = {
+      cart_id: cartId,
+    };
+    return this.http.get(endpoint, { params: params });
+  }
 
   /*
   @Input: Object with cart id to update and status (snd, cmt, acc)
@@ -125,6 +153,20 @@ export class OrdersService {
     const obj = {
       _id: cartId,
       status: status,
+    };
+    return this.http.post<any>(endpoint, obj);
+  }
+
+  /*
+  @Input: A cart ID and a boolean for status
+  @Output: None
+
+  Updates the status of the cart
+  */
+  cancelCart(cartId): Observable<any> {
+    const endpoint = `${OrdersService.ORDER_ENDPOINT}/cart/cancel/`;
+    const obj = {
+      _id: cartId,
     };
     return this.http.post<any>(endpoint, obj);
   }

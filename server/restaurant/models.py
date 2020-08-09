@@ -1,6 +1,8 @@
 from django.forms import model_to_dict
 from djongo import models
 from bson import ObjectId
+
+from geo.geo_controller import geocode
 from restaurant.cuisine_dict import load_dict
 from cloud_storage import cloud_controller
 from restaurant.enum import Prices, Categories
@@ -182,7 +184,7 @@ class Restaurant(models.Model):
     twitter = models.CharField(max_length=200, blank=True)
     instagram = models.CharField(max_length=200, blank=True)
     bio = models.TextField(null=True)
-    GEO_location = models.CharField(max_length=200)
+    GEO_location = models.CharField(blank=True, max_length=200)
     external_delivery_link = models.CharField(max_length=200, blank=True)
     cover_photo_url = models.CharField(max_length=200,
                                        default='https://storage.googleapis.com/default-assets/cover.jpg')
@@ -264,6 +266,13 @@ class Restaurant(models.Model):
         if 'phone' in fields and fields['phone'] is not None:
             if len(str(fields['phone'])) != 10:
                 invalid['Invalid'].append('phone')
+
+        if 'address' in fields:
+            try:
+                geocode(fields['address'])
+            except ValueError:
+                invalid['Invalid'].append('address')
+
         if len(invalid['Invalid']) == 0:
             return None
         else:
