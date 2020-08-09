@@ -1,0 +1,14 @@
+<div class="order-page">
+  <div class="order-box">
+    <h2>Order History</h2>
+    <div *ngIf="cartHistory.length > 0">
+      <div *ngFor="let order of cartHistory">
+        <app-all-order-card [order]="order"></app-all-order-card>
+      </div>
+      <img
+        class="bottom-left"
+        src="../../../assets/images/undraw_shopping.png"
+      />
+    </div>
+  </div>
+</div>

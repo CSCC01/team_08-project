@@ -1,0 +1,57 @@
+@import "src/styles";
+
+.order-box {
+  background: hsl(0, 0%, 96%);
+  border: 1px solid #dddddd;
+  box-sizing: border-box;
+  border-radius: 10px;
+  text-align: center;
+  margin: 40px auto 40px auto;
+  width: 900px;
+  padding: 20px 20px 20px 20px;
+
+  @media screen and (max-width: 1000px) {
+    width: auto;
+  }
+}
+
+.total {
+  font-size: 25px;
+  font-style: normal;
+  font-weight: normal;
+  margin-bottom: 10px;
+}
+
+.place-order {
+  width: 200px;
+  border-radius: 10px;
+}
+
+.card-wrapper {
+  width: 900px;
+  position: relative;
+
+  @media screen and (max-width: 1000px) {
+    width: auto;
+  }
+}
+
+.trashBtn {
+  z-index: 99;
+  margin: 0;
+  padding: 0;
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  left: 20px;
+}
+
+.trashBtn:hover {
+  fa-icon {
+    color: $secondary-color;
+  }
+}
+
+.clear-cart {
+  width: 200px;
+}
