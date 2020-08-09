@@ -48,7 +48,6 @@ export class AllRestaurantsComponent implements OnInit {
                     }
                 }
             }
-            console.log(this.restaurants);
             this.restaurants = this.sortClosestCurrentLoc(this.restaurants);
             this.allRestaurants = this.restaurants;
         }
