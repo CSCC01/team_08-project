@@ -5,12 +5,10 @@
       <p class="body-text"><b>Name:</b> {{ order.name }}</p>
       <p class="body-text"><b>Email:</b> {{ order.user_email }}</p>
       <p class="body-text"><b>Phone Number:</b> {{ order.phone }}</p>
+      <p class="body-text"><b>Address:</b> {{ order.address }}</p>
       <br />
     </div>
     <div class="order col-md-6">
-      <div class="orders" *ngFor="let dish of order.dishes">
-        <p class="dishes">{{ dish.count }} x {{ dish.dish_name }}</p>
-      </div>
       <div *ngIf="order.complete_tstmp">
         <h3>Completed</h3>
       </div>
@@ -19,6 +17,9 @@
       </div>
       <div *ngIf="!order.complete_tstmp && !order.accept_tstmp">
         <h3>New Order</h3>
+      </div>
+      <div class="orders" *ngFor="let dish of order.dishes">
+        <p class="dishes">{{ dish.count }} x {{ dish.dish_name }}</p>
       </div>
     </div>
   </div>

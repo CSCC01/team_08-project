@@ -74,6 +74,7 @@ export class RestuarantDashboardComponent implements OnInit {
         .subscribe((data) => {
           this.orders[i].name = data.name;
           this.orders[i].phone = data.phone;
+          this.orders[i].address = data.address;
         });
     }
   }
