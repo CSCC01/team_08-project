@@ -53,3 +53,15 @@ def update_model_geo(model, address):
     except ValueError:
         pass
     return model
+
+
+def models_to_json(iterable):
+    """
+    serialize iterable of models
+    @param iterable: iterable of models
+    @return: list of serialized models
+    """
+    models = []
+    for model in iterable:
+        models.append(model_to_json(model))
+    return models

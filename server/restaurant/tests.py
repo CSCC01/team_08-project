@@ -199,7 +199,7 @@ class FoodTestCases(TestCase):
                                                                      }, content_type="application/json")
         actual = json.loads(view_response.insert_dish_page(request).content)
         expected = Food(_id=actual['_id'], name="foodC", restaurant_id="111111111111111111111111", description="descripC",
-                        picture=MOCK_VALID_LINK,
+                        picture='https://storage.googleapis.com/default-assets/no-image.png',
                         price='10.99', category='')
         self.assertDictEqual(model_to_dict(expected), actual)
 

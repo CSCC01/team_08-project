@@ -30,14 +30,13 @@ class Food(models.Model):
     class Meta:
         unique_together = (("name", "restaurant_id"),)
 
-    @classmethod
-    def is_tagged(cls, tag):
+    def is_tagged(self, tag):
         """
         check if food is tagged with tag 'tag'
         @param tag: referenced tag
         @return: boolean
         """
-        return tag._id in cls.tags
+        return tag._id in self.tags
 
     @classmethod
     def add_dish(cls, food_data):
@@ -56,23 +55,11 @@ class Food(models.Model):
         )
         save_and_clean(dish)
         restaurant = Restaurant.objects.get(_id=food_data['restaurant_id'])
-        if restaurant.is_new_category(food_data['category']):
+        if not restaurant.is_new_category(food_data['category']):
             restaurant.categories.append(food_data['category'])
             restaurant.save(update_fields=['categories'])
         return dish
 
-    @classmethod
-    def get_all(cls):
-        """
-        retrieve list of restaurants from database
-        :return: return list of restaurant json data wrapped in dictionary
-        """
-        response = {'Dishes': []}
-        for food in list(Food.objects.all()):
-            food._id = str(food._id)
-            food.tags = list(map(str, food.tags))
-            response['Dishes'].append(model_to_dict(food))
-        return response
 
     @classmethod
     def get_by_restaurant(cls, rest_id):
@@ -105,13 +92,12 @@ class Food(models.Model):
         else:
             return invalid
 
-    @classmethod
-    def clean_description(cls):
-        description = {food for food in cls.desription.split(' ')}
-        clean_description = {}
-        for word in description:  # clean word, remove no alpha
+    def clean_description(self):
+        description = {food for food in self.description.split(' ')}
+        clean_description = set()
+        for word in description:  # clean word, remove non alphabetical
             clean_description.add(''.join(e for e in word if e.isalpha()))
-        clean_description.lower()
+        clean_description = set(map(str.lower, clean_description))
         return clean_description
 
 
@@ -138,14 +124,13 @@ class ManualTag(models.Model):
         food.tags = []
         food.save()
 
-    @classmethod
-    def remove_food(cls, food_id):
+    def remove_food(self, food_id):
         """
         remove food_id from tag
         @param food_id: referenced food_id
         """
-        cls.tags.remove(food_id)
-        cls.save()
+        self.foods.remove(food_id)
+        self.save()
 
     @classmethod
     def add_tag(cls, food_name, restaurant_id, category, value):
@@ -160,7 +145,7 @@ class ManualTag(models.Model):
         food = Food.objects.get(name=food_name,
                                 restaurant_id=restaurant_id)
         if not ManualTag.tag_exists(value, category):
-            tag = cls(value=value, category=category, foods=[])
+            tag = cls(value=value, category=category, foods=[food._id])
             save_and_clean(tag)
             return tag
 
@@ -195,7 +180,7 @@ class ManualTag(models.Model):
     def tag_description(cls, keywords, dish):
         tags = []
         for keyword in keywords:
-            tags.append(cls.add_tag(dish.name), dish.restuarant_id, Categories.DI.name, keyword)
+            tags.append(cls.add_tag(dish.name, dish.restaurant_id, Categories.DI.name, keyword))
         return tags
 
 
@@ -236,14 +221,13 @@ class Restaurant(models.Model):
     owner_picture_url = models.CharField(max_length=200, blank=True)
     categories = models.ListField(default=[], blank=True)
 
-    @classmethod
-    def is_new_category(cls, category):
+    def is_new_category(self, category):
         """
         Check whether category is new
         @param category: referenced category
         @return: boolean
         """
-        return category in cls.categories
+        return category in self.categories
 
     @classmethod
     def get(cls, _id):

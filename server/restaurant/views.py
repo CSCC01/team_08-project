@@ -1,9 +1,8 @@
 from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
 from restaurant.models import Food, ManualTag, Restaurant
-from django.forms.models import model_to_dict
 from jsonschema import validate
 import json
-from utils.model_util import model_to_json, save_and_clean, edit_model, update_model_geo
+from utils.model_util import model_to_json, save_and_clean, edit_model, update_model_geo, models_to_json
 
 # jsonschema validation schemes
 food_schema = {
@@ -28,7 +27,7 @@ tag_schema = {
         "category": {"type": "string"},
         "foods": {"type": "array",
                   "items": {"type": "string"}
-                  }
+                }
     }
 }
 
@@ -85,19 +84,15 @@ def get_dish_by_restaurant_page(request):
     """Retrieve all dishes from a restaurant"""
     rest_id = request.GET.get('restaurant_id')
     dishes = Food.get_by_restaurant(rest_id)
-    response = {'Dishes': []}
-    for dish in dishes:
-        response['Dishes'].append(model_to_json(dish))
+    response = {'Dishes': models_to_json(dishes)}
     return JsonResponse(response)
 
 
 def all_dishes_page(request):
     """Retrieve all dishes from the database"""
     foods = Food.objects.all()
-    response = {'Dishes': []}
-    for food in foods:
-        response['Dishes'].append(model_to_json(food))
-    return JsonResponse(Food.get_all())
+    response = {'Dishes': models_to_json(foods)}
+    return JsonResponse(response)
 
 
 def insert_dish_page(request):
@@ -118,18 +113,28 @@ def delete_dish_page(request):
     ManualTag.clear_food_tags(body["food_name"], body["restaurant_id"])
     food = Food.objects.get(name=body["food_name"], restaurant_id=body["restaurant_id"])
     food.delete()
-    if not Food.objects.filter(restaurant_id=body["restaurant_id"], category=food.category).exists():
+    if not category_exists(body['restaurant_id'], food.category):
         restaurant = Restaurant.objects.get(_id=body['restaurant_id'])
         restaurant.categories.remove(food.category)
         restaurant.save(update_fields=['categories'])
     return HttpResponse(status=200)
 
 
+def category_exists(restaurant_id, category):
+    """
+    check if restaurant still covers category 'category'
+    @param restaurant_id:referenced restaurant
+    @param category: category
+    @return:boolean
+    """
+    return Food.objects.filter(restaurant_id=restaurant_id, category=category).exists()
+
+
 def auto_tag_page(request):
     """Automatically generate tags for food"""
     validate(instance=request.body, schema=food_schema)
     body = json.loads(request.body)
-    tags = [model_to_dict(tag) for tag in ManualTag.auto_tag_food(body['_id'])]
+    tags = models_to_json(ManualTag.auto_tag_food(body['_id']))
     return JsonResponse({'tags': tags})
 
 
@@ -146,10 +151,8 @@ def get_restaurant_page(request):
 
 def get_all_restaurants_page(request):
     """Retrieve all restaurants"""
-    response = {'Restaurants': []}
     restaurants = list(Restaurant.objects.all())
-    for restaurant in restaurants:
-        response['Restaurants'].append(model_to_json(restaurant))
+    response = {'Restaurants': models_to_json(restaurants)}
     return JsonResponse(response)
 
 
