@@ -54,7 +54,6 @@ export class MapComponent implements OnInit {
           if (index.GEO_location != 'blank') {
             var GEOJson = JSON.parse(index.GEO_location.replace(/\'/g, '"'));
           }
-          console.log(GEOJson);
 
           if (index.GEO_location != 'blank' && GEOJson.lng != undefined) {
             var marker = new mapboxgl.Marker({ color: '#165788' })
