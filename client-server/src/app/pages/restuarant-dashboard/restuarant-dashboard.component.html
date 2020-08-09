@@ -1,15 +1,22 @@
 <div class="dashboard-box">
-  <h2 class="header-title">Welcome</h2>
-  <!--  Will eventually need to customize to specific restaurant name -->
+  <h2 class="header-title">Welcome {{ this.restaurantName | titlecase }}</h2>
 
   <div class="all-orders">
-    <button class="btn all-orders">View All Orders</button>
+    <button class="btn all-orders" (click)="viewAllOrders()">
+      View All Orders
+    </button>
   </div>
 
   <mat-tab-group mat-align-tabs="center">
     <mat-tab label="New Orders">
-      <div class="new-orders" *ngFor="let order of new_orders">
-        <div *ngIf="new_orders.length > 0">
+      <div *ngIf="new_orders.length > 0">
+        <div *ngIf="new_orders.length == 1">
+          <h4>{{ new_orders.length }} New Order</h4>
+        </div>
+        <div *ngIf="new_orders.length > 1">
+          <h4>{{ new_orders.length }} New Orders</h4>
+        </div>
+        <div class="new-orders" *ngFor="let order of new_orders">
           <app-order-card [order]="order"></app-order-card>
         </div>
       </div>
@@ -18,12 +25,18 @@
           class="no-orders-image"
           src="assets/images/undraw_receipt_ecdd.png"
         />
-        <p class="no-orders">Currently no orders!</p>
+        <p class="no-orders">Currently No New Orders!</p>
       </div>
     </mat-tab>
     <mat-tab label="In-Progress">
-      <div class="in-progress" *ngFor="let order of in_progress">
-        <div *ngIf="in_progress.length > 0">
+      <div *ngIf="in_progress.length > 0">
+        <div *ngIf="in_progress.length == 1">
+          <h4>{{ in_progress.length }} In-Progress Order</h4>
+        </div>
+        <div *ngIf="in_progress.length > 1">
+          <h4>{{ in_progress.length }} In-Progress Orders</h4>
+        </div>
+        <div class="in-progress" *ngFor="let order of in_progress">
           <app-order-card [order]="order"></app-order-card>
         </div>
       </div>
@@ -32,7 +45,27 @@
           class="no-orders-image"
           src="assets/images/undraw_booking_33fn.png"
         />
-        <p class="no-orders">Currently no orders!</p>
+        <p class="no-orders">Currently No In-Progress Orders!</p>
+      </div>
+    </mat-tab>
+    <mat-tab label="Completed">
+      <div *ngIf="complete.length > 0">
+        <div *ngIf="complete.length == 1">
+          <h4>{{ complete.length }} Complete Order</h4>
+        </div>
+        <div *ngIf="complete.length > 1">
+          <h4>{{ complete.length }} Complete Orders</h4>
+        </div>
+        <div class="completed" *ngFor="let order of complete">
+          <app-order-card [order]="order"></app-order-card>
+        </div>
+      </div>
+      <div *ngIf="complete.length === 0">
+        <img
+          class="no-orders-image"
+          src="assets/images/undraw_order_confirmed_aaw7.png"
+        />
+        <p class="no-orders">Currently No Completed Orders!</p>
       </div>
     </mat-tab>
   </mat-tab-group>

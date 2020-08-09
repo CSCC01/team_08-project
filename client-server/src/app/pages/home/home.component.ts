@@ -200,6 +200,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.router.navigate(['/all-listings']);
   }
 
+  browseStories() {
+    this.router.navigate(['/all-owners']);
+  }
+
   updateProfile() {
 
     let birthday = (<HTMLInputElement>document.getElementById('dateOfBirth')).value

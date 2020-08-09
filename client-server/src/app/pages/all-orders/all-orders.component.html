@@ -1,0 +1,13 @@
+<div class="order-page">
+  <div class="order-listings-box">
+    <h2>All Orders for {{ this.restaurantName }}</h2>
+    <div *ngFor="let order of orders">
+      <app-all-order-card [order]="order"></app-all-order-card>
+    </div>
+    <button class="btn back" (click)="back()">Back</button>
+  </div>
+  <img
+    class="bottom-left"
+    src="../../../assets/images/undraw_Booked_j7rj.png"
+  />
+</div>

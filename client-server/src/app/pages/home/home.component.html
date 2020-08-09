@@ -47,7 +47,14 @@
       What are you waiting for? Sign up and get your food right to your
       doorstep!
     </p>
-    <button (click)="auth.login()" class="btn">Sign Up →</button>
+    <button
+      (click)="auth.login()"
+      class="btn"
+      placement="top"
+      ngbTooltip="Create An Account"
+    >
+      Sign Up →
+    </button>
   </div>
 </div>
 
@@ -184,13 +191,28 @@
 <div class="bg1" style="text-align: center;">
   <h2 class="heading">Ready to explore?</h2>
   <br />
-  <button (click)="auth.login()" class="btn get-started-btn">
+  <button
+    (click)="auth.login()"
+    class="btn get-started-btn"
+    placement="top"
+    ngbTooltip="Create/Login to An Account"
+  >
     LOGIN/SIGNUP
   </button>
-  <button (click)="browseListings()" class="btn get-started-btn">
+  <button
+    (click)="browseListings()"
+    class="btn get-started-btn"
+    placement="top"
+    ngbTooltip="Explore Available Restaurants"
+  >
     BROWSE
   </button>
-  <button class="btn get-started-btn">
+  <button
+    (click)="browseStories()"
+    class="btn get-started-btn"
+    placement="top"
+    ngbTooltip="Explore The Stories of Restaurants"
+  >
     VIEW STORIES
   </button>
 </div>

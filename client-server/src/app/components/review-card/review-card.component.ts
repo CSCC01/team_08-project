@@ -13,8 +13,8 @@ export class ReviewCardComponent implements OnInit {
   totalStars = 5;
   starRating: StarRatingComponent;
   rating: number;
-  title: string;
-  comments: string;
+  title: string = '';
+  comments: string = '';
 
   constructor() {}
 
@@ -33,16 +33,20 @@ export class ReviewCardComponent implements OnInit {
   }
 
   sendReview() {
-    const reviewObj = {
-      rating: this.rating,
-      title: this.title,
-      comments: this.comments,
-    };
-    this.review.emit(reviewObj);
+    if (this.title == '' || this.comments == '') {
+      alert('Please provide comments for your review!');
+    } else {
+      const reviewObj = {
+        rating: this.rating,
+        title: this.title,
+        content: this.comments,
+      };
+      this.review.emit(reviewObj);
 
-    this.starRating.value = 0;
-    this.rating = 0;
-    this.title = '';
-    this.comments = '';
+      this.starRating.value = 0;
+      this.rating = 0;
+      this.title = '';
+      this.comments = '';
+    }
   }
 }

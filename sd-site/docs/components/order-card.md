@@ -33,38 +33,37 @@ Currently, the dish object should contain:
 ```json
 {
   "id": "{{ id from MongoDB }}",
-  "name": "{{ person name }}",
+  "user_name": "{{ person name }}",
   "email": "{{ person email }}",
   "phone": "{{ person phone number }}",
-  "price": "{{ the price of the dish }}",
-  "dishes": "{{ list of objects (each object contains a dish name & quantity) }}",
-  "Create_Timestamp": "{{ the time stamp for when the order was created }}",
-  "AccDec_Timestamp": "{{ the time stamp for when the order was accepted }}",
-  "Complete_Timestamp": "{{ the time stamp for when the order was completed }}"
+  "dishes": "{{ list of objects (each object contains a dish name & count) }}",
+  "send_tstmp": "{{ the time stamp for when the order was sent to the restaurant }}",
+  "accept_tstmp": "{{ the time stamp for when the order was accepted by the restaurant }}",
+  "complete_tstmp": "{{ the time stamp for when the order was completed by the restaurant }}"
 }
 ```
 
 Example:
 
 ```json
-{
+{{
   "id": "1235",
-  "name": "Jean Doe",
+  "user_name": "Jean Doe",
   "email": "sample1@email.com",
-  "phone": "416-321-4567",
+  "phone": "4163214567",
   "dishes": [
     {
-      "name": "Fancy Dish #1",
-      "quantity": 1
+      "dish_name": "Fancy Dish #1",
+      "count": 1
     },
     {
-      "name": "Fancy Dish #2",
-      "quantity": 2
+      "dish_name": "Fancy Dish #2",
+      "count": 2
     }
   ],
-  "Create_Timestamp": "12:05:21",
-  "AccDec_Timestamp": "",
-  "Complete_Timestamp": ""
+  "send_tstmp": "12:05:21",
+  "accept_tstmp": "",
+  "complete_tstmp": ""
 }
 ```
 
