@@ -6,6 +6,8 @@ import json
 from request_form import upload_form
 from geo import geo_controller
 # jsonschema validation schemes
+from utils.model_json import model_to_json
+
 food_schema = {
     "properties": {
         "_id": {"type": "string"},
@@ -194,11 +196,21 @@ def edit_dish_page(request):
     if invalid is not None:
         return JsonResponse(invalid)
     dish = Food.objects.get(_id=body["_id"])
+    old_category = dish.category
     for field in body:
         if field in dish_editable:
             setattr(dish, field, body[field])
     dish.clean_fields()
     dish.clean()
     dish.save()
-    dish._id = str(dish._id)
-    return JsonResponse(model_to_dict(dish))
+    if 'category' in body:
+        category = body['category']  # New One
+        restaurant = Restaurant.objects.get(_id=dish.restaurant_id)
+        if category not in restaurant.categories:
+            print('1')
+            restaurant.categories.append(category)
+            restaurant.save(update_fields=['categories'])
+        if not Food.objects.filter(restaurant_id=restaurant._id, category=old_category).exists():
+            restaurant.categories.remove(old_category)
+            restaurant.save(update_fields=['categories'])
+    return JsonResponse(model_to_json(dish))
