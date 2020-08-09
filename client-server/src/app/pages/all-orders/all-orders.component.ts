@@ -68,7 +68,6 @@ export class AllOrdersComponent implements OnInit {
       this.loginService
         .getUser({ email: this.orders[i].user_email })
         .subscribe((data) => {
-            console.log("address");
           this.orders[i].name = data.name;
           this.orders[i].phone = data.phone;
           this.orders[i].address = data.address;
