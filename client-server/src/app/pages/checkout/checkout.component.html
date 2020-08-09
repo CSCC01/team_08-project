@@ -1,53 +1,57 @@
 <div class="order-page">
-    <mat-tab-group mat-align-tabs="center">
-      <mat-tab label="Your Cart">
-        <div class="order-box">
-            <div *ngIf="cartItems.length == 0">
-            <p class="no-orders">No orders to display!</p>
-            <button class="btn order-now" [routerLink]="['/all-listings']">
-                Order Now!
-            </button>
-            </div>  
-  
-            <div *ngIf="cartItems.length > 0" style="text-align: center;">
-            <button class="btn clear-cart" (click)="clearCart()">
-                Clear Cart
-            </button>
-            </div>  
-  
-            <div *ngIf="cartItems.length > 0">
-            <div *ngFor="let item of cartItems" class="card-wrapper">
-                <button class="btn trashBtn" (click)="deleteOrder(item)">
-                <fa-icon [icon]="faTrash"></fa-icon>
-                </button>
-                <app-cart-card [dish]="item"></app-cart-card>
-            </div>
-            <div class="total-info">
-                <h3 class="total">Grand Total: ${{ this.total }}</h3>
-                <button class="btn place-order" [routerLink]="['/payment']" placement="bottom" ngbTooltip="Proceed to Checkout">
-                Place Order
-                </button>
-            </div>
-          </div>
+  <mat-tab-group mat-align-tabs="center">
+    <mat-tab label="Your Cart">
+      <div class="order-box">
+        <div *ngIf="cartItems.length == 0">
+          <p class="no-orders">No orders to display!</p>
+          <button class="btn order-now" [routerLink]="['/all-listings']">
+            Order Now!
+          </button>
         </div>
 
-      </mat-tab>
+        <div *ngIf="cartItems.length > 0" style="text-align: center;">
+          <button class="btn clear-cart" (click)="clearCart()">
+            Clear Cart
+          </button>
+        </div>
 
-      <mat-tab label="Order History">
-        <div class="order-box">
-          <div *ngIf="cartHistory.length == 0">
-              <p class="no-orders">No orders to display!</p>
-              <button class="btn order-now" [routerLink]="['/all-listings']">
-                  Order Now!
-              </button>
+        <div *ngIf="cartItems.length > 0">
+          <div *ngFor="let item of cartItems" class="card-wrapper">
+            <button class="btn trashBtn" (click)="deleteOrder(item)">
+              <fa-icon [icon]="faTrash"></fa-icon>
+            </button>
+            <app-cart-card [dish]="item"></app-cart-card>
           </div>
-          <div *ngIf="cartHistory.length > 0">
-            <div *ngFor="let order of cartHistory" class ="order-box">
-              <app-all-order-card [order]="order"></app-all-order-card>
-            </div>
+          <div class="total-info">
+            <h3 class="total">Grand Total: ${{ this.total }}</h3>
+            <button
+              class="btn place-order"
+              [routerLink]="['/payment']"
+              placement="bottom"
+              ngbTooltip="Proceed to Checkout"
+            >
+              Place Order
+            </button>
           </div>
         </div>
-      </mat-tab>
-    </mat-tab-group>
-    <img class="bottom-left" src="../../../assets/images/undraw_shopping.png" />
+      </div>
+    </mat-tab>
+
+    <mat-tab label="Order History">
+      <div class="order-box">
+        <div *ngIf="cartHistory.length == 0">
+          <p class="no-orders">No orders to display!</p>
+          <button class="btn order-now" [routerLink]="['/all-listings']">
+            Order Now!
+          </button>
+        </div>
+        <div *ngIf="cartHistory.length > 0">
+          <div *ngFor="let order of cartHistory">
+            <app-all-order-card [order]="order"></app-all-order-card>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+  <img class="bottom-left" src="../../../assets/images/undraw_shopping.png" />
 </div>
