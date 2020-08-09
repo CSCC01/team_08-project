@@ -11,6 +11,7 @@ import {
 } from 'rxjs';
 import { tap, catchError, concatMap, shareReplay } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 import { LoginService } from '../service/login.service';
 
 @Injectable({
@@ -20,8 +21,8 @@ export class AuthService {
   // Create an observable of Auth0 instance of client
   auth0Client$ = (from(
     createAuth0Client({
-      domain: 'dev-9kghct0f.us.auth0.com',
-      client_id: 'LbgoI3tmAyYueLtWm8ZY1WSGeZap6a52',
+      domain: environment.auth0.domain,
+      client_id: environment.auth0.client_id,
       redirect_uri: `${window.location.origin}`,
     })
   ) as Observable<Auth0Client>).pipe(
@@ -158,7 +159,7 @@ export class AuthService {
     this.auth0Client$.subscribe((client: Auth0Client) => {
       // Call method to log out
       client.logout({
-        client_id: 'LbgoI3tmAyYueLtWm8ZY1WSGeZap6a52',
+        client_id: environment.auth0.client_id,
         returnTo: `${window.location.origin}`,
       });
     });
