@@ -43,6 +43,7 @@ export class userValidator extends formValidator{
         'age': 'Must be older than 18 years of age'
     }
     // object with functions that will be used for validation
+    // replaceDefaults will replace the empty strings with functions that check if the corresponding field is non-empty
     validationFuncs = formValidator.replaceDefaults({
         'name': '',
         'address': '',
