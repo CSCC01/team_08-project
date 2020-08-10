@@ -6,6 +6,7 @@ module.exports = {
     Frontend: [
       "frontend/frontend",
       "frontend/folders",
+      "frontend/form-validation",
       "frontend/auth-guard",
       "frontend/bootstrap",
       "frontend/material",
