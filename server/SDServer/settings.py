@@ -89,8 +89,8 @@ WSGI_APPLICATION = 'SDServer.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
-        'NAME': 'calvin',
-        'HOST': 'mongodb+srv://scdining:eBXx50zNq5pE7ZeJ@cluster0-zwews.gcp.mongodb.net/calvin?retryWrites=true&w=majority',
+        'NAME': 'SCDining',
+        'HOST': 'mongodb+srv://scdining:eBXx50zNq5pE7ZeJ@cluster0-zwews.gcp.mongodb.net/SCDining?retryWrites=true&w=majority',
         'USER': 'scdining',
         'PASSWORD': 'eBXx50zNq5pE7ZeJ'
     }
