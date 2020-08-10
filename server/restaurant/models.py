@@ -4,7 +4,7 @@ from restaurant.cuisine_dict import load_dict
 from restaurant.enum import Prices, Categories
 from django.core.exceptions import ObjectDoesNotExist
 import requests
-from utils.model_util import save_and_clean, update_model_geo
+from utils.model_util import save_and_clean, update_model_geo, model_refresh
 from geo.geo_controller import geocode
 
 FOOD_PICTURE = 'https://storage.googleapis.com/default-assets/no-image.png'
@@ -54,11 +54,13 @@ class Food(models.Model):
             category=food_data['category'],
         )
         save_and_clean(dish)
+        dish = model_refresh(Food, {'name': dish.name, 'restaurant_id': dish.restaurant_id})
         restaurant = Restaurant.objects.get(_id=food_data['restaurant_id'])
         if not restaurant.category_exists(food_data['category']):
             restaurant.categories.append(food_data['category'])
             restaurant.save(update_fields=['categories'])
         return dish
+
 
 
     @classmethod

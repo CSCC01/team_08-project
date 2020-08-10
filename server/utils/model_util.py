@@ -65,3 +65,14 @@ def models_to_json(iterable):
     for model in iterable:
         models.append(model_to_json(model))
     return models
+
+
+def model_refresh(model_class, query):
+    """
+    Refresh model from db (workaround fix to _id not showing up)
+    @param model_class: Class object for model
+    @param query: query for searching correct model
+    @return: updated model
+    """
+    model = model_class.objects.get(**query)
+    return model
