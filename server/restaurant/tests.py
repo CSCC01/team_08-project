@@ -160,7 +160,7 @@ class FoodTestCases(TestCase):
 
     def setUp(self):
         """ Load food document """
-        self.restaurant = Restaurant.objects.create(    **{
+        self.restaurant = Restaurant.objects.create(**{
             '_id': '222222222222222222222222',
             'name': 'Winnies lambs',
             'address': '211 chicago',
@@ -183,7 +183,7 @@ class FoodTestCases(TestCase):
         })
         self.foodA = Food.objects.create(name="foodA", restaurant_id="111111111111111111111111", description="descripA", picture="picA",
                                          price='10.99', category='Lunch')
-        self.foodB = Food.objects.create(name="foodB", restaurant_id="222222222222222222222222", description="descripB", picture="picB",
+        self.foodB = Food.objects.create(name="foodB", restaurant_id=str(self.restaurant._id), description="descripB", picture="picB",
                                          price='20.99')
         self.expected = {
             '_id': '111111111111111111111111',
@@ -194,17 +194,17 @@ class FoodTestCases(TestCase):
             'email': 'alac@gmail.com',
             'cuisine': 'american',
             'pricepoint': 'High',
-            'twitter': 'http://link',
-            'instagram': 'http://link',
+            'twitter': MOCK_VALID_LINK,
+            'instagram': MOCK_VALID_LINK,
             'bio': 'Finger licking good chicken',
             'GEO_location': '{\'longitude\': 44.068203, \'latitude\':-114.742043}',
-            'external_delivery_link': 'http://link',
-            'cover_photo_url': 'http://link',
-            'logo_url': 'http://link',
+            'external_delivery_link': MOCK_VALID_LINK,
+            'cover_photo_url': MOCK_VALID_LINK,
+            'logo_url': MOCK_VALID_LINK,
             'rating': '3.00',
             'owner_name': 'Colonel Sanders',
             'owner_story': 'i made chicken',
-            'owner_picture_url': 'http://link',
+            'owner_picture_url': MOCK_VALID_LINK,
             'categories': ['Lunch']
         }
         Restaurant.objects.create(**self.expected)
@@ -215,7 +215,6 @@ class FoodTestCases(TestCase):
         """ Test if food is properly inserted into the database """
         request = self.factory.post('/api/restaurant/dish/insert/', {"name": 'foodC', 'restaurant_id': "111111111111111111111111",
                                                                      'description': "descripC",
-                                                                     'picture': MOCK_VALID_LINK,
                                                                      "price": '10.99', 'specials': "", 'category': ''
                                                                      }, content_type="application/json")
         actual = json.loads(view_response.insert_dish_page(request).content)
@@ -390,13 +389,13 @@ class RestaurantTestCases(TestCase):
             'email': 'CC@gmail.com',
             'cuisine': 'asina fusion',
             'pricepoint': 'High',
-            'twitter': 'http://link',
-            'instagram': 'http://link',
+            'twitter': MOCK_VALID_LINK,
+            'instagram': MOCK_VALID_LINK,
             'bio': 'Finger licking good chicken',
             'GEO_location': '{\'longitude\': 44.068203, \'latitude\':-114.742043}',
-            'external_delivery_link': 'http://link',
-            'cover_photo_url': 'http://link',
-            'logo_url': 'http://link',
+            'external_delivery_link': MOCK_VALID_LINK,
+            'cover_photo_url': MOCK_VALID_LINK,
+            'logo_url': MOCK_VALID_LINK,
             'rating': '3.00',
             'owner_name': 'Colonel Lam',
             'owner_story': 'lambs are a thing',
@@ -477,7 +476,7 @@ class RestaurantTestCases(TestCase):
         request = self.factory.post('/api/restaurant/dish/insert/',
                                     {"name": 'foodC', 'restaurant_id': "111111111111111111111111",
                                      'description': "descripC",
-                                     'picture': "http://link",
+                                     'picture': MOCK_VALID_LINK,
                                      "price": '10.99', 'specials': "",
                                      'category': 'Dinner'}, content_type="application/json")
         view_response.insert_dish_page(request)

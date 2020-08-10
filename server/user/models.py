@@ -1,6 +1,7 @@
 import requests
 from django.db import models
 from user.enum import Roles
+from geo.geo_controller import geocode
 
 
 class SDUser(models.Model):
@@ -76,6 +77,12 @@ class SDUser(models.Model):
         if 'phone' in fields and fields['phone'] is not None:
             if len(str(fields['phone'])) != 10:
                 invalid['Invalid'].append('phone')
+
+        if 'address' in fields:
+            try:
+                geocode(fields['address'])
+            except ValueError:
+                invalid['Invalid'].append('address')
 
         if not invalid['Invalid']:
             return None

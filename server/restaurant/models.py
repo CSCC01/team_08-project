@@ -1,4 +1,3 @@
-from django.forms import model_to_dict
 from djongo import models
 from bson import ObjectId
 from restaurant.cuisine_dict import load_dict
@@ -6,6 +5,7 @@ from restaurant.enum import Prices, Categories
 from django.core.exceptions import ObjectDoesNotExist
 import requests
 from utils.model_util import save_and_clean, update_model_geo
+from geo.geo_controller import geocode
 
 FOOD_PICTURE = 'https://storage.googleapis.com/default-assets/no-image.png'
 
@@ -55,7 +55,7 @@ class Food(models.Model):
         )
         save_and_clean(dish)
         restaurant = Restaurant.objects.get(_id=food_data['restaurant_id'])
-        if not restaurant.is_new_category(food_data['category']):
+        if not restaurant.category_exists(food_data['category']):
             restaurant.categories.append(food_data['category'])
             restaurant.save(update_fields=['categories'])
         return dish
@@ -221,7 +221,7 @@ class Restaurant(models.Model):
     owner_picture_url = models.CharField(max_length=200, blank=True)
     categories = models.ListField(default=[], blank=True)
 
-    def is_new_category(self, category):
+    def category_exists(self, category):
         """
         Check whether category is new
         @param category: referenced category
@@ -282,6 +282,11 @@ class Restaurant(models.Model):
         if 'phone' in fields and fields['phone'] is not None:
             if len(str(fields['phone'])) != 10:
                 invalid['Invalid'].append('phone')
+        if 'address' in fields:
+            try:
+                geocode(fields['address'])
+            except ValueError:
+                invalid['Invalid'].append('address')
         if len(invalid['Invalid']) == 0:
             return None
         else:
