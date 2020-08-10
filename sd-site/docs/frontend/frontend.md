@@ -1,6 +1,6 @@
 ---
 id: frontend
-title: Frontend
+title: Frontend Basics
 ---
 
 Compliation of how to use **packages** that are used in Angular, and rules set for the project.
@@ -32,6 +32,8 @@ sessionStorage.getItem("userId");
 ```
 
 We will be using this process to track a users role, their user id/email, and which restaurant they are associated with (if applicable).
+
+More items will be kept track of depending when needed, but these 3 will be kept right from login.
 
 ### Query Parameters
 

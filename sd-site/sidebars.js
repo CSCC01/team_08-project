@@ -5,6 +5,7 @@ module.exports = {
     Backend: ["backend/backend"],
     Frontend: [
       "frontend/frontend",
+      "frontend/folders",
       "frontend/auth-guard",
       "frontend/bootstrap",
       "frontend/material",
@@ -12,16 +13,16 @@ module.exports = {
       "frontend/fortawesome",
     ],
     Components: [
+      "components/all-order-card",
+      "components/cart-card",
       "components/dish-card",
       "components/filterlist-card",
-      "components/all-order-card",
       "components/order-card",
       "components/owner-card",
       "components/restaurant-card",
       "components/review-card",
       "components/timeline-post",
       "components/view-review-card",
-      "components/cart-card",
     ],
   },
 };
