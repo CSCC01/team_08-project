@@ -5,6 +5,46 @@ title: Frontend Basics
 
 Compliation of how to use **packages** that are used in Angular, and rules set for the project.
 
+## Style Guide
+
+### Default Colours
+
+Some of the default site colours are defined in the global `.scss` file.
+
+To use the colours in your page/component, add this to the top of you `.scss` file
+
+```css
+@import "src/styles";
+```
+
+Then call on the colour using `$`:
+
+```css
+.navbar {
+  background-color: $primary-color;
+}
+```
+
+### Bottom Corner Image
+
+Most pages will have an image at the bottom left corner to spice up the appearance of the page. Simply add the image to the page `.html` file and add the `bottom-left` class to it to format properly.
+
+```html
+<img class="bottom-left" src="assets/images/undraw_chef.png" />
+```
+
+The `bottom-left` class has been defined in `styles.scss`.
+
+## Third Party Services
+
+### Auth0
+
+Auth0 is used as the authentication service. `domain` and `client_id` are saved in the `src/environment.ts` file.
+
+### Mapbox
+
+Mapbox is used as the map service to display pins and locations of restaurants on a map. `accessToken` is saved in the `src/environment.ts` file.
+
 ## Session Storage
 
 To save current logged in user information in the browser. Closing the tab clears the storage.
@@ -126,33 +166,3 @@ In the `.html` file, the upload should be in a form (either on its own on encaps
 ```
 
 **NOTE:** Some manipluation may be needed. You can only add an image AFTER you have the repective id for it (i.e if you're making a new object, it must be created first to get the id)
-
-## Style Guide
-
-### Default Colours
-
-Some of the default site colours are defined in the global `.scss` file.
-
-To use the colours in your page/component, add this to the top of you `.scss` file
-
-```css
-@import "src/styles";
-```
-
-Then call on the colour using `$`:
-
-```css
-.navbar {
-  background-color: $primary-color;
-}
-```
-
-### Bottom Corner Image
-
-Most pages will have an image at the bottom left corner to spice up the appearance of the page. Simply add the image to the page `.html` file and add the `bottom-left` class to it to format properly.
-
-```html
-<img class="bottom-left" src="assets/images/undraw_chef.png" />
-```
-
-The `bottom-left` class has been defined in `styles.scss`.
