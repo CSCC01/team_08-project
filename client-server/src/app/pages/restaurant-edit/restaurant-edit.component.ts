@@ -51,14 +51,15 @@ export class RestaurantEditComponent implements OnInit {
 
   updateRestaurantInfo() {
 
+    let city = (<HTMLInputElement>document.getElementById('restaurant-city')).value;
+
     var restaurantInfo = {
       restaurant_id: this.restaurantId,
       name: (<HTMLInputElement>document.getElementById('restaurant-name'))
         .value,
       address: (<HTMLInputElement>document.getElementById('restaurant-address'))
-        .value,
-      city: (<HTMLInputElement>document.getElementById('restaurant-city'))
-        .value,
+        .value + ", " + city,
+      city: city,
       phone: (<HTMLInputElement>document.getElementById('phone-number')).value,
       pricepoint: (<HTMLInputElement>document.getElementById('pricepoint'))
         .value,
