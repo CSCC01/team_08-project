@@ -3,6 +3,7 @@ import { OrdersService } from 'src/app/service/orders.service';
 import { RestaurantsService } from 'src/app/service/restaurants.service';
 import { generalUtils } from '../../utils/general';
 import { orderUtils } from '../../utils/orders';
+import { LoginService } from 'src/app/service/login.service';
 
 @Component({
   selector: 'app-all-transactions',
@@ -23,12 +24,18 @@ export class AllTransactionsComponent implements OnInit {
   userId: string = '';
 
   constructor(
+    private loginService: LoginService,
     private orderService: OrdersService,
     private restaurantsService: RestaurantsService
   ) {}
 
   ngOnInit(): void {
     this.userId = sessionStorage.getItem('userId');
+    this.loginService.getUser({ email: this.userId }).subscribe((data) => {
+      this.userPhone = data.phone;
+      this.userName = data.name;
+      this.userAddress = data.address;
+    });
     this.loadOrderHistory(this.userId);
     this.cartHistory.sort(orderUtils.OrderStatusComparator);
   }

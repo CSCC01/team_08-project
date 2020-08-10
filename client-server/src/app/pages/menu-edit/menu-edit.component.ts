@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { RestaurantsService } from 'src/app/service/restaurants.service';
-import { formValidation } from "../../validation/forms";
+import { formValidation } from '../../validation/forms';
 import { dishValidator } from '../../validation/dishValidator';
 import { formValidator } from '../../validation/formValidator';
 
@@ -109,56 +109,56 @@ export class MenuEditComponent implements OnInit {
   }
 
   configDish() {
-
     // only used for form validation
     var validationInfo = {
-        name: this.dishName,
-        price: this.price,
-        menuCategory: this.menuCategory,
-        cuisine: this.cuisine,
-        dishInfo: this.dishInfo,
-        allergy: this.allergy
-    }
-    
+      name: this.dishName,
+      price: this.price,
+      menuCategory: this.menuCategory,
+      cuisine: this.cuisine,
+      dishInfo: this.dishInfo,
+      allergy: this.allergy,
+    };
+
     this.validator.clearAllErrors();
-    let failFlag = this.validator.validateAll(validationInfo, (key) => this.validator.setError(key));
+    let failFlag = this.validator.validateAll(validationInfo, (key) =>
+      this.validator.setError(key)
+    );
 
-    if ( ! failFlag
-    ) {
-        const price: number = +this.price;
-        var dishInfo = {};
-        dishInfo['_id'] = this.dishId;
-        dishInfo['name'] = this.dishName;
-        dishInfo['restaurant_id'] = this.restaurantId;
-        dishInfo['description'] = this.dishInfo;
-        dishInfo['price'] = price.toFixed(2);
-        dishInfo['category'] = this.menuCategory;
-        dishInfo['specials'] = '';
-        dishInfo['category'] = this.menuCategory;
+    if (!failFlag) {
+      const price: number = +this.price;
+      var dishInfo = {};
+      dishInfo['_id'] = this.dishId;
+      dishInfo['name'] = this.dishName;
+      dishInfo['restaurant_id'] = this.restaurantId;
+      dishInfo['description'] = this.dishInfo;
+      dishInfo['price'] = price.toFixed(2);
+      dishInfo['category'] = this.menuCategory;
+      dishInfo['specials'] = '';
+      dishInfo['category'] = this.menuCategory;
 
-        if (this.dishEdit) {
-          this.restaurantsService.editDish(dishInfo).subscribe((data) => {
-            if (this.newImage) {
-              this.onSubmit(data._id);
-            } else {
-              this.dishes[this.dishIndex] = data;
-              this.dishIndex = 0;
-              this.dishEdit = false;
-            }
-          });
-        } else {
-          dishInfo['picture'] = '';
-          this.restaurantsService.createDish(dishInfo).subscribe((data) => {
-            if (this.newImage) {
-              this.onSubmit(data._id);
-            } else {
-              this.dishes.push(data);
-            }
-          });
-        }
+      if (this.dishEdit) {
+        this.restaurantsService.editDish(dishInfo).subscribe((data) => {
+          if (this.newImage) {
+            this.onSubmit(data._id);
+          } else {
+            this.dishes[this.dishIndex] = data;
+            this.dishIndex = 0;
+            this.dishEdit = false;
+          }
+        });
+      } else {
+        dishInfo['picture'] = '';
+        this.restaurantsService.createDish(dishInfo).subscribe((data) => {
+          if (this.newImage) {
+            this.onSubmit(data._id);
+          } else {
+            this.dishes.push(data);
+          }
+        });
+      }
 
-        this.clearInput();
-        this.dishModalRef.close();
+      this.clearInput();
+      this.dishModalRef.close();
     }
   }
 
