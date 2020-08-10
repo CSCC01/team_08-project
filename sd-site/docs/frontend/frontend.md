@@ -73,7 +73,7 @@ sessionStorage.getItem("restaurantId");
 sessionStorage.getItem("userId");
 ```
 
-We will be using this process to track a users role, their user id/email, their user address and which restaurant they are associated with (if applicable).
+We will be using this process to track a users role, their user id/email, their user address and which restaurant they are associated with (if applicable). You can add more if you want but these are the most important one.
 
 More items will be kept track of depending when needed, but these 4 will be kept right from login.
 
