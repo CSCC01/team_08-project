@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { RestaurantsService } from '../../service/restaurants.service';
-import { formValidation } from "../../validation/forms";
+import { formValidation } from '../../validation/forms';
 import { ownerValidator } from '../../validation/ownerValidator';
 import { formValidator } from '../../validation/formValidator';
 
@@ -60,19 +60,25 @@ export class OwnerEditComponent implements OnInit {
     };
 
     this.validator.clearAllErrors();
-    let failFlag = this.validator.validateAll(restaurantInfo, (key) => this.validator.setError(key));
+    let failFlag = this.validator.validateAll(restaurantInfo, (key) =>
+      this.validator.setError(key)
+    );
 
     if (!failFlag) {
-      this.restaurantsService.editRestaurant(restaurantInfo).subscribe((data) => {
-        if(data && formValidation.isInvalidResponse(data)){
-            formValidation.HandleInvalid(data, (key) => this.validator.setError(key))
-          }else{
+      this.restaurantsService
+        .editRestaurant(restaurantInfo)
+        .subscribe((data) => {
+          if (data && formValidation.isInvalidResponse(data)) {
+            formValidation.HandleInvalid(data, (key) =>
+              this.validator.setError(key)
+            );
+          } else {
             if (this.newImage) {
-                this.onSubmit();
-              }
-              this.router.navigate(['/restaurant']);
+              this.onSubmit();
+            }
+            this.router.navigate(['/restaurant']);
           }
-      });
+        });
     }
   }
 
@@ -93,7 +99,9 @@ export class OwnerEditComponent implements OnInit {
     formData.append('file', this.uploadForm.get('file').value);
     this.restaurantsService
       .uploadRestaurantMedia(formData, this.restaurantId, 'owner')
-      .subscribe((data) => {});
-    this.newImage = false;
+      .subscribe((data) => {
+        this.newImage = false;
+        window.location.reload();
+      });
   }
 }
