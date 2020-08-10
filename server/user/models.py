@@ -15,7 +15,7 @@ class SDUser(models.Model):
     role = models.CharField(max_length=5, choices=Roles.choices(), default="BU")
     restaurant_id = models.CharField(max_length=24, blank=True, default=None)
     birthday = models.DateField(blank=True, default=None)
-    address = models.CharField(max_length=24, blank=True, default='')
+    address = models.CharField(max_length=100, blank=True, default='')
     phone = models.BigIntegerField(blank=True, default=None)
     GEO_location = models.CharField(max_length=200, blank=True, default='')
 

@@ -39,13 +39,15 @@ export class RestaurantSetupComponent implements OnInit {
 
   upgradeUser(): void {
     // Extract form inputs from the user
+
+    let city = (<HTMLInputElement>document.getElementById('restaurant-city')).value;
+
     var restaurantInfo = {
       name: (<HTMLInputElement>document.getElementById('restaurant-name'))
         .value,
       address: (<HTMLInputElement>document.getElementById('restaurant-address'))
-        .value,
-      city: (<HTMLInputElement>document.getElementById('restaurant-city'))
-        .value,
+        .value + ", " + city,
+      city: city,
       phone: (<HTMLInputElement>document.getElementById('phone-number')).value,
       email: (<HTMLInputElement>document.getElementById('restaurant-email'))
         .value,

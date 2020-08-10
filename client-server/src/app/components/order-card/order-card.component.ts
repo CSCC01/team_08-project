@@ -34,10 +34,11 @@ export class OrderCardComponent implements OnInit {
   }
 
   updateStatusofCart(status): void {
-    this.ordersService.updateStatus(this.order._id, status).subscribe();
-    setTimeout(function () {
-      window.location.reload();
-    }, 100);
+    this.ordersService.updateStatus(this.order._id, status).subscribe((data) => {
+        setTimeout(function () {
+            window.location.reload();
+          }, 100);
+    });
   }
 
   openModal(content) {

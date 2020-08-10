@@ -18,7 +18,7 @@ export class userValidator extends formValidator{
 
     errorStrings = {
         'name': 'Invalid Name',
-        'address': 'Invalid Address',
+        'address': 'Invalid Address, if this address exists in multiple cities, specify the city',
         'phone': 'Invalid phone number - ensure exactly 10 digits',
         'birthday': 'Invalid Birthday, ensure YYYY-MM-DD format',
         'age': 'Must be older than 18 years of age'

@@ -18,7 +18,7 @@ class Food(models.Model):
     """ Model for the Food Items on the Menu """
     _id = models.ObjectIdField()
     name = models.CharField(max_length=50, default='')
-    restaurant_id = models.CharField(max_length=24, editable=False)
+    restaurant_id = models.CharField(max_length=24)
     description = models.CharField(max_length=200, blank=True, default='')
     picture = models.CharField(max_length=200, blank=True,
                                default=FOOD_PICTURE)
