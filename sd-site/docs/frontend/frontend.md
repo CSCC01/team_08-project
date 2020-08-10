@@ -54,6 +54,7 @@ We'll be keeping track of 3 pieces of information:
 1. role
 2. restaurantId (if applicable)
 3. userId (email)
+4. userAddress (if applicable & present)
 
 To set the values:
 
@@ -61,6 +62,7 @@ To set the values:
 sessionStorage.setItem('role', {{ the role}});
 sessionStorage.setItem('restaurantId', {{ the restaurant id}});
 sessionStorage.setItem('userId', {{ the user id / email}});
+sessionStorage.setItem('userAddress', {{ the user address}});
 ```
 
 To get the values (can store into a variable):
@@ -71,9 +73,9 @@ sessionStorage.getItem("restaurantId");
 sessionStorage.getItem("userId");
 ```
 
-We will be using this process to track a users role, their user id/email, and which restaurant they are associated with (if applicable).
+We will be using this process to track a users role, their user id/email, their user address and which restaurant they are associated with (if applicable).
 
-More items will be kept track of depending when needed, but these 3 will be kept right from login.
+More items will be kept track of depending when needed, but these 4 will be kept right from login.
 
 ### Query Parameters
 
